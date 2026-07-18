@@ -1,0 +1,60 @@
+:root {
+/* == CORES == */
+
+    --color-bg:#050505;
+    --color-surface:#101010;
+    --color-surface-light:#1A1A1A;
+
+    --color-primary:#00FF84;
+    --color-primary-dark:#00CC6A;
+
+    --color-text:#FFFFFF;
+    --color-text-secondary:#B7B7B7;
+
+    --color-border:rgba(255,255,255,.08);
+
+    --color-glow:rgba(0,255,132,.25);
+
+
+
+    /* == TYPOGRAPHY == */
+
+    --font-title:"Space Grotesk", sans-serif;
+    --font-text:"Inter", sans-serif;
+
+
+
+    /* == ESPAÇAMENTO == */
+
+    --space-1:4px;
+    --space-2:8px;
+    --space-3:16px;
+    --space-4:24px;
+    --space-5:32px;
+    --space-6:48px;
+    --space-7:64px;
+    --space-8:96px;
+    --space-9:128px;
+
+
+
+    /* == RADIUS == */
+
+    --radius-sm:12px;
+    --radius-md:16px;
+    --radius-lg:20px;
+
+
+
+    /* == TRANSITIONS == */
+
+    --transition-fast:.25s;
+    --transition-normal:.4s;
+    --transition-slow:.8s;
+
+
+
+    /* == CONTAINER == */
+
+    --container:1400px;
+}

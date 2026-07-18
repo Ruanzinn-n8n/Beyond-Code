@@ -1,0 +1,25 @@
+/* === IMPORTS === */
+@import url("./reset.css");
+@import url("./variables.css");
+
+/* == BASE == */
+
+body {
+    background:
+        radial-gradient(circle at top,
+            #111111 0%,
+            #050505 70%);
+    color: var(--color-text);
+    font-family: var(--font-text);
+    overflow-x: hidden;
+}
+
+.container {
+    width: min(var(--container), calc(100% - 80px));
+    margin-inline: auto;
+}
+
+section {
+    position: relative;
+    padding: var(--space-9) 0;
+}

@@ -1,0 +1,79 @@
+/*
+
+Layout global
+
+Header
+
+Sections
+
+Footer
+
+*/
+
+/* == HERO == */
+
+.hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.hero__container {
+    max-width: 1400px;
+    height: 100vh;
+    margin: auto;
+    padding: 0 80px;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: var(--space-8);
+    position: relative;
+    z-index: 2;
+}
+
+.hero__background {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.hero__content {
+    position: absolute;
+    bottom: 120px;
+    left: 80px;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+.hero__visual {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    inset: 0;
+    pointer-events: none;
+}
+
+.hero__scene {
+    width: min(42vw, 560px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    right: -120px;
+    width: 700px;
+    height: 700px;
+    transform: translateY(-50%);
+}
+
+.hero__glow {
+    width: 700px;
+    height: 700px;
+    border-radius: 50%;
+    position: absolute;
+    top: -200px;
+    right: -120px;
+}
