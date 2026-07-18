@@ -1,0 +1,188 @@
+/* ==========================================================================
+   BEYOND CODE — ATMOSPHERE
+   Fundação visual global do projeto.
+
+   Este arquivo NÃO estiliza seções, componentes, textos ou botões.
+   Ele constrói apenas o "estúdio" por trás de toda a página:
+   luz, profundidade, textura e vazio.
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   1. DESIGN TOKENS
+   Centraliza cor, profundidade e timing num único lugar. Qualquer seção
+   futura deve consumir estas variáveis em vez de declarar cores novas —
+   é o que garante que a página inteira pareça um único filme, não
+   seções desenhadas em dias diferentes.
+   -------------------------------------------------------------------------- */
+:root {
+
+  /* Vazio — nunca preto puro (#000). Preto puro absorve luz e "achata"
+     a imagem; um preto com leve subtom frio deixa espaço para o brilho
+     ler como luz de verdade, não como um retângulo colorido em cima do nada. */
+  --color-void: #07080a;
+  --color-void-deep: #040405;
+
+  /* Reservado para futuras superfícies elevadas (cards, painéis).
+     Não é usado neste arquivo — existe aqui para já nascer consistente
+     quando as seções forem estilizadas. */
+  --color-elevated: #0f1218;
+
+  /* As duas únicas fontes de luz da página inteira. */
+  --color-glow-cold: #6e8ca3;   /* luz distante, fria — a dominante   */
+
+  /* Linha de contorno quase invisível, para uso futuro em divisores. */
+  --color-hairline: rgba(255, 255, 255, 0.06);
+
+  /* Profundidade */
+  --depth-blur-lg: 140px;
+  --depth-blur-md: 90px;
+  --shadow-cinematic: 0 60px 160px rgba(0, 0, 0, 0.6);
+
+  /* Timing — ainda não animamos nada, mas o "ritmo" do filme já fica
+     definido aqui para que qualquer animação futura (Hero, scroll,
+     partículas) puxe da mesma fonte e nunca pareça fora de tom. */
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-ambient: 1.4s;
+
+  --page-max-width: 1400px;
+}
+
+
+/* --------------------------------------------------------------------------
+   2. BASE GLOBAL
+   Define o "chão" da página. Tudo o mais é luz projetada sobre isto.
+   -------------------------------------------------------------------------- */
+html {
+  background-color: var(--color-void);
+  /* Perspectiva sutil no root prepara qualquer transform 3D futuro
+     (ex.: elementos com translateZ) para ter profundidade real de
+     câmera, em vez de um efeito 2D achatado. */
+}
+
+body {
+    overflow-x: hidden;
+  background-color: var(--color-void);
+  /* O body em si fica transparente sobre a atmosfera — quem pinta
+     é a camada .atmosphere, fixa, por trás de tudo. */
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Cabeçalho, conteúdo e rodapé precisam existir num plano acima da
+   atmosfera (que é position: fixed e teria z-index natural conflitante). */
+.header,
+.main,
+.footer {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* --------------------------------------------------------------------------
+   3. ATMOSPHERE — CAMADA FIXA GLOBAL
+   Um único container fixo, atrás de toda a página, que não se move
+   com o scroll. É isso que faz o fundo parecer "vivo": o conteúdo
+   desliza sobre um cenário parado, como uma câmera passando por um
+   set construído — não um papel de parede que rola junto.
+   -------------------------------------------------------------------------- */
+.core {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  isolation: isolate;
+  background-color: var(--color-void);
+  pointer-events: none; /* nunca deve interceptar clique/scroll */
+}
+
+/* 3.1 — Gradiente de base
+   Uma transição extremamente sutil de void para void-deep, de cima
+   para baixo. Sozinho, um fundo 100% sólido lê como "imagem", não
+   como espaço. Um gradiente quase imperceptível já basta para o olho
+   perceber profundidade, antes mesmo de qualquer brilho entrar. */
+.core__gradient {
+  position: absolute;
+  inset: -10%;
+  background:
+    radial-gradient(
+      120% 90% at 50% -10%,
+      #101319 0%,
+      var(--color-void) 45%,
+      var(--color-void-deep) 100%
+    );
+}
+
+/* 3.2 — Fontes de luz
+   Duas manchas radiais grandes, borradas ao extremo, fixas na tela
+   (não presas ao scroll). Pense nelas como dois holofotes de estúdio
+   apontados para fora de quadro: você não vê o holofote, só o brilho
+   que ele deixa no ar. Por isso o blur é tão alto e a opacidade tão baixa. */
+.core__glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(var(--depth-blur-lg));
+}
+
+.core__glow--cold {
+  top: -15%;
+  left: 55%;
+  width: 60vw;
+  height: 60vw;
+  background: var(--color-glow-cold);
+  opacity: 0.08;
+}
+
+/* 3.3 — Textura / grain
+   Ruído fractal via SVG inline, em opacidade quase nula com
+   mix-blend-mode overlay. Isso quebra o "banding" digital de
+   gradientes grandes e dá uma textura de película de filme —
+   é o detalhe que separa "fundo elegante" de "fundo de app comum". */
+.core__grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'>\
+<filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter>\
+<rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 160px 160px;
+}
+
+/* 3.4 — Partículas (reservado)
+   Vazio por design. Nenhum framework de partículas foi decidido
+   ainda; este elemento só existe para já ter endereço fixo no layout,
+   evitando reestruturar HTML/CSS quando essa etapa chegar. */
+.core__particles {
+  position: absolute;
+  inset: 0;
+}
+
+/* 3.5 — Vinheta
+   Escurece sutilmente os quatro cantos. É o que faz o centro da tela
+   parecer "iluminado" por contraste, sem precisar aumentar brilho
+   nenhum — a mesma lógica de vinheta de lente usada em cinema. */
+.core__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    120% 100% at 50% 50%,
+    transparent 55%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
+}
+
+
+/* --------------------------------------------------------------------------
+   4. ACESSIBILIDADE / PREPARAÇÃO PARA MOVIMENTO
+   Nenhuma animação foi escrita ainda, mas a regra já fica pronta:
+   qualquer animação futura na atmosfera (respiração do glow, partículas)
+   deve respeitar quem pede menos movimento.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .core * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
