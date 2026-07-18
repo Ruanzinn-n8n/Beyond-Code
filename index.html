@@ -6,17 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DevClub</title>
   <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/intro.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/typography.css">
+  <link rel="stylesheet" href="css/effects.css">
+  <link rel="stylesheet" href="css/intro.css">
+  <link rel="stylesheet" href="css/warp.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/responsive.css">
-  <link rel="stylesheet" href="css/typography.css">
-  <link rel="stylesheet" href="css/effects.css" <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -49,24 +49,28 @@
     </div>
 
     <!-- Camada da frase de abertura -->
-    <div class="intro__message">
-      <p class="intro__text">Toda grande carreira começa com uma decisão.</p>
-    </div>
+    <!-- Intro: sequência de abertura cinematográfica -->
+  <!-- Independente da Hero — cobre 100vw x 100vh, fixa, acima de tudo -->
+  <!-- data-phase é controlado exclusivamente por js/intro.js -->
+  <div class="intro" data-phase="black" aria-hidden="true">
 
-    <!-- Assinatura da introdução -->
-    <div class="intro__signature">
-    
-      <span class="intro__signature-top">
-        DEVCLUB PRESENTS
-      </span>
-      <span class="intro__signature-bottom">
+    <!-- Cena 2: ponto de luz central que dispara em direção à câmera -->
+    <div class="intro__light"></div>
+
+    <!-- Cena 3: efeito de túnel espacial (Canvas API — ver js/warp.js) -->
+    <canvas class="intro__canvas"></canvas>
+
+    <!-- Cenas 4, 5 e 6: frase central + assinatura -->
+    <div class="intro__content">
+      <p class="intro__text">
+        Toda grande carreira<br>
+        começa com uma decisão.
+      </p>
+      <p class="intro__credit">
+        DEVCLUB PRESENTS<br>
         Beyond Code
-      </span>
-    
+      </p>
     </div>
-
-    <!-- Camada de overlay: reservada para futuro fade/transição de saída -->
-    <div class="intro__overlay"></div>
 
   </div>
 
