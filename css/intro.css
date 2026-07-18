@@ -1,0 +1,180 @@
+/* ==========================================================================
+   BEYOND CODE — INTRO
+   Sequência de abertura cinematográfica.
+
+   Independente da Hero: ocupa 100vw x 100vh, fixa, acima de toda a página
+   (inclusive acima da .atmosphere). Aqui só existe POSICIONAMENTO e ESTADO
+   INICIAL — nenhum @keyframes, nenhuma transition, nenhum JS.
+   A animação (entrada da frase, saída do overlay, etc.) é responsabilidade
+   de uma etapa futura.
+   ========================================================================== */
+
+
+/* --------------------------------------------------------------------------
+   1. TOKENS LOCAIS
+   Reaproveita os tokens de cor já definidos em atmosphere.css sempre que
+   possível. Os valores abaixo existem só para o que é específico da intro.
+   -------------------------------------------------------------------------- */
+:root {
+    --intro-bg: var(--color-void, #07080a);
+    --intro-text-color: #f2f3f5;
+    --intro-z-lines: 1;
+    --intro-z-message: 2;
+    --intro-z-overlay: 3;
+}
+
+
+/* --------------------------------------------------------------------------
+   2. CONTAINER PRINCIPAL
+   Fixo, cobrindo 100% da viewport, acima de header/main/footer/atmosphere.
+   -------------------------------------------------------------------------- */
+.intro {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999;
+    /* acima da .atmosphere (z-index: 0) e do conteúdo (z-index: 1) */
+    overflow: hidden;
+    background-color: var(--intro-bg);
+    pointer-events: none;
+    /* nada aqui deve capturar interação por padrão */
+}
+
+.intro--finished {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.intro__signature{
+
+    position:absolute;
+    left:50%;
+    bottom:48px;
+    transform:translateX(-50%);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+    z-index:var(--intro-z-message);
+    pointer-events:none;
+    user-select:none;
+}
+
+.intro__signature-top{
+    font-family:var(--font-body);
+    font-size:.72rem;
+    font-weight:500;
+    letter-spacing:.42em;
+    text-transform:uppercase;
+    color:#ffffff;
+    opacity:.28;
+}
+
+.intro__signature-bottom{
+    font-family:var(--font-title);
+    font-size:.95rem;
+    font-weight:600;
+    letter-spacing:.20em;
+    text-transform:uppercase;
+    color:#ffffff;
+    opacity:.55;
+}
+
+.intro__svg {
+    width: 100%;
+    height: 100%;
+}
+
+.intro__line{
+    stroke:#ffffff;
+    stroke-width:1.3;
+    stroke-linecap:round;
+    opacity:1;
+    filter:drop-shadow(0 0 8px rgba(255,255,255,.35));
+}
+
+/* --------------------------------------------------------------------------
+   3. LINES
+   Camada reservada para uma futura composição gráfica (linhas, traços,
+   grid técnico). Ocupa toda a área, atrás da frase. Estado inicial neutro:
+   invisível, sem transformação, pronta para receber SVG/canvas depois.
+   -------------------------------------------------------------------------- */
+.intro__lines {
+    position: absolute;
+    inset: 0;
+    z-index: var(--intro-z-lines);
+    opacity: 1;
+}
+
+.intro__line:nth-child(odd) {
+    opacity: .55;
+    stroke-width: .9;
+}
+
+.intro__line:nth-child(even) {
+    opacity: .85;
+    stroke-width: 1.3;
+}
+
+
+/* --------------------------------------------------------------------------
+   4. MESSAGE
+   Camada da frase de abertura, centralizada em ambos os eixos via flexbox.
+   Estado inicial preparado para uma futura entrada (ex.: fade + slide):
+   começa invisível e levemente deslocada.
+   -------------------------------------------------------------------------- */
+.intro__message {
+    position: absolute;
+    inset: 0;
+    z-index: var(--intro-z-message);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 1.5rem;
+}
+
+.intro__text {
+    margin: 0;
+    max-width: 26ch;
+    color: var(--intro-text-color);
+    font-size: clamp(1.5rem, 4vw, 2.75rem);
+    font-weight: 700;
+    font-family: var(--font-title);
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    opacity: 1;
+    pointer-events: none;
+    transform: translateY(24px);
+}
+
+
+/* --------------------------------------------------------------------------
+   5. OVERLAY
+   Camada opcional, acima de tudo dentro da intro. Serve tanto para uma
+   transição de saída (fade para revelar a Hero) quanto para um véu sutil
+   sobre lines/message enquanto a cena "monta". Começa transparente.
+   -------------------------------------------------------------------------- */
+.intro__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: var(--intro-z-overlay);
+    background-color: var(--intro-bg);
+    opacity: 0;
+}
+
+
+/* --------------------------------------------------------------------------
+   6. ACESSIBILIDADE
+   A intro é decorativa/transitória (o texto se repete na Hero), por isso
+   recebe aria-hidden no HTML. Ainda assim, qualquer animação futura deve
+   respeitar quem pede menos movimento.
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+    .intro * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
