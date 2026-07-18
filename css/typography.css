@@ -1,0 +1,33 @@
+@import url(variables.css);
+
+.hero__eyebrow {
+    font-size: .85rem;
+    letter-spacing: .35em;
+    color: var(--color-primary);
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.hero__title {
+    font-size: clamp(3.8rem, 6vw, 6.5rem);
+    line-height: .95;
+    font-family: var(--font-title);
+    font-weight: 700;
+    max-width: 10ch;
+    margin-bottom: 36px;
+}
+
+.hero__description {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: var(--color-text-secondary);
+    max-width: 36rem;
+    margin-bottom: 50px;
+}
+
+.button {
+    padding: 18px 34px;
+    border-radius: 999px;
+    font-weight: 600;
+}

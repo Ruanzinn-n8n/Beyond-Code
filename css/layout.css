@@ -14,20 +14,17 @@ Footer
 
 .hero {
     position: relative;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
+    min-height: 92vh;
     overflow: hidden;
 }
 
-.hero__container {
-    max-width: 1400px;
-    height: 100vh;
-    margin: auto;
-    padding: 0 80px;
+.hero__container{
+    width: min(1400px, 100% - 160px);
+    min-height: 92vh;
+    margin-inline: auto;
+    display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
-    gap: var(--space-8);
     position: relative;
     z-index: 2;
 }
@@ -39,41 +36,40 @@ Footer
 }
 
 .hero__content {
-    position: absolute;
-    bottom: 120px;
-    left: 80px;
-    max-width: 600px;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-5);
+    max-width: 620px;
 }
 
 .hero__visual {
-    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
-    inset: 0;
-    pointer-events: none;
 }
 
 .hero__scene {
-    width: min(42vw, 560px);
+    width: min(42vw, 600px);
     aspect-ratio: 1;
     border-radius: 50%;
-    position: absolute;
-    top: 50%;
-    right: -120px;
-    width: 700px;
-    height: 700px;
-    transform: translateY(-50%);
+    transform: translateX(18%);
 }
 
 .hero__glow {
-    width: 700px;
-    height: 700px;
-    border-radius: 50%;
     position: absolute;
-    top: -200px;
-    right: -120px;
+    top: 50%;
+    right: 5%;
+    width: 700px;
+    aspect-ratio: 1;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background: rgba(0, 255, 132, .08);
+    filter: blur(160px);
+}
+
+.hero__gradient {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        circle at top right,
+        rgba(0,255,132,.08),
+        transparent 60%
+    );
 }

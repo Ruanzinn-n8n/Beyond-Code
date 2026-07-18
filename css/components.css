@@ -9,3 +9,17 @@ Inputs
 Badges
 
 */
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 34px;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.hero__actions {
+    display: flex;
+    gap: 20px;
+    margin-top: 50px;
+}
