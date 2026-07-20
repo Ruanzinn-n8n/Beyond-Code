@@ -13,43 +13,19 @@
   <link rel="stylesheet" href="css/intro.css">
   <link rel="stylesheet" href="css/warp.css">
   <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/hero-reveal.css">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
 
-  <!-- Intro pronta para ser animada via JS/GSAP em etapa futura -->
-  <div class="intro" aria-hidden="true">
-
-    <!-- Camada de linhas: reservada para futura composição gráfica animada -->
-    <div class="intro__lines">
-      <svg class="intro__svg" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
-    
-        <!-- esquerda -->
-        <line class="intro__line intro__line--left" x1="0" y1="490" x2="280" y2="490" />
-        <line class="intro__line intro__line--left" x1="0" y1="500" x2="350" y2="500" />
-        <line class="intro__line intro__line--left" x1="0" y1="510" x2="310" y2="510" />
-        <!-- direita -->
-        <line class="intro__line intro__line--right" x1="1000" y1="490" x2="720" y2="490" />
-        <line class="intro__line intro__line--right" x1="1000" y1="500" x2="650" y2="500" />
-        <line class="intro__line intro__line--right" x1="1000" y1="510" x2="690" y2="510" />
-        <!-- topo -->
-        <line class="intro__line intro__line--top" x1="490" y1="0" x2="490" y2="300" />
-        <line class="intro__line intro__line--top" x1="500" y1="0" x2="500" y2="350" />
-        <line class="intro__line intro__line--top" x1="510" y1="0" x2="510" y2="280" />
-        <!-- baixo -->
-        <line class="intro__line intro__line--bottom" x1="490" y1="1000" x2="490" y2="700" />
-        <line class="intro__line intro__line--bottom" x1="500" y1="1000" x2="500" y2="650" />
-        <line class="intro__line intro__line--bottom" x1="510" y1="1000" x2="510" y2="720" />
-    
-      </svg>
-    </div>
-
-    <!-- Camada da frase de abertura -->
-    <!-- Intro: sequência de abertura cinematográfica -->
+  <!-- Camada da frase de abertura -->
+  <!-- Intro: sequência de abertura cinematográfica -->
   <!-- Independente da Hero — cobre 100vw x 100vh, fixa, acima de tudo -->
   <!-- data-phase é controlado exclusivamente por js/intro.js -->
   <div class="intro" data-phase="black" aria-hidden="true">
@@ -84,445 +60,442 @@
 
   </div>
 
-  <header>
-    ...
+  <header class="header">
+    <nav class="nav">
+      <!-- Logo -->
+      <!-- Links -->
+      <!-- CTA -->
+    </nav>
+  </header>
 
-    <header class="header">
-      <nav class="nav">
-        <!-- Logo -->
-        <!-- Links -->
-        <!-- CTA -->
-      </nav>
-    </header>
+  <main class="main">
 
-    <main class="main">
+    <!-- Hero Section -->
 
-      <!-- Hero Section -->
+    <section class="hero">
+      <!-- Reservado para futura animação de partículas de fundo e etc -->
+      <div class="hero__background">
 
-      <section class="hero">
-        <!-- Reservado para futura animação de partículas de fundo e etc -->
-        <div class="hero__background">
+        <div class="hero__particles"></div>
+        <div class="hero__gradient"></div>
+        <div class="hero__glow"></div>
 
-          <div class="hero__particles"></div>
-          <div class="hero__gradient"></div>
-          <div class="hero__glow"></div>
+      </div>
 
-        </div>
+      <div class="hero__container">
+        <div class="hero__content">
 
-        <div class="hero__container">
-          <div class="hero__content">
+          <span class="hero__eyebrow">DEVCLUB • FORMANDO A PRÓXIMA GERAÇÃO</span>
 
-            <span class="hero__eyebrow">DEVCLUB • FORMANDO A PRÓXIMA GERAÇÃO</span>
+          <h1 class="hero__title">Toda grande carreira
+            começa com uma decisão.</h1>
 
-            <h1 class="hero__title">Toda grande carreira
-              começa com uma decisão.</h1>
-
-            <p class="hero__description">
-              Uma experiência além da tela. Tecnologia, design e código
-              se encontram em um novo universo digital.
-            </p>
-
-            <!-- Hero Actions -->
-            <!-- Bloco com os dois botões de ação da Hero -->
-            <div class="hero__actions">
-              <a href="#journey" class="button button--primary">Explorar</a>
-              <a href="#results" class="button button--secondary">Resultados</a>
-            </div>
-
-          </div>
-
-          <!-- Hero Visual -->
-          <!-- Área reservada para futura animação 3D -->
-          <div class="hero__visual">
-            <div class="hero__scene">
-              <!-- Esfera Futura -->
-            </div>
-          </div>
-
-        </div>
-
-      </section>
-
-      <section class="story" id="journey">
-        <div class="container">
-
-          <div class="story__header">
-
-            <span class="story__eyebrow">TODO PROFISSIONAL JÁ FOI UM INICIANTE</span>
-
-            <h2 class="story__title">Você não precisa nascer sabendo.</h2>
-
-            <p class="story__description">
-              Todo desenvolvedor que você admira começou exatamente
-              onde você está agora. A diferença nunca foi talento,
-              mas a decisão de continuar aprendendo.
-            </p>
-
-          </div>
-
-          <div class="story__timeline">
-            <div class="timeline__item">
-
-              <span class="timeline__number">01</span>
-
-              <h3>Curiosidade</h3>
-              <p>Todo mundo começa escrevendo poucas linhas.</p>
-
-            </div>
-
-            <div class="timeline__item">
-
-              <span class="timeline__number">02</span>
-
-              <h3>Consistência</h3>
-              <p>É quando teoria se transforma em prática.</p>
-
-            </div>
-
-            <div class="timeline__item">
-
-              <span class="timeline__number">03</span>
-
-              <h3>Oportunidade</h3>
-              <p>O mercado recompensa quem continua evoluindo.</p>
-
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      <!-- Transformation Section -->
-      <section class="transformation" id="method">
-        <div class="container">
-
-          <div class="transformation__header">
-
-            <span class="transformation__eyebrow">O MÉTODO DEVCLUB</span>
-
-            <h2 class="transformation__title">Do primeiro código ao primeiro emprego.</h2>
-
-            <p class="transformation__description">
-              Uma jornada estruturada, pensada para transformar iniciantes
-              em desenvolvedores prontos para o mercado de trabalho.
-            </p>
-
-          </div>
-
-          <div class="transformation__content">
-
-            <!-- Reservado para futura animação 3D / scroll-driven -->
-            <div class="transformation__visual">
-              <div class="transformation__scene"></div>
-            </div>
-
-            <ul class="transformation__cards">
-
-              <li class="transformation-card">
-                <span class="transformation-card__icon"></span>
-                <h3 class="transformation-card__title">Fundamentos sólidos</h3>
-                <p class="transformation-card__description">
-                  Lógica, estrutura e raciocínio computacional antes de qualquer framework.
-                </p>
-              </li>
-
-              <li class="transformation-card">
-                <span class="transformation-card__icon"></span>
-                <h3 class="transformation-card__title">Projetos reais</h3>
-                <p class="transformation-card__description">
-                  Aplicações completas para construir portfólio desde o início.
-                </p>
-              </li>
-
-              <li class="transformation-card">
-                <span class="transformation-card__icon"></span>
-                <h3 class="transformation-card__title">Mentoria contínua</h3>
-                <p class="transformation-card__description">
-                  Acompanhamento próximo em cada etapa da sua evolução.
-                </p>
-              </li>
-
-            </ul>
-
-          </div>
-
-          <ul class="transformation__benefits">
-            <li class="transformation__benefit">Suporte individualizado</li>
-            <li class="transformation__benefit">Comunidade ativa</li>
-            <li class="transformation__benefit">Conteúdo atualizado</li>
-            <li class="transformation__benefit">Certificação</li>
-          </ul>
-
-        </div>
-      </section>
-
-      <!-- Results Section -->
-      <section class="results" id="results">
-        <div class="container">
-
-          <div class="results__header">
-
-            <span class="results__eyebrow">RESULTADOS QUE FALAM POR SI</span>
-
-            <h2 class="results__title">O impacto de quem decidiu começar.</h2>
-
-            <p class="results__description">
-              Números construídos por pessoas reais, que confiaram no processo
-              e transformaram suas carreiras.
-            </p>
-
-          </div>
-
-          <ul class="results__stats">
-
-            <li class="stat-item">
-              <span class="stat-item__number">12.000+</span>
-              <span class="stat-item__label">Alunos formados</span>
-            </li>
-
-            <li class="stat-item">
-              <span class="stat-item__number">87%</span>
-              <span class="stat-item__label">Taxa de empregabilidade</span>
-            </li>
-
-            <li class="stat-item">
-              <span class="stat-item__number">+300</span>
-              <span class="stat-item__label">Empresas parceiras</span>
-            </li>
-
-            <li class="stat-item">
-              <span class="stat-item__number">4.9/5</span>
-              <span class="stat-item__label">Avaliação média</span>
-            </li>
-
-          </ul>
-
-          <!-- Reservado para futuro mapa interativo do Brasil -->
-          <div class="results__map">
-            <div class="results__map-visual"></div>
-            <p class="results__map-caption">Alunos em todos os estados do Brasil.</p>
-          </div>
-
-          <div class="results__companies">
-            <span class="results__companies-label">Nossos alunos estão em</span>
-            <ul class="results__companies-list">
-              <li class="results__company-logo"></li>
-              <li class="results__company-logo"></li>
-              <li class="results__company-logo"></li>
-              <li class="results__company-logo"></li>
-              <li class="results__company-logo"></li>
-            </ul>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- Community Section -->
-      <section class="community" id="community">
-        <div class="container">
-
-          <div class="community__header">
-
-            <span class="community__eyebrow">VOCÊ NÃO ESTÁ SOZINHO NESSA</span>
-
-            <h2 class="community__title">Uma comunidade que evolui junto.</h2>
-
-            <p class="community__description">
-              Milhares de desenvolvedores compartilhando dúvidas, conquistas
-              e oportunidades todos os dias.
-            </p>
-
-          </div>
-
-          <ul class="community__testimonials">
-
-            <li class="testimonial-card">
-              <div class="testimonial-card__avatar"></div>
-              <blockquote class="testimonial-card__quote">
-                A didática mudou completamente a forma como eu aprendo.
-              </blockquote>
-              <span class="testimonial-card__author">Ana Ribeiro</span>
-              <span class="testimonial-card__role">Desenvolvedora Front-end</span>
-            </li>
-
-            <li class="testimonial-card">
-              <div class="testimonial-card__avatar"></div>
-              <blockquote class="testimonial-card__quote">
-                Consegui minha primeira vaga antes mesmo de terminar o curso.
-              </blockquote>
-              <span class="testimonial-card__author">Lucas Almeida</span>
-              <span class="testimonial-card__role">Desenvolvedor Full Stack</span>
-            </li>
-
-            <li class="testimonial-card">
-              <div class="testimonial-card__avatar"></div>
-              <blockquote class="testimonial-card__quote">
-                A comunidade foi essencial para eu não desistir.
-              </blockquote>
-              <span class="testimonial-card__author">Beatriz Souza</span>
-              <span class="testimonial-card__role">Desenvolvedora Back-end</span>
-            </li>
-
-          </ul>
-
-          <!-- Reservado para futura galeria de fotos da comunidade -->
-          <ul class="community__gallery">
-            <li class="community__gallery-item"></li>
-            <li class="community__gallery-item"></li>
-            <li class="community__gallery-item"></li>
-            <li class="community__gallery-item"></li>
-            <li class="community__gallery-item"></li>
-            <li class="community__gallery-item"></li>
-          </ul>
-
-        </div>
-      </section>
-
-      <!-- FAQ Section -->
-      <section class="faq" id="faq">
-        <div class="container">
-
-          <div class="faq__header">
-
-            <span class="faq__eyebrow">TIRE SUAS DÚVIDAS</span>
-
-            <h2 class="faq__title">Perguntas frequentes.</h2>
-
-            <p class="faq__description">
-              Tudo o que você precisa saber antes de dar o próximo passo.
-            </p>
-
-          </div>
-
-          <ul class="faq__list">
-
-            <li class="faq-item">
-              <h3 class="faq-item__question">
-                <button type="button" class="faq-item__trigger" aria-expanded="false" aria-controls="faq-answer-1">
-                  Preciso ter experiência prévia com programação?
-                </button>
-              </h3>
-              <div class="faq-item__answer" id="faq-answer-1" role="region" hidden>
-                <p>Não. O curso foi desenhado para levar você do zero absoluto até um nível profissional.</p>
-              </div>
-            </li>
-
-            <li class="faq-item">
-              <h3 class="faq-item__question">
-                <button type="button" class="faq-item__trigger" aria-expanded="false" aria-controls="faq-answer-2">
-                  Quanto tempo leva para concluir a formação?
-                </button>
-              </h3>
-              <div class="faq-item__answer" id="faq-answer-2" role="region" hidden>
-                <p>O tempo varia de acordo com sua dedicação, mas a maioria dos alunos conclui em poucos meses.</p>
-              </div>
-            </li>
-
-            <li class="faq-item">
-              <h3 class="faq-item__question">
-                <button type="button" class="faq-item__trigger" aria-expanded="false" aria-controls="faq-answer-3">
-                  Existe suporte durante o aprendizado?
-                </button>
-              </h3>
-              <div class="faq-item__answer" id="faq-answer-3" role="region" hidden>
-                <p>Sim, com mentoria e uma comunidade ativa disponível todos os dias.</p>
-              </div>
-            </li>
-
-            <li class="faq-item">
-              <h3 class="faq-item__question">
-                <button type="button" class="faq-item__trigger" aria-expanded="false" aria-controls="faq-answer-4">
-                  O certificado é reconhecido pelo mercado?
-                </button>
-              </h3>
-              <div class="faq-item__answer" id="faq-answer-4" role="region" hidden>
-                <p>Sim, com centenas de empresas parceiras que reconhecem a formação DevClub.</p>
-              </div>
-            </li>
-
-          </ul>
-
-        </div>
-      </section>
-
-      <!-- CTA Section -->
-      <section class="cta" id="start">
-        <div class="container">
-
-          <div class="cta__content">
-
-            <span class="cta__eyebrow">SUA JORNADA COMEÇA AGORA</span>
-
-            <h2 class="cta__title">O próximo passo é seu.</h2>
-
-            <p class="cta__description">
-              Junte-se a milhares de pessoas que decidiram mudar de carreira
-              e construir seu futuro na tecnologia.
-            </p>
-
-            <div class="cta__actions">
-              <a href="#" class="button button--primary">Quero começar agora</a>
-              <a href="#" class="button button--secondary">Falar com um consultor</a>
-            </div>
-
-          </div>
-
-          <!-- Reservado para futuro efeito visual de encerramento cinematográfico -->
-          <div class="cta__visual"></div>
-
-        </div>
-      </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="footer__container">
-
-        <div class="footer__brand">
-          <span class="footer__logo">DevClub</span>
-          <p class="footer__description">
-            Formando a próxima geração de desenvolvedores do Brasil.
+          <p class="hero__description">
+            Uma experiência além da tela. Tecnologia, design e código
+            se encontram em um novo universo digital.
           </p>
+
+          <!-- Hero Actions -->
+          <!-- Bloco com os dois botões de ação da Hero -->
+          <div class="hero__actions">
+            <a href="#journey" class="button button--primary">Explorar</a>
+            <a href="#results" class="button button--secondary">Resultados</a>
+          </div>
+
         </div>
 
-        <nav class="footer__nav" aria-label="Links do rodapé">
+        <!-- Hero Visual -->
+        <!-- Área reservada para futura animação 3D -->
+        <div class="hero__visual">
+          <div class="hero__scene">
+            <!-- Esfera Futura -->
+          </div>
+        </div>
 
-          <div class="footer__nav-group">
-            <span class="footer__nav-title">Institucional</span>
-            <ul class="footer__nav-list">
-              <li><a href="#journey">Sobre</a></li>
-              <li><a href="#results">Resultados</a></li>
-              <li><a href="#community">Comunidade</a></li>
-              <li><a href="#faq">FAQ</a></li>
-            </ul>
+      </div>
+
+    </section>
+
+    <section class="story" id="journey">
+      <div class="container">
+
+        <div class="story__header">
+
+          <span class="story__eyebrow">TODO PROFISSIONAL JÁ FOI UM INICIANTE</span>
+
+          <h2 class="story__title">Você não precisa nascer sabendo.</h2>
+
+          <p class="story__description">
+            Todo desenvolvedor que você admira começou exatamente
+            onde você está agora. A diferença nunca foi talento,
+            mas a decisão de continuar aprendendo.
+          </p>
+
+        </div>
+
+        <div class="story__timeline">
+          <div class="timeline__item">
+
+            <span class="timeline__number">01</span>
+
+            <h3>Curiosidade</h3>
+            <p>Todo mundo começa escrevendo poucas linhas.</p>
+
           </div>
 
-          <div class="footer__nav-group">
-            <span class="footer__nav-title">Suporte</span>
-            <ul class="footer__nav-list">
-              <li><a href="#faq">Perguntas frequentes</a></li>
-              <li><a href="#">Contato</a></li>
-              <li><a href="#">Política de privacidade</a></li>
-            </ul>
+          <div class="timeline__item">
+
+            <span class="timeline__number">02</span>
+
+            <h3>Consistência</h3>
+            <p>É quando teoria se transforma em prática.</p>
+
           </div>
 
-        </nav>
+          <div class="timeline__item">
 
-        <ul class="footer__social" aria-label="Redes sociais">
-          <li><a href="#" class="footer__social-link">Instagram</a></li>
-          <li><a href="#" class="footer__social-link">YouTube</a></li>
-          <li><a href="#" class="footer__social-link">LinkedIn</a></li>
+            <span class="timeline__number">03</span>
+
+            <h3>Oportunidade</h3>
+            <p>O mercado recompensa quem continua evoluindo.</p>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Transformation Section -->
+    <section class="transformation" id="method">
+      <div class="container">
+
+        <div class="transformation__header">
+
+          <span class="transformation__eyebrow">O MÉTODO DEVCLUB</span>
+
+          <h2 class="transformation__title">Do primeiro código ao primeiro emprego.</h2>
+
+          <p class="transformation__description">
+            Uma jornada estruturada, pensada para transformar iniciantes
+            em desenvolvedores prontos para o mercado de trabalho.
+          </p>
+
+        </div>
+
+        <div class="transformation__content">
+
+          <!-- Reservado para futura animação 3D / scroll-driven -->
+          <div class="transformation__visual">
+            <div class="transformation__scene"></div>
+          </div>
+
+          <ul class="transformation__cards">
+
+            <li class="transformation-card">
+              <span class="transformation-card__icon"></span>
+              <h3 class="transformation-card__title">Fundamentos sólidos</h3>
+              <p class="transformation-card__description">
+                Lógica, estrutura e raciocínio computacional antes de qualquer framework.
+              </p>
+            </li>
+
+            <li class="transformation-card">
+              <span class="transformation-card__icon"></span>
+              <h3 class="transformation-card__title">Projetos reais</h3>
+              <p class="transformation-card__description">
+                Aplicações completas para construir portfólio desde o início.
+              </p>
+            </li>
+
+            <li class="transformation-card">
+              <span class="transformation-card__icon"></span>
+              <h3 class="transformation-card__title">Mentoria contínua</h3>
+              <p class="transformation-card__description">
+                Acompanhamento próximo em cada etapa da sua evolução.
+              </p>
+            </li>
+
+          </ul>
+
+        </div>
+
+        <ul class="transformation__benefits">
+          <li class="transformation__benefit">Suporte individualizado</li>
+          <li class="transformation__benefit">Comunidade ativa</li>
+          <li class="transformation__benefit">Conteúdo atualizado</li>
+          <li class="transformation__benefit">Certificação</li>
         </ul>
 
       </div>
+    </section>
 
-      <div class="footer__bottom">
-        <p class="footer__copyright">&copy; 2026 DevClub. Todos os direitos reservados.</p>
+    <!-- Results Section -->
+    <section class="results" id="results">
+      <div class="container">
+
+        <div class="results__header">
+
+          <span class="results__eyebrow">RESULTADOS QUE FALAM POR SI</span>
+
+          <h2 class="results__title">O impacto de quem decidiu começar.</h2>
+
+          <p class="results__description">
+            Números construídos por pessoas reais, que confiaram no processo
+            e transformaram suas carreiras.
+          </p>
+
+        </div>
+
+        <ul class="results__stats">
+
+          <li class="stat-item">
+            <span class="stat-item__number">12.000+</span>
+            <span class="stat-item__label">Alunos formados</span>
+          </li>
+
+          <li class="stat-item">
+            <span class="stat-item__number">87%</span>
+            <span class="stat-item__label">Taxa de empregabilidade</span>
+          </li>
+
+          <li class="stat-item">
+            <span class="stat-item__number">+300</span>
+            <span class="stat-item__label">Empresas parceiras</span>
+          </li>
+
+          <li class="stat-item">
+            <span class="stat-item__number">4.9/5</span>
+            <span class="stat-item__label">Avaliação média</span>
+          </li>
+
+        </ul>
+
+        <!-- Reservado para futuro mapa interativo do Brasil -->
+        <div class="results__map">
+          <div class="results__map-visual"></div>
+          <p class="results__map-caption">Alunos em todos os estados do Brasil.</p>
+        </div>
+
+        <div class="results__companies">
+          <span class="results__companies-label">Nossos alunos estão em</span>
+          <ul class="results__companies-list">
+            <li class="results__company-logo"></li>
+            <li class="results__company-logo"></li>
+            <li class="results__company-logo"></li>
+            <li class="results__company-logo"></li>
+            <li class="results__company-logo"></li>
+          </ul>
+        </div>
+
       </div>
-    </footer>
+    </section>
 
-    <script type="module" src="js/main.js"></script>
+    <!-- Community Section -->
+    <section class="community" id="community">
+      <div class="container">
+
+        <div class="community__header">
+
+          <span class="community__eyebrow">VOCÊ NÃO ESTÁ SOZINHO NESSA</span>
+
+          <h2 class="community__title">Uma comunidade que evolui junto.</h2>
+
+          <p class="community__description">
+            Milhares de desenvolvedores compartilhando dúvidas, conquistas
+            e oportunidades todos os dias.
+          </p>
+
+        </div>
+
+        <ul class="community__testimonials">
+
+          <li class="testimonial-card">
+            <div class="testimonial-card__avatar"></div>
+            <blockquote class="testimonial-card__quote">
+              A didática mudou completamente a forma como eu aprendo.
+            </blockquote>
+            <span class="testimonial-card__author">Ana Ribeiro</span>
+            <span class="testimonial-card__role">Desenvolvedora Front-end</span>
+          </li>
+
+          <li class="testimonial-card">
+            <div class="testimonial-card__avatar"></div>
+            <blockquote class="testimonial-card__quote">
+              Consegui minha primeira vaga antes mesmo de terminar o curso.
+            </blockquote>
+            <span class="testimonial-card__author">Lucas Almeida</span>
+            <span class="testimonial-card__role">Desenvolvedor Full Stack</span>
+          </li>
+
+          <li class="testimonial-card">
+            <div class="testimonial-card__avatar"></div>
+            <blockquote class="testimonial-card__quote">
+              A comunidade foi essencial para eu não desistir.
+            </blockquote>
+            <span class="testimonial-card__author">Beatriz Souza</span>
+            <span class="testimonial-card__role">Desenvolvedora Back-end</span>
+          </li>
+
+        </ul>
+
+        <!-- Reservado para futura galeria de fotos da comunidade -->
+        <ul class="community__gallery">
+          <li class="community__gallery-item"></li>
+          <li class="community__gallery-item"></li>
+          <li class="community__gallery-item"></li>
+          <li class="community__gallery-item"></li>
+          <li class="community__gallery-item"></li>
+          <li class="community__gallery-item"></li>
+        </ul>
+
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+      <div class="container">
+
+        <div class="faq__header">
+
+          <span class="faq__eyebrow">TIRE SUAS DÚVIDAS</span>
+
+          <h2 class="faq__title">Perguntas frequentes.</h2>
+
+          <p class="faq__description">
+            Tudo o que você precisa saber antes de dar o próximo passo.
+          </p>
+
+        </div>
+
+        <ul class="faq__list">
+
+          <li class="faq-item">
+            <h3 class="faq-item__question">
+              <button type="button" class="faq-item__trigger" aria-expanded="false" aria-controls="faq-answer-1">
+                Preciso ter experiência prévia com programação?
+              </button>
+            </h3>
+            <div class="faq-item__answer" id="faq-answer-1" role="region" hidden>
+              <p>Não. O curso foi desenhado para levar você do zero absoluto até um nível profissional.</p>
+            </div>
+          </li>
+
+          <li class="faq-item">
+            <h3 class="faq-item__question">
+              <button type="button" class="faq-item__trigger" aria-expanded="false" aria-controls="faq-answer-2">
+                Quanto tempo leva para concluir a formação?
+              </button>
+            </h3>
+            <div class="faq-item__answer" id="faq-answer-2" role="region" hidden>
+              <p>O tempo varia de acordo com sua dedicação, mas a maioria dos alunos conclui em poucos meses.</p>
+            </div>
+          </li>
+
+          <li class="faq-item">
+            <h3 class="faq-item__question">
+              <button type="button" class="faq-item__trigger" aria-expanded="false" aria-controls="faq-answer-3">
+                Existe suporte durante o aprendizado?
+              </button>
+            </h3>
+            <div class="faq-item__answer" id="faq-answer-3" role="region" hidden>
+              <p>Sim, com mentoria e uma comunidade ativa disponível todos os dias.</p>
+            </div>
+          </li>
+
+          <li class="faq-item">
+            <h3 class="faq-item__question">
+              <button type="button" class="faq-item__trigger" aria-expanded="false" aria-controls="faq-answer-4">
+                O certificado é reconhecido pelo mercado?
+              </button>
+            </h3>
+            <div class="faq-item__answer" id="faq-answer-4" role="region" hidden>
+              <p>Sim, com centenas de empresas parceiras que reconhecem a formação DevClub.</p>
+            </div>
+          </li>
+
+        </ul>
+
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta" id="start">
+      <div class="container">
+
+        <div class="cta__content">
+
+          <span class="cta__eyebrow">SUA JORNADA COMEÇA AGORA</span>
+
+          <h2 class="cta__title">O próximo passo é seu.</h2>
+
+          <p class="cta__description">
+            Junte-se a milhares de pessoas que decidiram mudar de carreira
+            e construir seu futuro na tecnologia.
+          </p>
+
+          <div class="cta__actions">
+            <a href="#" class="button button--primary">Quero começar agora</a>
+            <a href="#" class="button button--secondary">Falar com um consultor</a>
+          </div>
+
+        </div>
+
+        <!-- Reservado para futuro efeito visual de encerramento cinematográfico -->
+        <div class="cta__visual"></div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__container">
+
+      <div class="footer__brand">
+        <span class="footer__logo">DevClub</span>
+        <p class="footer__description">
+          Formando a próxima geração de desenvolvedores do Brasil.
+        </p>
+      </div>
+
+      <nav class="footer__nav" aria-label="Links do rodapé">
+
+        <div class="footer__nav-group">
+          <span class="footer__nav-title">Institucional</span>
+          <ul class="footer__nav-list">
+            <li><a href="#journey">Sobre</a></li>
+            <li><a href="#results">Resultados</a></li>
+            <li><a href="#community">Comunidade</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__nav-group">
+          <span class="footer__nav-title">Suporte</span>
+          <ul class="footer__nav-list">
+            <li><a href="#faq">Perguntas frequentes</a></li>
+            <li><a href="#">Contato</a></li>
+            <li><a href="#">Política de privacidade</a></li>
+          </ul>
+        </div>
+
+      </nav>
+
+      <ul class="footer__social" aria-label="Redes sociais">
+        <li><a href="#" class="footer__social-link">Instagram</a></li>
+        <li><a href="#" class="footer__social-link">YouTube</a></li>
+        <li><a href="#" class="footer__social-link">LinkedIn</a></li>
+      </ul>
+
+    </div>
+
+    <div class="footer__bottom">
+      <p class="footer__copyright">&copy; 2026 DevClub. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
 </body>
 
 </html>

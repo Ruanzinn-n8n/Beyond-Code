@@ -1,72 +1,107 @@
 /* ==========================================================================
    BEYOND CODE — WARP
-   Toda a matemática e o desenho do efeito de túnel espacial (Canvas API).
-   Não conhece "cenas" ou timeline — apenas desenha de acordo com uma
-   intensidade (0 a 1) definida externamente via setIntensity().
+   Túnel espacial por perspectiva (estilo starfield/hyperspace).
+   Cada linha existe num espaço 3D simplificado (x, y, z); a câmera avança
+   em direção a z=0. Projetar (x/z, y/z) é o que faz tudo crescer e
+   acelerar ao se aproximar — como estrelas vistas de dentro de uma nave,
+   não uma explosão saindo do centro da tela.
    ========================================================================== */
 
 const CONFIG = Object.freeze({
-  PARTICLE_COUNT: 220,
-  BASE_SPEED: 1.5,
-  MAX_SPEED: 32,
-  ACCEL_RATE: 0.9,
-  SPAWN_RADIUS: 6,
-  TAIL_LENGTH_FACTOR: 5,
-  LINE_WIDTH: 1.6,
+  PARTICLE_COUNT: 260,
+
+  // Profundidade: Z_FAR é "no horizonte", Z_NEAR é "colado na câmera".
+  // Ao cruzar Z_NEAR, a linha "passou pelo usuário" e renasce em Z_FAR —
+  // nunca no centro da tela.
+  Z_FAR: 1,
+  Z_NEAR: 0.015,
+
+  // Posição angular ao redor do eixo da câmera (espalhamento lateral).
+  MIN_SPREAD: 0.05,
+  MAX_SPREAD: 1,
+
+  // Velocidade individual por linha ao longo do eixo Z — varia entre
+  // partículas para que o campo nunca pareça um bloco rígido/sincronizado.
+  SPEED_MIN: 0.0035,
+  SPEED_MAX: 0.011,
+
+  // Rastro mínimo garantido: nenhuma linha nasce como um ponto — ela já
+  // existe como um traço curto e alonga naturalmente ao se aproximar.
+  MIN_STREAK_DELTA_Z: 0.01,
+  STREAK_FACTOR: 1,
+
+  FOCAL_LENGTH: 320,
+  LINE_WIDTH_BASE: 1.2,
+  LINE_WIDTH_GROWTH: 2.2,
   COLOR_RGB: '245, 246, 247',
-  INTENSITY_SMOOTHING: 0.08,
-  FADE_IN_FRAMES: 16,
+
+  INTENSITY_SMOOTHING: 0.06,
 });
 
 /**
- * Uma única linha do túnel: nasce no centro e viaja até sair da tela.
- * Propriedades próprias: x, y (derivadas), direction, speed, length,
- * opacity, life.
+ * Uma única "linha" do túnel. Vive em coordenadas (x, y, z): x e y são
+ * fixos (a direção do raio não muda), só z diminui — é a câmera avançando.
  */
 class Particle {
-  constructor(centerX, centerY) {
-    this.reset(centerX, centerY);
+  constructor() {
+    this.respawn(true);
   }
 
-  reset(centerX, centerY) {
-    this.centerX = centerX;
-    this.centerY = centerY;
-    this.direction = Math.random() * Math.PI * 2;
-    this.radius = Math.random() * CONFIG.SPAWN_RADIUS;
-    this.speed = CONFIG.BASE_SPEED + Math.random() * 2;
-    this.length = 0;
-    this.opacity = 0;
-    this.life = 0;
+  /**
+   * @param {boolean} spreadAcrossDepth — true apenas na criação inicial,
+   * para o túnel já nascer com profundidade em vez de todas as linhas
+   * surgirem juntas em Z_FAR e demorarem a preencher a cena.
+   */
+  respawn(spreadAcrossDepth) {
+    const angle = Math.random() * Math.PI * 2;
+    const spread =
+      CONFIG.MIN_SPREAD + Math.random() * (CONFIG.MAX_SPREAD - CONFIG.MIN_SPREAD);
+
+    this.x = Math.cos(angle) * spread;
+    this.y = Math.sin(angle) * spread;
+
+    this.z = spreadAcrossDepth
+      ? CONFIG.Z_NEAR + Math.random() * (CONFIG.Z_FAR - CONFIG.Z_NEAR)
+      : CONFIG.Z_FAR;
+
+    this.speed =
+      CONFIG.SPEED_MIN + Math.random() * (CONFIG.SPEED_MAX - CONFIG.SPEED_MIN);
   }
 
-  update(intensity) {
-    this.speed = Math.min(
-      this.speed + CONFIG.ACCEL_RATE * intensity,
-      CONFIG.MAX_SPEED
-    );
-    this.radius += this.speed * intensity;
-    this.length = Math.min(this.speed * CONFIG.TAIL_LENGTH_FACTOR, this.radius);
-    this.life += 1;
-    this.opacity = Math.min(1, this.life / CONFIG.FADE_IN_FRAMES) * intensity;
-
-    this.x = this.centerX + Math.cos(this.direction) * this.radius;
-    this.y = this.centerY + Math.sin(this.direction) * this.radius;
+  /** Avança a linha em direção à câmera. speedMultiplier vem da intensidade global. */
+  update(speedMultiplier) {
+    this.z -= this.speed * speedMultiplier;
   }
 
-  isDead(maxRadius) {
-    return this.radius > maxRadius;
+  hasPassedCamera() {
+    return this.z <= CONFIG.Z_NEAR;
   }
 
-  getHead() {
-    return { x: this.x, y: this.y };
-  }
-
-  getTail() {
-    const tailRadius = Math.max(this.radius - this.length, 0);
+  /** Projeta um ponto (x, y) num dado z para coordenadas de tela. */
+  _project(z, center) {
+    const depth = Math.max(z, CONFIG.Z_NEAR);
     return {
-      x: this.centerX + Math.cos(this.direction) * tailRadius,
-      y: this.centerY + Math.sin(this.direction) * tailRadius,
+      x: center.x + (this.x / depth) * CONFIG.FOCAL_LENGTH,
+      y: center.y + (this.y / depth) * CONFIG.FOCAL_LENGTH,
     };
+  }
+
+  /** Cabeça (posição atual) e cauda (um pouco mais longe) do traço. */
+  getStreak(center, speedMultiplier) {
+    const head = this._project(this.z, center);
+
+    const deltaZ =
+      Math.max(this.speed * speedMultiplier, CONFIG.MIN_STREAK_DELTA_Z) *
+      CONFIG.STREAK_FACTOR;
+
+    const tail = this._project(Math.min(this.z + deltaZ, CONFIG.Z_FAR), center);
+
+    return { head, tail };
+  }
+
+  /** 0 = acabou de nascer no fundo · 1 = colada na câmera. */
+  getProximity() {
+    return 1 - (this.z - CONFIG.Z_NEAR) / (CONFIG.Z_FAR - CONFIG.Z_NEAR);
   }
 }
 
@@ -80,7 +115,6 @@ export class WarpEffect {
     this.running = false;
     this.frameId = null;
     this.center = { x: 0, y: 0 };
-    this.maxRadius = 0;
 
     this._handleResize = this._handleResize.bind(this);
     this._loop = this._loop.bind(this);
@@ -91,10 +125,11 @@ export class WarpEffect {
     this._handleResize();
     window.addEventListener('resize', this._handleResize);
 
-    this.particles = Array.from(
-      { length: CONFIG.PARTICLE_COUNT },
-      () => new Particle(this.center.x, this.center.y)
-    );
+    this.particles = Array.from({ length: CONFIG.PARTICLE_COUNT }, () => {
+      const particle = new Particle();
+      particle.respawn(true); // espalha pela profundidade já na criação
+      return particle;
+    });
   }
 
   /** Define para onde a intensidade deve convergir (0 = parado, 1 = máxima). */
@@ -125,7 +160,6 @@ export class WarpEffect {
     this.canvas.width = width;
     this.canvas.height = height;
     this.center = { x: width / 2, y: height / 2 };
-    this.maxRadius = Math.hypot(width, height) / 2 + 40;
   }
 
   _loop() {
@@ -143,25 +177,28 @@ export class WarpEffect {
   _updateParticles() {
     this.particles.forEach((particle) => {
       particle.update(this.intensity);
-      if (particle.isDead(this.maxRadius)) {
-        particle.reset(this.center.x, this.center.y);
+      if (particle.hasPassedCamera()) {
+        // Renasce no fundo do túnel — nunca no centro da tela.
+        particle.respawn(false);
       }
     });
   }
 
   _draw() {
     this._clear();
-    const { ctx } = this;
-    ctx.lineWidth = CONFIG.LINE_WIDTH;
-    ctx.lineCap = 'round';
+    const { ctx, center, intensity } = this;
 
     this.particles.forEach((particle) => {
-      if (particle.opacity <= 0) return;
+      const proximity = particle.getProximity();
+      const alpha = intensity * (0.35 + proximity * 0.65);
+      if (alpha <= 0.01) return;
 
-      const head = particle.getHead();
-      const tail = particle.getTail();
+      const { head, tail } = particle.getStreak(center, intensity);
 
-      ctx.strokeStyle = `rgba(${CONFIG.COLOR_RGB}, ${particle.opacity})`;
+      ctx.lineWidth = CONFIG.LINE_WIDTH_BASE + proximity * CONFIG.LINE_WIDTH_GROWTH;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = `rgba(${CONFIG.COLOR_RGB}, ${alpha})`;
+
       ctx.beginPath();
       ctx.moveTo(tail.x, tail.y);
       ctx.lineTo(head.x, head.y);

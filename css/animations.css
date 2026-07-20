@@ -1,13 +1,246 @@
-/*
+/* ==========================================================================
+   BEYOND CODE — HERO REVEAL
+   Coreografia de entrada da Hero, disparada quando main.js adiciona a
+   classe .hero--ready (depois que a Intro já sumiu por completo).
+   Toda a animação vive aqui — o JS só troca a classe.
 
-GSAP
+   Objetivo: um único plano cinematográfico, não uma lista de fades.
+   Cada camada usa apenas opacity, transform e filter (nunca layout).
 
-Fade
+   Pico da sequência: ~1.73s (dentro da faixa de 1.5s–1.8s pedida).
+   ========================================================================== */
 
-Reveal
+:root {
+  /* Reaproveita a mesma curva "premium" já usada na Intro (effects.css),
+     com fallback próprio caso esta folha carregue antes daquela. */
+  --reveal-ease: var(--ease-cinematic, cubic-bezier(0.16, 1, 0.3, 1));
 
-Scroll
+  /* -- Atraso de início de cada camada (stagger) -------------------------- */
+  --reveal-delay-background: 0ms;
+  --reveal-delay-glow: 110ms;
+  --reveal-delay-gradient: 220ms;
+  --reveal-delay-particles: 340ms;
+  --reveal-delay-eyebrow: 480ms;
+  --reveal-delay-title: 610ms;
+  --reveal-delay-description: 740ms;
+  --reveal-delay-button-primary: 880ms;
+  --reveal-delay-button-secondary: 1000ms; /* +120ms sobre o primeiro botão */
+  --reveal-delay-visual: 1050ms;
 
-Particles
+  /* -- Duração de cada camada --------------------------------------------- */
+  --reveal-duration-background: 950ms;
+  --reveal-duration-glow: 1450ms;
+  --reveal-duration-gradient: 1150ms;
+  --reveal-duration-particles: 1100ms;
+  --reveal-duration-eyebrow: 820ms;
+  --reveal-duration-title: 860ms;
+  --reveal-duration-description: 820ms;
+  --reveal-duration-button: 720ms;
+  --reveal-duration-visual: 680ms;
+}
 
-*/
+/* --------------------------------------------------------------------------
+   1. FUNDO — background, glow, gradient, particles
+   Nunca um fade comum: o background "puxa o foco" (blur + escala), o glow
+   cresce como se estivesse se formando, o gradient e as partículas
+   resolvem devagar por cima. É essa sobreposição que dá profundidade.
+   -------------------------------------------------------------------------- */
+
+.hero__background {
+  opacity: 0;
+  filter: blur(24px);
+  transform: scale(1.05);
+  will-change: opacity, filter, transform;
+  transition:
+    opacity var(--reveal-duration-background) var(--reveal-ease) var(--reveal-delay-background),
+    filter var(--reveal-duration-background) var(--reveal-ease) var(--reveal-delay-background),
+    transform var(--reveal-duration-background) var(--reveal-ease) var(--reveal-delay-background);
+}
+
+.hero__glow {
+  opacity: 0;
+  transform: scale(0.82);
+  will-change: opacity, transform;
+  transition:
+    opacity var(--reveal-duration-glow) var(--reveal-ease) var(--reveal-delay-glow),
+    transform var(--reveal-duration-glow) var(--reveal-ease) var(--reveal-delay-glow);
+}
+
+.hero__gradient {
+  opacity: 0;
+  transform: scale(1.04);
+  will-change: opacity, transform;
+  transition:
+    opacity var(--reveal-duration-gradient) var(--reveal-ease) var(--reveal-delay-gradient),
+    transform var(--reveal-duration-gradient) var(--reveal-ease) var(--reveal-delay-gradient);
+}
+
+.hero__particles {
+  opacity: 0;
+  filter: blur(6px);
+  will-change: opacity, filter;
+  transition:
+    opacity var(--reveal-duration-particles) var(--reveal-ease) var(--reveal-delay-particles),
+    filter var(--reveal-duration-particles) var(--reveal-ease) var(--reveal-delay-particles);
+}
+
+/* --------------------------------------------------------------------------
+   2. TEXTO — eyebrow, title, description
+   Emergem: opacity 0 + translateY + blur(12px), nunca um simples slide.
+   Pequenas variações de distância entre eles evitam a sensação de clone.
+   -------------------------------------------------------------------------- */
+
+.hero__eyebrow {
+  opacity: 0;
+  transform: translateY(26px);
+  filter: blur(12px);
+  will-change: opacity, transform, filter;
+  transition:
+    opacity var(--reveal-duration-eyebrow) var(--reveal-ease) var(--reveal-delay-eyebrow),
+    transform var(--reveal-duration-eyebrow) var(--reveal-ease) var(--reveal-delay-eyebrow),
+    filter var(--reveal-duration-eyebrow) var(--reveal-ease) var(--reveal-delay-eyebrow);
+}
+
+.hero__title {
+  opacity: 0;
+  transform: translateY(30px);
+  filter: blur(12px);
+  will-change: opacity, transform, filter;
+  transition:
+    opacity var(--reveal-duration-title) var(--reveal-ease) var(--reveal-delay-title),
+    transform var(--reveal-duration-title) var(--reveal-ease) var(--reveal-delay-title),
+    filter var(--reveal-duration-title) var(--reveal-ease) var(--reveal-delay-title);
+}
+
+.hero__description {
+  opacity: 0;
+  transform: translateY(28px);
+  filter: blur(12px);
+  will-change: opacity, transform, filter;
+  transition:
+    opacity var(--reveal-duration-description) var(--reveal-ease) var(--reveal-delay-description),
+    transform var(--reveal-duration-description) var(--reveal-ease) var(--reveal-delay-description),
+    filter var(--reveal-duration-description) var(--reveal-ease) var(--reveal-delay-description);
+}
+
+/* --------------------------------------------------------------------------
+   3. BOTÕES — nunca entram juntos
+   .button--primary ("Explorar") e .button--secondary ("Resultados") já
+   são as classes existentes no HTML, na ordem certa — só precisam de
+   transições próprias em vez de uma animação de grupo em .hero__actions.
+   -------------------------------------------------------------------------- */
+
+.hero__actions {
+  /* O grupo em si não anima — só controla a interatividade durante
+     o reveal, para não permitir clique em botões ainda invisíveis. */
+  pointer-events: none;
+}
+
+.hero--ready .hero__actions {
+  pointer-events: auto;
+}
+
+.hero__actions .button--primary {
+  opacity: 0;
+  transform: translateY(18px);
+  filter: blur(10px);
+  will-change: opacity, transform, filter;
+  transition:
+    opacity var(--reveal-duration-button) var(--reveal-ease) var(--reveal-delay-button-primary),
+    transform var(--reveal-duration-button) var(--reveal-ease) var(--reveal-delay-button-primary),
+    filter var(--reveal-duration-button) var(--reveal-ease) var(--reveal-delay-button-primary);
+}
+
+.hero__actions .button--secondary {
+  opacity: 0;
+  transform: translateY(18px);
+  filter: blur(10px);
+  will-change: opacity, transform, filter;
+  transition:
+    opacity var(--reveal-duration-button) var(--reveal-ease) var(--reveal-delay-button-secondary),
+    transform var(--reveal-duration-button) var(--reveal-ease) var(--reveal-delay-button-secondary),
+    filter var(--reveal-duration-button) var(--reveal-ease) var(--reveal-delay-button-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   4. HERO VISUAL — profundidade real, não só fade
+   perspective() embutido na própria transform: dá volume ao rotateX sem
+   precisar declarar "perspective" em nenhum elemento pai (não mexe em
+   layout/grid). A ordem das funções é a mesma no estado inicial e final,
+   para a transição interpolar componente a componente.
+   -------------------------------------------------------------------------- */
+
+.hero__visual {
+  opacity: 0;
+  transform: perspective(1000px) translateY(18px) scale(0.96) rotateX(6deg);
+  will-change: opacity, transform;
+  transition:
+    opacity var(--reveal-duration-visual) var(--reveal-ease) var(--reveal-delay-visual),
+    transform var(--reveal-duration-visual) var(--reveal-ease) var(--reveal-delay-visual);
+}
+
+/* --------------------------------------------------------------------------
+   5. ESTADO FINAL — .hero--ready
+   -------------------------------------------------------------------------- */
+
+.hero--ready .hero__background {
+  opacity: 1;
+  filter: blur(0);
+  transform: scale(1);
+}
+
+.hero--ready .hero__glow {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.hero--ready .hero__gradient {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.hero--ready .hero__particles {
+  opacity: 1;
+  filter: blur(0);
+}
+
+.hero--ready .hero__eyebrow,
+.hero--ready .hero__title,
+.hero--ready .hero__description {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.hero--ready .hero__actions .button--primary,
+.hero--ready .hero__actions .button--secondary {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.hero--ready .hero__visual {
+  opacity: 1;
+  transform: perspective(1000px) translateY(0) scale(1) rotateX(0deg);
+}
+
+/* --------------------------------------------------------------------------
+   6. ACESSIBILIDADE
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hero__background,
+  .hero__glow,
+  .hero__gradient,
+  .hero__particles,
+  .hero__eyebrow,
+  .hero__title,
+  .hero__description,
+  .hero__actions .button--primary,
+  .hero__actions .button--secondary,
+  .hero__visual {
+    transition-duration: 200ms !important;
+    transition-delay: 0ms !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}

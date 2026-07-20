@@ -153,8 +153,8 @@
 
 /* Cena 5 — aproximação: a frase cresce lentamente */
 .intro[data-phase="approach"] .intro__text {
-  transform: scale(5000);
-  transition: transform 3.2s var(--intro-ease);
+  transform: scale(2);
+  transition: transform 4s var(--intro-ease);
 }
 
 /* Cena 6 — crescimento final: o branco toma a viewport pela tipografia,
