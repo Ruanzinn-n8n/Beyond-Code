@@ -46,10 +46,35 @@ Footer
 }
 
 .hero__scene {
-    width: min(42vw, 600px);
+    width: min(42vw, 500px);
     aspect-ratio: 1;
     border-radius: 50%;
     transform: translateX(18%);
+    position: relative;
+}
+
+/* Canvas do núcleo tecnológico (js/hero-orb.js). Preenche o círculo
+   reservado por .hero__scene; todo o desenho é feito via Canvas 2D,
+   o CSS aqui só posiciona. */
+.hero__orb {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+@media (max-width: 1024px) {
+    .hero__scene {
+        width: min(52vw, 400px);
+    }
+}
+
+@media (max-width: 640px) {
+    .hero__scene {
+        width: min(70vw, 300px);
+        transform: none;
+    }
 }
 
 .hero__glow {
@@ -72,4 +97,321 @@ Footer
         rgba(0,255,132,.08),
         transparent 60%
     );
+}
+
+/* =========================================
+            STORY                
+===========================================*/
+
+.story{
+    padding:180px 0;
+}
+
+.story .container{
+
+    width:min(1300px,100% - 160px);
+    margin-inline:auto;
+
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:100px;
+
+    align-items:center;
+}
+
+.story__header{
+
+    order:2;
+
+    max-width:600px;
+
+}
+
+.story__timeline{
+
+    order:1;
+
+}
+
+/* ==========================================================
+   TRANSFORMATION
+========================================================== */
+
+.transformation{
+
+    padding:180px 0;
+
+}
+
+.transformation .container{
+
+    width:min(1300px,100% - 160px);
+    margin-inline:auto;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+}
+
+.transformation__header{
+
+    max-width:720px;
+
+    text-align:center;
+
+    margin-bottom:90px;
+
+}
+
+.transformation__content{
+
+    width:100%;
+
+}
+
+.transformation__cards{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:32px;
+
+}
+
+.transformation__benefits{
+
+    margin-top:70px;
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:20px;
+
+}
+
+/* ==========================================================
+   RESULTS
+========================================================== */
+
+.results{
+
+    padding:180px 0;
+
+}
+
+.results .container{
+
+    width:min(1300px,100% - 160px);
+
+    margin-inline:auto;
+
+}
+
+.results__header{
+
+    max-width:620px;
+
+    margin-bottom:70px;
+
+}
+
+.results__stats{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:28px;
+
+    margin-bottom:80px;
+
+}
+
+.results__map{
+
+    margin-bottom:80px;
+
+}
+
+.results__companies{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+}
+
+/* ==========================================================
+   COMMUNITY
+========================================================== */
+
+.community{
+
+    padding:180px 0;
+
+}
+
+.community .container{
+
+    width:min(1300px,100% - 160px);
+
+    margin-inline:auto;
+
+}
+
+.community__header{
+
+    max-width:620px;
+
+    margin-left:auto;
+
+    text-align:right;
+
+    margin-bottom:80px;
+
+}
+
+.community__testimonials{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:30px;
+
+    margin-bottom:70px;
+
+}
+
+.community__gallery{
+
+    display:grid;
+
+    grid-template-columns:repeat(6,1fr);
+
+    gap:20px;
+
+}
+
+/* ==========================================================
+   FAQ
+========================================================== */
+
+.faq{
+
+    padding:180px 0;
+
+}
+
+.faq .container{
+
+    width:min(1000px,100% - 160px);
+
+    margin-inline:auto;
+
+}
+
+.faq__header{
+
+    text-align:center;
+
+    max-width:700px;
+
+    margin-inline:auto;
+
+    margin-bottom:80px;
+
+}
+
+.faq__list{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+/* ==========================================================
+   CTA
+========================================================== */
+
+.cta{
+
+    padding:220px 0;
+
+}
+
+.cta .container{
+
+    width:min(1200px,100% - 160px);
+
+    margin-inline:auto;
+
+}
+
+.cta__content{
+
+    max-width:760px;
+
+    margin-inline:auto;
+
+    text-align:center;
+
+}
+
+.cta__actions{
+
+    margin-top:50px;
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:24px;
+
+}
+
+/* ==========================================================
+   FOOTER
+========================================================== */
+
+.footer{
+
+    padding:100px 0 40px;
+
+}
+
+.footer__container{
+
+    width:min(1300px,100% - 160px);
+
+    margin-inline:auto;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    gap:80px;
+
+}
+
+.footer__bottom{
+
+    margin-top:70px;
+
+    text-align:center;
+
 }
