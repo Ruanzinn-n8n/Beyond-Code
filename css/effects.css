@@ -4,6 +4,7 @@
    BASE GLOBAL
    -------------------------------------------------------------------------- */
 html {
+    overflow-x: hidden;
     background-color: var(--color-void);
     /* Perspectiva sutil no root prepara qualquer transform 3D futuro
      (ex.: elementos com translateZ) para ter profundidade real de
