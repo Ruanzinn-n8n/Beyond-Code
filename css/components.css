@@ -226,7 +226,7 @@
    -------------------------------------------------------------------------- */
 
 .timeline__item {
-    padding: 44px 40px;
+    padding: 44px 36px;
     display: flex;
     flex-direction: column;
     gap: 14px;
@@ -286,7 +286,7 @@
 }
 
 .timeline__item h3 {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     font-weight: 600;
     color: var(--copy-primary, rgba(255, 255, 255, .96));
 }
@@ -345,7 +345,7 @@
 }
 
 .transformation-card__title {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     font-weight: 600;
     color: var(--copy-primary, rgba(255, 255, 255, .96));
 }
@@ -505,7 +505,7 @@
    -------------------------------------------------------------------------- */
 
 .testimonial-card {
-    padding: 40px 36px;
+    padding: 44px 36px;
     display: flex;
     flex-direction: column;
     gap: 22px;
@@ -743,6 +743,12 @@
 
 .footer__nav-list a:hover {
     color: var(--copy-primary, rgba(255, 255, 255, .96));
+}
+
+.footer__nav-list a:focus-visible,
+.footer__social-link:focus-visible {
+    outline: 2px solid var(--color-accent-green, #00ff84);
+    outline-offset: 4px;
 }
 
 .footer__social {

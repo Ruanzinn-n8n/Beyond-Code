@@ -156,6 +156,37 @@ class PointerGlow {
 
 
 /* ==========================================================================
+   POINTER TRACKER — posição do mouse compartilhada
+   Um único listener em window. GlobalParallax se inscreve como
+   assinante (chamado de dentro do mesmo evento, sem listener próprio);
+   GlobalParticles só lê o valor mais recente de dentro do seu próprio
+   loop de rAF. Antes eram dois listeners de pointermove em window
+   fazendo essencialmente o mesmo trabalho a cada movimento do mouse.
+   ========================================================================== */
+const pointerTracker = { x: null, y: null };
+const pointerSubscribers = [];
+
+window.addEventListener(
+  'pointermove',
+  (event) => {
+    pointerTracker.x = event.clientX;
+    pointerTracker.y = event.clientY;
+    pointerSubscribers.forEach((fn) => fn(event));
+  },
+  { passive: true }
+);
+
+window.addEventListener(
+  'pointerleave',
+  () => {
+    pointerTracker.x = null;
+    pointerTracker.y = null;
+  },
+  { passive: true }
+);
+
+
+/* ==========================================================================
    GLOBAL PARALLAX
    ========================================================================== */
 class GlobalParallax {
@@ -170,7 +201,7 @@ class GlobalParallax {
 
   init() {
     if (prefersReducedMotion()) return this;
-    window.addEventListener('pointermove', this._onPointerMove, { passive: true });
+    pointerSubscribers.push(this._onPointerMove);
     return this;
   }
 
@@ -195,7 +226,8 @@ class GlobalParallax {
   }
 
   destroy() {
-    window.removeEventListener('pointermove', this._onPointerMove);
+    const index = pointerSubscribers.indexOf(this._onPointerMove);
+    if (index !== -1) pointerSubscribers.splice(index, 1);
   }
 }
 
@@ -218,15 +250,11 @@ class GlobalParticles {
     this.width = 0;
     this.height = 0;
     this.particles = [];
-    this.mouseX = null;
-    this.mouseY = null;
 
     this._running = false;
     this._rafId = null;
 
     this._onResize = this._onResize.bind(this);
-    this._onPointerMove = this._onPointerMove.bind(this);
-    this._onPointerLeave = this._onPointerLeave.bind(this);
     this._onVisibilityChange = this._onVisibilityChange.bind(this);
     this._loop = this._loop.bind(this);
   }
@@ -239,8 +267,6 @@ class GlobalParticles {
     this._createParticles();
 
     window.addEventListener('resize', this._onResize, { passive: true });
-    window.addEventListener('pointermove', this._onPointerMove, { passive: true });
-    window.addEventListener('pointerleave', this._onPointerLeave, { passive: true });
     document.addEventListener('visibilitychange', this._onVisibilityChange);
 
     this.start();
@@ -261,8 +287,6 @@ class GlobalParticles {
   destroy() {
     this.stop();
     window.removeEventListener('resize', this._onResize);
-    window.removeEventListener('pointermove', this._onPointerMove);
-    window.removeEventListener('pointerleave', this._onPointerLeave);
     document.removeEventListener('visibilitychange', this._onVisibilityChange);
     this.canvas.remove();
   }
@@ -308,16 +332,6 @@ class GlobalParticles {
     this._resize();
   }
 
-  _onPointerMove(event) {
-    this.mouseX = event.clientX;
-    this.mouseY = event.clientY;
-  }
-
-  _onPointerLeave() {
-    this.mouseX = null;
-    this.mouseY = null;
-  }
-
   _onVisibilityChange() {
     if (document.hidden) this.stop();
     else this.start();
@@ -351,9 +365,9 @@ class GlobalParticles {
     let targetX = 0;
     let targetY = 0;
 
-    if (this.mouseX !== null) {
-      const dx = p.x - this.mouseX;
-      const dy = p.y - this.mouseY;
+    if (pointerTracker.x !== null) {
+      const dx = p.x - pointerTracker.x;
+      const dy = p.y - pointerTracker.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
       if (dist < this.repelRadius) {
