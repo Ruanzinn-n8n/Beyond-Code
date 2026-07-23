@@ -171,8 +171,8 @@ body {
     background:
         radial-gradient(circle, rgba(255, 255, 255, 0.05), transparent 55%),
         radial-gradient(circle, rgba(0, 255, 132, 0.05), transparent 70%);
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 10%, transparent 10%);
-    mask-image: linear-gradient(to bottom, black 0%, black 10%, transparent 10%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 6%, transparent 16%);
+    mask-image: linear-gradient(to bottom, black 0%, black 6%, transparent 16%);
 }
 
 

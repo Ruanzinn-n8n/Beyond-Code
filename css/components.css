@@ -304,10 +304,14 @@
 .story [data-reveal] {
     --reveal-progress: 1;
     opacity: var(--reveal-progress);
-    transform: translateX(calc((1 - var(--reveal-progress)) * 28px));
+    transform:
+        translateX(calc((1 - var(--reveal-progress)) * 28px))
+        scale(calc(0.985 + var(--reveal-progress) * 0.015));
+    filter: blur(calc((1 - var(--reveal-progress)) * 4px));
     transition:
-        opacity var(--reveal-duration, 820ms) var(--ease-cinematic, ease) calc(var(--i, 0) * var(--reveal-stagger-step, 90ms)),
-        transform var(--reveal-duration, 820ms) var(--ease-cinematic, ease) calc(var(--i, 0) * var(--reveal-stagger-step, 90ms));
+        opacity var(--reveal-duration, 1150ms) var(--ease-cinematic, ease) calc(var(--i, 0) * var(--reveal-stagger-step, 120ms)),
+        transform var(--reveal-duration, 1150ms) var(--ease-cinematic, ease) calc(var(--i, 0) * var(--reveal-stagger-step, 120ms)),
+        filter var(--reveal-duration, 1150ms) var(--ease-cinematic, ease) calc(var(--i, 0) * var(--reveal-stagger-step, 120ms));
 }
 
 
@@ -372,12 +376,16 @@
     letter-spacing: .02em;
     transition:
         border-color var(--duration-hover, 420ms) var(--ease-hover, ease),
-        color var(--duration-hover, 420ms) var(--ease-hover, ease);
+        color var(--duration-hover, 420ms) var(--ease-hover, ease),
+        transform var(--duration-hover, 420ms) var(--ease-hover, ease),
+        box-shadow var(--duration-hover, 420ms) var(--ease-hover, ease);
 }
 
 .transformation__benefit:hover {
     border-color: var(--glass-border-hover, rgba(255, 255, 255, .18));
     color: var(--copy-primary, rgba(255, 255, 255, .9));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .25);
 }
 
 
@@ -393,11 +401,14 @@
     gap: 8px;
     padding: 28px 0;
     border-top: 1px solid var(--glass-border, rgba(255, 255, 255, .08));
-    transition: transform var(--duration-hover, 420ms) var(--ease-hover, ease);
+    transition:
+        transform var(--duration-hover, 420ms) var(--ease-hover, ease),
+        border-color var(--duration-hover, 420ms) var(--ease-hover, ease);
 }
 
 .stat-item:hover {
     transform: translateY(-4px);
+    border-color: rgba(0, 255, 132, .3);
 }
 
 .stat-item__number {

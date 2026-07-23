@@ -1,3 +1,15 @@
+@media (max-width: 1024px){
+
+    /* HERO — vindo de layout.css (Etapa de organização): mantém a
+       mesma cascata largo → estreito que o resto deste arquivo já
+       segue, então o breakpoint de 640px sempre vence aqui quando as
+       duas faixas se sobrepõem. */
+    .hero__scene{
+        width: min(52vw, 400px);
+    }
+
+}
+
 @media (max-width: 980px){
 
     .hero__container{
@@ -68,6 +80,12 @@
 }
 
 @media (max-width: 640px){
+
+    /* HERO — vindo de layout.css. */
+    .hero__scene{
+        width: min(70vw, 300px);
+        transform: none;
+    }
 
     /* NAVBAR — mesma identidade, só mais compacta: nada de reorganizar
        logo/dropdown/CTA, apenas menos espaço entre eles e alvos de

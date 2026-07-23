@@ -288,6 +288,11 @@ class GlobalParticles {
       // Metade sobe, metade desce, algumas quase paradas — cada uma com
       // sua própria velocidade, nunca um movimento em bloco/repetitivo.
       driftSpeed: (Math.random() - 0.5) * 0.05,
+      // Deriva horizontal orgânica — sem isso, a partícula só sobe/desce
+      // em linha reta, o que lê como "efeito" em vez de poeira flutuando.
+      swayAmplitude: 3 + Math.random() * 6,
+      swaySpeed: 0.00025 + Math.random() * 0.0004,
+      swayPhase: Math.random() * Math.PI * 2,
       twinklePhase: Math.random() * Math.PI * 2,
       twinkleSpeed: 0.0005 + Math.random() * 0.001,
       offsetX: 0,
@@ -364,11 +369,12 @@ class GlobalParticles {
   }
 
   _draw(p, now) {
+    const sway = Math.sin(now * p.swaySpeed + p.swayPhase) * p.swayAmplitude;
     const twinkle = 0.7 + Math.sin(now * p.twinkleSpeed + p.twinklePhase) * 0.3;
     const alpha = p.baseOpacity * twinkle;
 
     this.ctx.beginPath();
-    this.ctx.arc(p.x + p.offsetX, p.y + p.offsetY, p.size, 0, Math.PI * 2);
+    this.ctx.arc(p.x + p.offsetX + sway, p.y + p.offsetY, p.size, 0, Math.PI * 2);
     this.ctx.fillStyle = `rgba(255, 255, 255, ${alpha.toFixed(3)})`;
     this.ctx.fill();
   }

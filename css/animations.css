@@ -327,7 +327,9 @@
 .transformation__visual {
   --reveal-progress: 1;
   opacity: var(--reveal-progress);
-  transform: translateY(calc((1 - var(--reveal-progress)) * 25px));
+  transform:
+    translateY(calc((1 - var(--reveal-progress)) * 25px))
+    scale(calc(0.985 + var(--reveal-progress) * 0.015));
   filter: blur(calc((1 - var(--reveal-progress)) * 6px));
   transition:
     opacity var(--reveal-duration) var(--ease-cinematic, ease) calc(var(--i, 0) * var(--reveal-stagger-step)),
@@ -335,9 +337,10 @@
     filter var(--reveal-duration) var(--ease-cinematic, ease) calc(var(--i, 0) * var(--reveal-stagger-step));
 }
 
-/* Results — mesma base, só com um leve scale-in somado: reforça a
-   sensação de "cascata" (elementos chegando um após o outro, cada um
-   se assentando no lugar) sem sair da linguagem/timing compartilhados. */
+/* Results — mesma base, só com o scale-in um pouco mais pronunciado:
+   reforça a sensação de "cascata" (elementos chegando um após o outro,
+   cada um se assentando no lugar) sem sair da linguagem/timing
+   compartilhados. */
 .results [data-reveal] {
   transform:
     translateY(calc((1 - var(--reveal-progress)) * 25px))

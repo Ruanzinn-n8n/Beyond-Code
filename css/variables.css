@@ -75,13 +75,11 @@
     --dropdown-duration: 300ms;
     --nav-reveal-duration: 750ms;
     /* -- Scroll reveal------------------------------------------------*/
-    --reveal-duration: 820ms;
-    --reveal-stagger-step: 90ms;
+    --reveal-duration: 1150ms;
+    --reveal-stagger-step: 120ms;
 
 /* === EFFECTS === */
 
-    --reveal-duration: 820ms;
-    --reveal-stagger-step: 90ms;
     --color-elevated: #0f1218;
     --color-glow-cold: #6e8ca3;
     --color-hairline: rgba(255, 255, 255, 0.06);
