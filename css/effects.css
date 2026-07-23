@@ -240,6 +240,13 @@ body {
     background-position: 0 0;
     -webkit-mask-image: radial-gradient(120% 90% at 50% 20%, #000 0%, transparent 75%);
     mask-image: radial-gradient(120% 90% at 50% 20%, #000 0%, transparent 75%);
+
+    /* Poeira reagindo ao mouse — só alguns pixels (ver js/main.js,
+     classe ParticleParallax). Sem JS, os dois ficam em 0px e nada muda. */
+    --particles-x: 0px;
+    --particles-y: 0px;
+    transform: translate(var(--particles-x), var(--particles-y));
+    transition: transform 900ms var(--ease-cinematic, ease);
 }
 
 /* 3.5 — Vinheta

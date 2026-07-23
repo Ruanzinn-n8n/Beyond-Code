@@ -391,3 +391,105 @@
     transform: none !important;
   }
 }
+
+
+/* ==========================================================================
+   BEYOND CODE — SCROLL REVEAL (Transformation → Footer)
+   Disparado por js/main.js (classe ScrollReveal): cada elemento com
+   [data-reveal] entra em cena com opacity + translateY + blur muito
+   leve, escalonado pelo --i (inline no HTML, ex.: style="--i: 2").
+
+   Mesmo mecanismo inerte já usado na Story (--reveal-progress), só que
+   aqui o valor por padrão é 1 (sempre visível) e só o JS — ao iniciar —
+   escreve 0 nos elementos que vai observar, antes de qualquer scroll.
+   Se o JS não rodar por qualquer motivo, o conteúdo permanece visível:
+   progressive enhancement, nunca um site quebrado sem JS.
+
+   Escopo explícito (:where(...)) — nunca inclui .story, que não deve
+   ser alterada.
+   ========================================================================== */
+
+:root {
+  --reveal-duration: 900ms;
+  --reveal-stagger-step: 90ms; /* multiplicado por --i em cada elemento */
+}
+
+:where(.transformation, .results, .community, .faq, .cta, .footer) [data-reveal] {
+  --reveal-progress: 1;
+  opacity: var(--reveal-progress);
+  transform: translateY(calc((1 - var(--reveal-progress)) * 28px));
+  filter: blur(calc((1 - var(--reveal-progress)) * 6px));
+  transition:
+    opacity var(--reveal-duration) var(--ease-cinematic, ease) calc(var(--i, 0) * var(--reveal-stagger-step)),
+    transform var(--reveal-duration) var(--ease-cinematic, ease) calc(var(--i, 0) * var(--reveal-stagger-step)),
+    filter var(--reveal-duration) var(--ease-cinematic, ease) calc(var(--i, 0) * var(--reveal-stagger-step));
+}
+
+
+/* --------------------------------------------------------------------------
+   RESPIRAÇÃO AMBIENTAL — nunca parado, sempre extremamente lento
+   Três loops independentes, todos só opacity/transform (nunca layout):
+   a malha da Transformation, os nós do mapa da Results e o glow do CTA.
+   -------------------------------------------------------------------------- */
+
+@keyframes mesh-breathe {
+  0%, 100% { opacity: .7; transform: scale(1); }
+  50%      { opacity: 1;  transform: scale(1.015); }
+}
+
+.transformation__mesh {
+  animation: mesh-breathe 9s ease-in-out infinite;
+}
+
+/* A oscilação combina duas coisas na mesma animação: a respiração
+   ambiente (sempre ligada, discreta) e o boost de proximidade do mouse
+   (--proximity, escrito por MapPointer em js/main.js — 0 por padrão,
+   então sem JS/mouse o resultado é idêntico à respiração pura). */
+@keyframes node-pulse {
+  0%, 100% {
+    opacity: calc(.5 + var(--proximity, 0) * .3);
+    filter: drop-shadow(0 0 calc(2px + var(--proximity, 0) * 5px) currentColor);
+  }
+  50% {
+    opacity: calc(.9 + var(--proximity, 0) * .1);
+    filter: drop-shadow(0 0 calc(6px + var(--proximity, 0) * 6px) currentColor);
+  }
+}
+
+.results__map-nodes circle {
+  animation: node-pulse 3.2s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * 420ms);
+}
+
+@keyframes cta-glow-breathe {
+  0%, 100% { opacity: .9; transform: scale(1); }
+  50%      { opacity: 1;  transform: scale(1.04); }
+}
+
+.cta__visual {
+  animation: cta-glow-breathe 8s ease-in-out infinite;
+}
+
+
+/* --------------------------------------------------------------------------
+   ACESSIBILIDADE — estende a regra da seção 6 acima
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  :where(.transformation, .results, .community, .faq, .cta, .footer) [data-reveal] {
+    transition-duration: 1ms !important;
+    filter: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .transformation__mesh,
+  .results__map-nodes circle,
+  .cta__visual {
+    animation: none !important;
+  }
+
+  .results__map-nodes circle {
+    opacity: .8;
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+}

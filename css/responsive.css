@@ -121,6 +121,13 @@ Desktop
         gap: 12px;
     }
 
+    /* A malha de energia é puramente decorativa — em telas estreitas o
+       espaço já é curto, então ela sai de cena (o painel de luz por trás
+       dos cards continua). */
+    .transformation__mesh{
+        display: none;
+    }
+
     /* RESULTS — números em coluna única, mapa mais alto (mais legível
        que um retângulo muito raso em telas estreitas). */
     .results__stats{

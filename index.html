@@ -68,25 +68,13 @@
       <div class="nav__actions">
 
         <div class="nav__menu">
-          <button
-            type="button"
-            class="nav__menu-trigger"
-            id="nav-menu-trigger"
-            aria-haspopup="true"
-            aria-expanded="false"
-            aria-controls="nav-menu-list"
-          >
+          <button type="button" class="nav__menu-trigger" id="nav-menu-trigger" aria-haspopup="true"
+            aria-expanded="false" aria-controls="nav-menu-list">
             <span class="nav__menu-trigger-label">Story</span>
             <span class="nav__menu-caret" aria-hidden="true"></span>
           </button>
 
-          <ul
-            class="nav__menu-list"
-            id="nav-menu-list"
-            role="menu"
-            aria-labelledby="nav-menu-trigger"
-            hidden
-          >
+          <ul class="nav__menu-list" id="nav-menu-list" role="menu" aria-labelledby="nav-menu-trigger" hidden>
             <li role="none"><a href="#journey" class="nav__menu-item" role="menuitem">Story</a></li>
             <li role="none"><a href="#method" class="nav__menu-item" role="menuitem">Transformation</a></li>
             <li role="none"><a href="#results" class="nav__menu-item" role="menuitem">Results</a></li>
@@ -204,11 +192,11 @@
 
         <div class="transformation__header">
 
-          <span class="transformation__eyebrow">O MÉTODO DEVCLUB</span>
+          <span class="transformation__eyebrow" data-reveal>O MÉTODO DEVCLUB</span>
 
-          <h2 class="transformation__title">Do primeiro código ao primeiro emprego.</h2>
+          <h2 class="transformation__title" data-reveal style="--i:1">Do primeiro código ao primeiro emprego.</h2>
 
-          <p class="transformation__description">
+          <p class="transformation__description" data-reveal style="--i:2">
             Uma jornada estruturada, pensada para transformar iniciantes
             em desenvolvedores prontos para o mercado de trabalho.
           </p>
@@ -217,31 +205,75 @@
 
         <div class="transformation__content">
 
-          <!-- Reservado para futura animação 3D / scroll-driven -->
-          <div class="transformation__visual">
+          <!-- Malha de energia: rede de nós/linhas extremamente discreta,
+               sugerindo algo "se formando" atrás dos cards. Estática por
+               padrão, com uma respiração lentíssima em opacity/transform
+               (ver css/animations.css) — nunca compete com o conteúdo. -->
+          <div class="transformation__visual" aria-hidden="true">
             <div class="transformation__scene"></div>
+            <svg class="transformation__mesh" viewBox="0 0 800 480" focusable="false">
+              <g class="transformation__mesh-lines" stroke="currentColor" stroke-width="1" fill="none">
+                <path d="M120 90 L300 150 L480 80 L680 160" />
+                <path d="M300 150 L340 320 L560 360" />
+                <path d="M480 80 L560 360" />
+                <path d="M120 90 L180 340 L340 320" />
+                <path d="M680 160 L620 60" />
+                <path d="M340 320 L520 420" />
+              </g>
+              <g class="transformation__mesh-nodes" fill="currentColor">
+                <circle cx="120" cy="90" r="3" style="--i:0" />
+                <circle cx="300" cy="150" r="2.5" style="--i:1" />
+                <circle cx="480" cy="80" r="3" style="--i:2" />
+                <circle cx="680" cy="160" r="2.5" style="--i:3" />
+                <circle cx="620" cy="60" r="2" style="--i:4" />
+                <circle cx="340" cy="320" r="3" style="--i:5" />
+                <circle cx="560" cy="360" r="2.5" style="--i:0" />
+                <circle cx="180" cy="340" r="2" style="--i:2" />
+                <circle cx="520" cy="420" r="2.5" style="--i:4" />
+              </g>
+            </svg>
           </div>
 
           <ul class="transformation__cards">
 
-            <li class="transformation-card">
-              <span class="transformation-card__icon"></span>
+            <li class="transformation-card" data-reveal data-glow style="--i:0">
+              <span class="transformation-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 3 3 8l9 5 9-5-9-5Z" />
+                  <path d="M3 13l9 5 9-5" />
+                </svg>
+              </span>
               <h3 class="transformation-card__title">Fundamentos sólidos</h3>
               <p class="transformation-card__description">
                 Lógica, estrutura e raciocínio computacional antes de qualquer framework.
               </p>
             </li>
 
-            <li class="transformation-card">
-              <span class="transformation-card__icon"></span>
+            <li class="transformation-card" data-reveal data-glow style="--i:1">
+              <span class="transformation-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="4" width="18" height="16" rx="2" />
+                  <path d="M3 9h18" />
+                  <path d="M9 13.5 7 15.5 9 17.5M15 13.5l2 2-2 2" />
+                </svg>
+              </span>
               <h3 class="transformation-card__title">Projetos reais</h3>
               <p class="transformation-card__description">
                 Aplicações completas para construir portfólio desde o início.
               </p>
             </li>
 
-            <li class="transformation-card">
-              <span class="transformation-card__icon"></span>
+            <li class="transformation-card" data-reveal data-glow style="--i:2">
+              <span class="transformation-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="3" />
+                  <circle cx="12" cy="12" r="9" />
+                  <circle cx="21" cy="12" r="1.1" fill="currentColor" stroke="none" />
+                </svg>
+              </span>
               <h3 class="transformation-card__title">Mentoria contínua</h3>
               <p class="transformation-card__description">
                 Acompanhamento próximo em cada etapa da sua evolução.
@@ -252,7 +284,7 @@
 
         </div>
 
-        <ul class="transformation__benefits">
+        <ul class="transformation__benefits" data-reveal style="--i:3">
           <li class="transformation__benefit">Suporte individualizado</li>
           <li class="transformation__benefit">Comunidade ativa</li>
           <li class="transformation__benefit">Conteúdo atualizado</li>
@@ -268,11 +300,11 @@
 
         <div class="results__header">
 
-          <span class="results__eyebrow">RESULTADOS QUE FALAM POR SI</span>
+          <span class="results__eyebrow" data-reveal>RESULTADOS QUE FALAM POR SI</span>
 
-          <h2 class="results__title">O impacto de quem decidiu começar.</h2>
+          <h2 class="results__title" data-reveal style="--i:1">O impacto de quem decidiu começar.</h2>
 
-          <p class="results__description">
+          <p class="results__description" data-reveal style="--i:2">
             Números construídos por pessoas reais, que confiaram no processo
             e transformaram suas carreiras.
           </p>
@@ -281,42 +313,89 @@
 
         <ul class="results__stats">
 
-          <li class="stat-item">
-            <span class="stat-item__number">12.000+</span>
+          <li class="stat-item" data-reveal data-glow style="--i:0">
+            <span class="stat-item__number" data-count-to="12000" data-count-suffix="+">0</span>
             <span class="stat-item__label">Alunos formados</span>
           </li>
 
-          <li class="stat-item">
-            <span class="stat-item__number">87%</span>
+          <li class="stat-item" data-reveal data-glow style="--i:1">
+            <span class="stat-item__number" data-count-to="87" data-count-suffix="%">0</span>
             <span class="stat-item__label">Taxa de empregabilidade</span>
           </li>
 
-          <li class="stat-item">
-            <span class="stat-item__number">+300</span>
+          <li class="stat-item" data-reveal data-glow style="--i:2">
+            <span class="stat-item__number" data-count-to="300" data-count-prefix="+">0</span>
             <span class="stat-item__label">Empresas parceiras</span>
           </li>
 
-          <li class="stat-item">
-            <span class="stat-item__number">4.9/5</span>
+          <li class="stat-item" data-reveal data-glow style="--i:3">
+            <span class="stat-item__number" data-count-to="4.9" data-count-decimals="1" data-count-suffix="/5">0</span>
             <span class="stat-item__label">Avaliação média</span>
           </li>
 
         </ul>
 
-        <!-- Reservado para futuro mapa interativo do Brasil -->
-        <div class="results__map">
-          <div class="results__map-visual"></div>
+        <!-- Painel tecnológico: mesmo espaço reservado pro mapa do Brasil,
+             agora com pontos luminosos e linhas de conexão discretas —
+             lê como um "painel de dados" mesmo antes do mapa real entrar. -->
+        <div class="results__map" data-reveal style="--i:4">
+          <div class="results__map-visual">
+            <svg class="results__map-points" viewBox="0 0 400 300" aria-hidden="true" focusable="false">
+              <!-- As conexões (<line>) são geradas em runtime por
+                   js/main.js (classe MapNetwork) — cada ponto liga aos
+                   3 vizinhos mais próximos. Este grupo começa vazio. -->
+              <g class="results__map-lines" stroke="currentColor" stroke-width="1" fill="none" opacity=".28"></g>
+              <g class="results__map-nodes" fill="currentColor">
+                <circle cx="148" cy="40" r="3" style="--i:0" />
+                <circle cx="167" cy="40" r="3" style="--i:1" />
+                <circle cx="203" cy="40" r="3" style="--i:2" />
+                <circle cx="176" cy="51" r="3" style="--i:3" />
+                <circle cx="194" cy="51" r="3" style="--i:4" />
+                <circle cx="144" cy="53" r="3" style="--i:5" />
+                <circle cx="125" cy="56" r="3" style="--i:6" />
+                <circle cx="167" cy="59" r="3" style="--i:7" />
+                <circle cx="212" cy="59" r="3" style="--i:8" />
+                <circle cx="116" cy="64" r="3" style="--i:9" />
+                <circle cx="222" cy="69" r="3" style="--i:10" />
+                <circle cx="238" cy="75" r="3" style="--i:11" />
+                <circle cx="121" cy="80" r="3" style="--i:12" />
+                <circle cx="260" cy="86" r="3" style="--i:13" />
+                <circle cx="112" cy="91" r="3" style="--i:14" />
+                <circle cx="278" cy="96" r="3" style="--i:15" />
+                <circle cx="103" cy="102" r="3" style="--i:16" />
+                <circle cx="107" cy="116" r="3" style="--i:17" />
+                <circle cx="278" cy="116" r="3" style="--i:18" />
+                <circle cx="139" cy="121" r="3" style="--i:19" />
+                <circle cx="116" cy="126" r="3" style="--i:20" />
+                <circle cx="153" cy="137" r="3" style="--i:21" />
+                <circle cx="260" cy="137" r="3" style="--i:22" />
+                <circle cx="166" cy="152" r="3" style="--i:23" />
+                <circle cx="256" cy="163" r="3" style="--i:24" />
+                <circle cx="176" cy="168" r="3" style="--i:25" />
+                <circle cx="176" cy="183" r="3" style="--i:26" />
+                <circle cx="247" cy="182" r="3" style="--i:27" />
+                <circle cx="185" cy="193" r="3" style="--i:28" />
+                <circle cx="231" cy="193" r="3" style="--i:29" />
+                <circle cx="217" cy="204" r="3" style="--i:30" />
+                <circle cx="194" cy="209" r="3" style="--i:31" />
+                <circle cx="185" cy="218" r="3" style="--i:32" />
+                <circle cx="212" cy="223" r="3" style="--i:33" />
+                <circle cx="185" cy="233" r="3" style="--i:34" />
+                <circle cx="194" cy="245" r="3" style="--i:35" />
+              </g>
+            </svg>
+          </div>
           <p class="results__map-caption">Alunos em todos os estados do Brasil.</p>
         </div>
 
-        <div class="results__companies">
+        <div class="results__companies" data-reveal style="--i:5">
           <span class="results__companies-label">Nossos alunos estão em</span>
           <ul class="results__companies-list">
-            <li class="results__company-logo"></li>
-            <li class="results__company-logo"></li>
-            <li class="results__company-logo"></li>
-            <li class="results__company-logo"></li>
-            <li class="results__company-logo"></li>
+            <li class="results__company-logo">Minas Gerais</li>
+            <li class="results__company-logo">Santa Catarina</li>
+            <li class="results__company-logo">Amapá</li>
+            <li class="results__company-logo">Bahia</li>
+            <li class="results__company-logo">São Paulo</li>
           </ul>
         </div>
 
@@ -329,11 +408,11 @@
 
         <div class="community__header">
 
-          <span class="community__eyebrow">VOCÊ NÃO ESTÁ SOZINHO NESSA</span>
+          <span class="community__eyebrow" data-reveal>VOCÊ NÃO ESTÁ SOZINHO NESSA</span>
 
-          <h2 class="community__title">Uma comunidade que evolui junto.</h2>
+          <h2 class="community__title" data-reveal style="--i:1">Uma comunidade que evolui junto.</h2>
 
-          <p class="community__description">
+          <p class="community__description" data-reveal style="--i:2">
             Milhares de desenvolvedores compartilhando dúvidas, conquistas
             e oportunidades todos os dias.
           </p>
@@ -342,7 +421,7 @@
 
         <ul class="community__testimonials">
 
-          <li class="testimonial-card">
+          <li class="testimonial-card" data-reveal data-glow style="--i:0">
             <div class="testimonial-card__avatar"></div>
             <blockquote class="testimonial-card__quote">
               A didática mudou completamente a forma como eu aprendo.
@@ -351,7 +430,7 @@
             <span class="testimonial-card__role">Desenvolvedora Front-end</span>
           </li>
 
-          <li class="testimonial-card">
+          <li class="testimonial-card" data-reveal data-glow style="--i:1">
             <div class="testimonial-card__avatar"></div>
             <blockquote class="testimonial-card__quote">
               Consegui minha primeira vaga antes mesmo de terminar o curso.
@@ -360,7 +439,7 @@
             <span class="testimonial-card__role">Desenvolvedor Full Stack</span>
           </li>
 
-          <li class="testimonial-card">
+          <li class="testimonial-card" data-reveal data-glow style="--i:2">
             <div class="testimonial-card__avatar"></div>
             <blockquote class="testimonial-card__quote">
               A comunidade foi essencial para eu não desistir.
@@ -371,8 +450,8 @@
 
         </ul>
 
-        <!-- Reservado para futura galeria de fotos da comunidade -->
-        <ul class="community__gallery">
+        <!-- Galeria da comunidade — composição fotográfica discreta -->
+        <ul class="community__gallery" data-reveal style="--i:3">
           <li class="community__gallery-item"></li>
           <li class="community__gallery-item"></li>
           <li class="community__gallery-item"></li>
@@ -390,11 +469,11 @@
 
         <div class="faq__header">
 
-          <span class="faq__eyebrow">TIRE SUAS DÚVIDAS</span>
+          <span class="faq__eyebrow" data-reveal>TIRE SUAS DÚVIDAS</span>
 
-          <h2 class="faq__title">Perguntas frequentes.</h2>
+          <h2 class="faq__title" data-reveal style="--i:1">Perguntas frequentes.</h2>
 
-          <p class="faq__description">
+          <p class="faq__description" data-reveal style="--i:2">
             Tudo o que você precisa saber antes de dar o próximo passo.
           </p>
 
@@ -402,7 +481,7 @@
 
         <ul class="faq__list">
 
-          <li class="faq-item">
+          <li class="faq-item" data-reveal style="--i:0">
             <h3 class="faq-item__question">
               <button type="button" class="faq-item__trigger" aria-expanded="false" aria-controls="faq-answer-1">
                 Preciso ter experiência prévia com programação?
@@ -413,7 +492,7 @@
             </div>
           </li>
 
-          <li class="faq-item">
+          <li class="faq-item" data-reveal style="--i:1">
             <h3 class="faq-item__question">
               <button type="button" class="faq-item__trigger" aria-expanded="false" aria-controls="faq-answer-2">
                 Quanto tempo leva para concluir a formação?
@@ -424,7 +503,7 @@
             </div>
           </li>
 
-          <li class="faq-item">
+          <li class="faq-item" data-reveal style="--i:2">
             <h3 class="faq-item__question">
               <button type="button" class="faq-item__trigger" aria-expanded="false" aria-controls="faq-answer-3">
                 Existe suporte durante o aprendizado?
@@ -435,7 +514,7 @@
             </div>
           </li>
 
-          <li class="faq-item">
+          <li class="faq-item" data-reveal style="--i:3">
             <h3 class="faq-item__question">
               <button type="button" class="faq-item__trigger" aria-expanded="false" aria-controls="faq-answer-4">
                 O certificado é reconhecido pelo mercado?
@@ -457,24 +536,27 @@
 
         <div class="cta__content">
 
-          <span class="cta__eyebrow">SUA JORNADA COMEÇA AGORA</span>
+          <span class="cta__eyebrow" data-reveal>SUA JORNADA COMEÇA AGORA</span>
 
-          <h2 class="cta__title">O próximo passo é seu.</h2>
+          <h2 class="cta__title" data-reveal style="--i:1">O próximo passo é seu.</h2>
 
-          <p class="cta__description">
+          <p class="cta__description" data-reveal style="--i:2">
             Junte-se a milhares de pessoas que decidiram mudar de carreira
             e construir seu futuro na tecnologia.
           </p>
 
-          <div class="cta__actions">
-            <a href="https://links.devclub.com.br/pagamentos-lf60" class="button button--primary">Quero começar agora</a>
-            <a href="http://wa.me/5586981653315" class="button button--secondary">Falar com um consultor</a>
+          <div class="cta__actions" data-reveal style="--i:3">
+            <a href="https://links.devclub.com.br/pagamentos-lf60" class="button button--primary" target="_blank">Quero
+              começar agora</a>
+            <a href="http://wa.me/5586981653315" class="button button--secondary" target="_blank">Falar com um
+              consultor</a>
           </div>
 
         </div>
 
-        <!-- Reservado para futuro efeito visual de encerramento cinematográfico -->
-        <div class="cta__visual"></div>
+        <!-- Encerramento cinematográfico: o mesmo glow de effects.css, com
+             uma respiração lentíssima (opacity/scale) via animations.css. -->
+        <div class="cta__visual" aria-hidden="true"></div>
 
       </div>
     </section>
@@ -485,14 +567,14 @@
   <footer class="footer">
     <div class="footer__container">
 
-      <div class="footer__brand">
+      <div class="footer__brand" data-reveal>
         <span class="footer__logo">DevClub</span>
         <p class="footer__description">
           Formando a próxima geração de desenvolvedores do Brasil.
         </p>
       </div>
 
-      <nav class="footer__nav" aria-label="Links do rodapé">
+      <nav class="footer__nav" aria-label="Links do rodapé" data-reveal style="--i:1">
 
         <div class="footer__nav-group">
           <span class="footer__nav-title">Institucional</span>
@@ -508,7 +590,8 @@
           <span class="footer__nav-title">Suporte</span>
           <ul class="footer__nav-list">
             <li><a href="#faq">Perguntas frequentes</a></li>
-            <li><a href="https://www.instagram.com/rodolfomorii?igsh=MXdtYnlpM2MyeXo4dg==">Contato</a></li>
+            <li><a href="https://www.instagram.com/rodolfomorii?igsh=MXdtYnlpM2MyeXo4dg==" target="_blank">Contato</a>
+            </li>
             <li><a href="#">Política de privacidade</a></li>
           </ul>
         </div>
@@ -516,9 +599,12 @@
       </nav>
 
       <ul class="footer__social" aria-label="Redes sociais">
-        <li><a href="https://www.instagram.com/rodolfomorii?igsh=MXdtYnlpM2MyeXo4dg==" class="footer__social-link" target="_blank">Instagram</a></li>
-        <li><a href="https://youtube.com/@canaldevclub?si=yz9yjKVvXU3ZflTb" class="footer__social-link" target="_blank">YouTube</a></li>
-        <li><a href="https://www.linkedin.com/school/dev-club-devs/" class="footer__social-link" target="_blank">LinkedIn</a></li>
+        <li><a href="https://www.instagram.com/rodolfomorii?igsh=MXdtYnlpM2MyeXo4dg==" class="footer__social-link"
+            target="_blank">Instagram</a></li>
+        <li><a href="https://youtube.com/@canaldevclub?si=yz9yjKVvXU3ZflTb" class="footer__social-link"
+            target="_blank">YouTube</a></li>
+        <li><a href="https://www.linkedin.com/school/dev-club-devs/" class="footer__social-link"
+            target="_blank">LinkedIn</a></li>
       </ul>
 
     </div>

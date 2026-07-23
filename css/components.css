@@ -198,6 +198,34 @@ Badges
     box-shadow: var(--glass-shadow-hover, 0 40px 110px rgba(0, 0, 0, .45));
 }
 
+/* Glow de mouse genérico — qualquer elemento com [data-glow] ganha um
+   brilho radial que segue o ponteiro (--pointer-x/--pointer-y, escritos
+   por main.js). Uma única regra serve Transformation/Results/Community;
+   a Story já tem o próprio mecanismo equivalente e não é tocada aqui. */
+[data-glow] {
+    position: relative;
+    overflow: hidden;
+}
+
+[data-glow]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+        220px circle at var(--pointer-x, 50%) var(--pointer-y, 50%),
+        rgba(255, 255, 255, .07),
+        transparent 70%
+    );
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+[data-glow]:hover::after {
+    opacity: 1;
+}
+
 
 /* --------------------------------------------------------------------------
    STORY — cartões da timeline
@@ -315,12 +343,20 @@ Badges
 }
 
 .transformation-card__icon {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 44px;
     height: 44px;
     border-radius: 50%;
     border: 1px solid var(--glass-border-hover, rgba(255, 255, 255, .18));
     background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, .08), transparent 70%);
+    color: var(--copy-primary, rgba(255, 255, 255, .85));
+}
+
+.transformation-card__icon svg {
+    width: 20px;
+    height: 20px;
 }
 
 .transformation-card__title {
@@ -335,6 +371,16 @@ Badges
     color: var(--copy-secondary, rgba(255, 255, 255, .62));
 }
 
+/* Malha de energia — traços/nós extremamente discretos; a respiração
+   lenta (opacity/transform) vive em animations.css. */
+.transformation__mesh-lines path {
+    stroke-opacity: .5;
+}
+
+.transformation__mesh-nodes circle {
+    opacity: .75;
+}
+
 /* Badges — "pílulas" quase invisíveis, texto pequeno, sem competir
    com os cards acima. */
 .transformation__benefit {
@@ -345,6 +391,14 @@ Badges
     color: var(--copy-secondary, rgba(255, 255, 255, .62));
     font-size: .85rem;
     letter-spacing: .02em;
+    transition:
+        border-color var(--duration-hover, 420ms) var(--ease-hover, ease),
+        color var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.transformation__benefit:hover {
+    border-color: var(--glass-border-hover, rgba(255, 255, 255, .18));
+    color: var(--copy-primary, rgba(255, 255, 255, .9));
 }
 
 
@@ -353,11 +407,18 @@ Badges
    -------------------------------------------------------------------------- */
 
 .stat-item {
+    position: relative;
     display: flex;
+    align-items: center;
     flex-direction: column;
     gap: 8px;
     padding: 28px 0;
     border-top: 1px solid var(--glass-border, rgba(255, 255, 255, .08));
+    transition: transform var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.stat-item:hover {
+    transform: translateY(-4px);
 }
 
 .stat-item__number {
@@ -398,6 +459,20 @@ Badges
     color: var(--copy-tertiary, rgba(255, 255, 255, .36));
 }
 
+/* As linhas (<line>) são geradas por js/main.js — ver classe MapNetwork. */
+.results__map-lines line {
+    stroke-opacity: .4;
+}
+
+/* Pontos/linhas do painel — glow curto via drop-shadow (mais barato que
+   um blur em cada nó). Todo o brilho — a respiração ambiente E o boost
+   de proximidade do mouse — é resolvido junto na animação (ver
+   node-pulse em animations.css), por isso não há opacity/filter
+   estáticos aqui. */
+.results__map-nodes circle {
+    --proximity: 0;
+}
+
 .results__companies-label {
     font-size: .85rem;
     letter-spacing: .08em;
@@ -415,11 +490,23 @@ Badges
 }
 
 .results__company-logo {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 120px;
     height: 32px;
     border-radius: 6px;
     background: linear-gradient(90deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .03));
     opacity: .6;
+    transition:
+        opacity var(--duration-hover, 420ms) var(--ease-hover, ease),
+        transform var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.results__company-logo:hover {
+    opacity: 1;
+    transform: translateY(-2px);
 }
 
 
@@ -471,11 +558,14 @@ Badges
     border-radius: var(--glass-radius-sm, 16px);
     border: 1px solid var(--glass-border, rgba(255, 255, 255, .08));
     background: linear-gradient(160deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .015));
-    transition: border-color var(--duration-hover, 420ms) var(--ease-hover, ease);
+    transition:
+        border-color var(--duration-hover, 420ms) var(--ease-hover, ease),
+        transform var(--duration-hover, 420ms) var(--ease-hover, ease);
 }
 
 .community__gallery-item:hover {
     border-color: var(--glass-border-hover, rgba(255, 255, 255, .18));
+    transform: scale(1.03);
 }
 
 
@@ -484,7 +574,31 @@ Badges
    -------------------------------------------------------------------------- */
 
 .faq-item {
+    position: relative;
     border-top: 1px solid var(--glass-border, rgba(255, 255, 255, .08));
+}
+
+/* Barra de acento — quase invisível em repouso, cresce suavemente no
+   hover e permanece visível enquanto a resposta está aberta. */
+.faq-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--color-accent-green, #00ff84);
+    opacity: 0;
+    transform: scaleY(.4);
+    transition:
+        opacity var(--duration-hover, 420ms) var(--ease-hover, ease),
+        transform var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.faq-item:hover::before,
+.faq-item.is-open::before {
+    opacity: .55;
+    transform: scaleY(1);
 }
 
 .faq-item:last-child {
@@ -589,10 +703,29 @@ Badges
 }
 
 .footer__nav-list a {
+    position: relative;
+    display: inline-block;
     font-size: .95rem;
     color: var(--copy-secondary, rgba(255, 255, 255, .62));
     text-decoration: none;
     transition: color var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.footer__nav-list a::after,
+.footer__social-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 100%;
+    bottom: -2px;
+    height: 1px;
+    background: currentColor;
+    transition: right var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.footer__nav-list a:hover::after,
+.footer__social-link:hover::after {
+    right: 0;
 }
 
 .footer__nav-list a:hover {
@@ -605,6 +738,8 @@ Badges
 }
 
 .footer__social-link {
+    position: relative;
+    display: inline-block;
     font-size: .9rem;
     color: var(--copy-secondary, rgba(255, 255, 255, .62));
     text-decoration: none;
@@ -745,11 +880,18 @@ Badges
     .community__gallery-item,
     .faq-item__trigger,
     .faq-item__trigger::after,
+    .faq-item::before,
+    .footer__nav-list a::after,
+    .footer__social-link::after,
     .footer__nav-list a,
     .footer__social-link,
     .nav__menu-trigger,
     .nav__menu-caret,
-    .nav__menu-item {
+    .nav__menu-item,
+    .stat-item,
+    .transformation__benefit,
+    .results__company-logo,
+    [data-glow]::after {
         transition-duration: 1ms !important;
     }
 
@@ -757,7 +899,10 @@ Badges
     .button--secondary:hover,
     .timeline__item:hover,
     .transformation-card:hover,
-    .testimonial-card:hover {
+    .testimonial-card:hover,
+    .community__gallery-item:hover,
+    .stat-item:hover,
+    .results__company-logo:hover {
         transform: none !important;
     }
 }
