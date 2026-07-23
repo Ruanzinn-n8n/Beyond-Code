@@ -51,6 +51,78 @@
 
 
 /* --------------------------------------------------------------------------
+   1.1 DESIGN TOKENS — SISTEMA DAS SEÇÕES + NAVBAR
+   Estende o sistema acima para tudo que vem depois da Hero (Story,
+   Transformation, Results, Community, FAQ, CTA, Footer) e para a
+   navbar. Nomes próprios (nunca reaproveita nomes de variables.css,
+   importado só em typography.css) para não sobrescrever nada por
+   acidente — como este arquivo carrega DEPOIS de typography.css, um
+   nome repetido em :root venceria silenciosamente.
+   -------------------------------------------------------------------------- */
+:root {
+
+    /* Texto — três níveis de contraste, nunca branco 100% puro no corpo
+     do texto (só o essencial, como números de destaque). */
+    --copy-primary: rgba(255, 255, 255, 0.96);
+    --copy-secondary: rgba(255, 255, 255, 0.62);
+    --copy-tertiary: rgba(255, 255, 255, 0.36);
+
+    /* Verde DevClub — o mesmo tom já usado no glow da Hero (rgba(0,255,132)).
+     Usado com extrema moderação: só para o que precisa chamar atenção
+     (hover de botões, itens do dropdown, glow do CTA). */
+    --color-accent-green: #00ff84;
+
+    /* Fontes com fallback seguro: se --font-title / --font-body existirem
+     em variables.css, são usadas; senão caem nas fontes já carregadas
+     via Google Fonts no <head>. */
+    --font-display: var(--font-title, 'Space Grotesk', sans-serif);
+    --font-copy: var(--font-body, 'Inter', sans-serif);
+
+    /* Superfícies "glass" — um único sistema para todo card do site
+     (timeline, cards do método, depoimentos) e para o dropdown da
+     navbar: mesmo raio, mesmo vidro, mesmo brilho, mesmo hover. */
+    --glass-bg: rgba(255, 255, 255, 0.025);
+    --glass-bg-hover: rgba(255, 255, 255, 0.045);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-border-hover: rgba(255, 255, 255, 0.18);
+    --glass-radius: 24px;
+    --glass-radius-sm: 16px;
+    --glass-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+    --glass-shadow-hover: 0 40px 110px rgba(0, 0, 0, 0.45);
+
+    /* Timing de hover — compartilhado por botões, cards, itens de menu
+     e a navbar. Nunca rápido, nunca brusco. */
+    --ease-hover: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-hover: 420ms;
+
+    /* Ritmo vertical — todas as seções abaixo da Hero respiram na mesma
+     medida, o que por si só já ajuda a costurar a página como um
+     único ambiente contínuo. */
+    --section-padding-y: 180px;
+    --section-padding-y-lg: 220px;
+
+    /* Navbar — dois estados bem distintos, amarrados a "dentro" ou "fora"
+     da Hero (ver IntersectionObserver em js/nav.js), não a um valor de
+     scroll arbitrário:
+     — --nav-* (dentro da Hero): quase invisível, sensação de flutuar.
+     — --nav-*-scrolled (fora da Hero): vidro fosco, com presença real. */
+    --nav-bg: rgba(7, 8, 10, 0.12);
+    --nav-bg-scrolled: rgba(7, 8, 10, 0.76);
+    --nav-blur: blur(6px) saturate(120%);
+    --nav-blur-scrolled: blur(22px) saturate(160%);
+    --nav-border: rgba(255, 255, 255, 0.03);
+    --nav-border-scrolled: rgba(255, 255, 255, 0.09);
+    --nav-shadow-scrolled: 0 20px 45px rgba(0, 0, 0, 0.25);
+
+    /* Dropdown — mais opaco que a navbar em qualquer estado dela, porque
+     precisa continuar legível sobre qualquer conteúdo passando por
+     baixo (mesma linguagem "glass" dos cards do site). */
+    --dropdown-bg: rgba(12, 14, 18, 0.82);
+    --dropdown-blur: blur(26px) saturate(160%);
+}
+
+
+/* --------------------------------------------------------------------------
    2. BASE GLOBAL
    Define o "chão" da página. Tudo o mais é luz projetada sobre isto.
    -------------------------------------------------------------------------- */
@@ -70,9 +142,12 @@ body {
     min-height: 100vh;
 }
 
-/* Cabeçalho, conteúdo e rodapé precisam existir num plano acima da
-   atmosfera (que é position: fixed e teria z-index natural conflitante). */
-.header,
+/* Conteúdo e rodapé precisam existir num plano acima da atmosfera (que é
+   position: fixed e teria z-index natural conflitante). O .header fica
+   de fora desta regra de propósito: ele precisa de position: fixed
+   (definido em css/layout.css, como overlay puro que nunca ocupa
+   espaço no layout) e de um z-index mais alto, para ficar acima de
+   qualquer seção — a navbar e o dropdown resolvem isso lá. */
 .main,
 .footer {
     position: relative;
@@ -150,13 +225,21 @@ body {
     background-size: 160px 160px;
 }
 
-/* 3.4 — Partículas (reservado)
-   Vazio por design. Nenhum framework de partículas foi decidido
-   ainda; este elemento só existe para já ter endereço fixo no layout,
-   evitando reestruturar HTML/CSS quando essa etapa chegar. */
+/* 3.4 — Partículas
+   Uma trama de pontos extremamente discreta, via CSS puro (nenhum
+   framework, nenhum JS) — o suficiente para a página ganhar textura de
+   "campo de partículas" sem nunca ler como um efeito. Repete-se sozinha
+   por ser um padrão pequeno; custo de renderização é o de um único
+   background, não o de centenas de elementos. */
 .core__particles {
     position: absolute;
     inset: 0;
+    opacity: 0.5;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px);
+    background-size: 64px 64px;
+    background-position: 0 0;
+    -webkit-mask-image: radial-gradient(120% 90% at 50% 20%, #000 0%, transparent 75%);
+    mask-image: radial-gradient(120% 90% at 50% 20%, #000 0%, transparent 75%);
 }
 
 /* 3.5 — Vinheta
@@ -173,7 +256,84 @@ body {
 
 
 /* --------------------------------------------------------------------------
-   4. ACESSIBILIDADE / PREPARAÇÃO PARA MOVIMENTO
+   5. PONTES DE LUZ ENTRE SEÇÕES
+   A .core (seção 3) já garante que todo o site compartilha o mesmo fundo
+   fixo — é o que evita a sensação de "blocos empilhados". Esta seção
+   reforça essa continuidade: cada seção principal ganha um brilho de
+   fundo próprio, largo e borrado por gradiente (nunca filter: blur, que
+   é caro em áreas grandes), sempre extrapolando os limites da própria
+   seção para "vazar" na seguinte.
+
+   São pseudo-elementos (::before) — nenhuma div nova é criada. Por
+   virem antes do conteúdo real na árvore, pintam atrás dele sem
+   precisar de z-index (position: relative nas seções vive em
+   css/layout.css, ao lado do restante da estrutura de cada uma).
+   -------------------------------------------------------------------------- */
+.story::before,
+.transformation::before,
+.results::before,
+.community::before,
+.cta::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    width: 1400px;
+    max-width: 160vw;
+    aspect-ratio: 1;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Story — ecoa o glow frio da Hero, um pouco mais alto que a própria
+   seção para "puxar" o olhar de uma seção para a outra.
+   --parallax-offset: etapa 2 vai atualizar isso no scroll; hoje é
+   sempre 0px, então o resultado visual é idêntico ao de antes. */
+.story::before {
+    top: -30%;
+    --parallax-offset: 0px;
+    transform: translateX(-72%) translateY(var(--parallax-offset));
+    background: radial-gradient(circle, rgba(110, 140, 163, 0.08), transparent 65%);
+}
+
+/* Transformation — glow central e mais discreto, coerente com o layout
+   centralizado da seção. */
+.transformation::before {
+    top: -10%;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(110, 140, 163, 0.06), transparent 60%);
+}
+
+/* Results — o único ponto do site (fora Hero/CTA) com uma insinuação de
+   verde, coerente com o "componente tecnológico" pedido para o mapa. */
+.results::before {
+    top: -15%;
+    transform: translateX(-30%);
+    background: radial-gradient(circle, rgba(0, 255, 132, 0.05), transparent 62%);
+}
+
+/* Community — ecoa do lado direito, acompanhando o header alinhado à
+   direita desta seção. */
+.community::before {
+    top: -20%;
+    transform: translateX(-28%);
+    background: radial-gradient(circle, rgba(110, 140, 163, 0.07), transparent 65%);
+}
+
+/* CTA — o glow mais generoso do site depois da Hero: é o "encerramento
+   cinematográfico" pedido no brief, branco e verde muito discretos se
+   sobrepondo, vazando para o Footer logo abaixo. */
+.cta::before {
+    top: -55%;
+    width: 1700px;
+    transform: translateX(-50%);
+    background:
+        radial-gradient(circle, rgba(255, 255, 255, 0.05), transparent 55%),
+        radial-gradient(circle, rgba(0, 255, 132, 0.05), transparent 70%);
+}
+
+
+/* --------------------------------------------------------------------------
+   6. ACESSIBILIDADE / PREPARAÇÃO PARA MOVIMENTO
    Nenhuma animação foi escrita ainda, mas a regra já fica pronta:
    qualquer animação futura na atmosfera (respiração do glow, partículas)
    deve respeitar quem pede menos movimento.

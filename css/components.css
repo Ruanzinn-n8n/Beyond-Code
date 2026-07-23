@@ -23,3 +23,741 @@ Badges
     gap: 20px;
     margin-top: 50px;
 }
+
+
+/* ==========================================================================
+   BOTÕES — ACABAMENTO
+   .button (acima) já define a forma-base usada na Hero. Aqui só
+   completamos o que faltava: cor, hover, foco e estado ativo — usado
+   tanto na Hero quanto no "Entrar" da navbar, para o botão continuar
+   sendo "o mesmo botão elegante" em qualquer lugar do site.
+   ========================================================================== */
+
+.button {
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition:
+        transform var(--duration-hover, 420ms) var(--ease-hover, ease),
+        box-shadow var(--duration-hover, 420ms) var(--ease-hover, ease),
+        background-color var(--duration-hover, 420ms) var(--ease-hover, ease),
+        border-color var(--duration-hover, 420ms) var(--ease-hover, ease);
+    will-change: transform;
+}
+
+/* Primário — preenchido, branco puro sobre o vazio: o único lugar do
+   site (fora o verde de destaque) que usa contraste máximo. */
+.button--primary {
+    background: var(--copy-primary, #fff);
+    color: var(--color-void, #06070a);
+    box-shadow: 0 20px 50px rgba(255, 255, 255, 0.08);
+}
+
+.button--primary:hover {
+    transform: translateY(-2px) scale(1.015);
+    box-shadow: 0 26px 70px rgba(255, 255, 255, 0.14);
+}
+
+/* Secundário — contorno quase invisível em repouso; o verde só aparece
+   no hover, como um convite discreto a clicar, nunca como decoração
+   parada na tela. */
+.button--secondary {
+    background: transparent;
+    color: var(--copy-primary, #fff);
+    border-color: var(--glass-border, rgba(255, 255, 255, .08));
+}
+
+.button--secondary:hover {
+    transform: translateY(-2px);
+    border-color: var(--color-accent-green, #00ff84);
+    background: rgba(0, 255, 132, .06);
+    box-shadow: 0 20px 50px rgba(0, 255, 132, .08);
+}
+
+.button:active {
+    transform: translateY(0) scale(0.98);
+    transition-duration: 120ms;
+}
+
+.button:focus-visible {
+    outline: 2px solid var(--color-accent-green, #00ff84);
+    outline-offset: 4px;
+}
+
+
+/* ==========================================================================
+   TIPOGRAFIA DE SEÇÃO — EYEBROW / TITLE / DESCRIPTION
+   Cada seção abaixo da Hero tem sua própria classe (story__eyebrow,
+   transformation__eyebrow...), mas todas devem ler como o mesmo
+   sistema tipográfico da Hero — por isso agrupadas numa única regra.
+   ========================================================================== */
+
+.story__eyebrow,
+.transformation__eyebrow,
+.results__eyebrow,
+.community__eyebrow,
+.faq__eyebrow,
+.cta__eyebrow {
+    display: inline-block;
+    font-size: .8rem;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--color-accent-green, #00ff84);
+    margin-bottom: 22px;
+}
+
+.story__title,
+.transformation__title,
+.results__title,
+.community__title,
+.faq__title,
+.cta__title {
+    font-family: var(--font-display, 'Space Grotesk', sans-serif);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--copy-primary, rgba(255, 255, 255, .96));
+    margin-bottom: 26px;
+}
+
+.story__title,
+.transformation__title,
+.community__title {
+    font-size: clamp(2.4rem, 3.2vw, 3.4rem);
+}
+
+.results__title,
+.cta__title {
+    font-size: clamp(2.6rem, 3.6vw, 3.8rem);
+}
+
+.faq__title {
+    font-size: clamp(2.1rem, 2.6vw, 2.7rem);
+}
+
+.story__description,
+.transformation__description,
+.results__description,
+.community__description,
+.faq__description,
+.cta__description {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--copy-secondary, rgba(255, 255, 255, .62));
+    font-weight: 400;
+}
+
+.cta__description {
+    font-size: 1.15rem;
+}
+
+/* Story-only: mesma hierarquia da Hero, só com um pouco mais de respiro
+   e uma medida de leitura mais curta — texto que "respira", nunca um
+   bloco grande. Não mexe na regra agrupada acima (que serve todas as
+   seções); só soma o que é específico daqui. */
+.story__eyebrow {
+    margin-bottom: 26px;
+}
+
+.story__description {
+    max-width: 42ch;
+}
+
+
+/* ==========================================================================
+   SISTEMA DE CARDS "GLASS"
+   Um único vidro para todo o site: mesmo raio, mesmo brilho, mesmo
+   hover, mesmas sombras. As diferenças de conteúdo entre timeline,
+   cards do método e depoimentos ficam em blocos próprios logo abaixo;
+   o que é comum vive aqui.
+   ========================================================================== */
+
+.timeline__item,
+.transformation-card,
+.testimonial-card {
+    position: relative;
+    background: var(--glass-bg, rgba(255, 255, 255, .025));
+    border: 1px solid var(--glass-border, rgba(255, 255, 255, .08));
+    border-radius: var(--glass-radius, 24px);
+    box-shadow: var(--glass-shadow, 0 30px 80px rgba(0, 0, 0, .35));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition:
+        transform var(--duration-hover, 420ms) var(--ease-hover, ease),
+        background-color var(--duration-hover, 420ms) var(--ease-hover, ease),
+        border-color var(--duration-hover, 420ms) var(--ease-hover, ease),
+        box-shadow var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.timeline__item:hover,
+.transformation-card:hover,
+.testimonial-card:hover {
+    transform: translateY(-6px);
+    background: var(--glass-bg-hover, rgba(255, 255, 255, .045));
+    border-color: var(--glass-border-hover, rgba(255, 255, 255, .18));
+    box-shadow: var(--glass-shadow-hover, 0 40px 110px rgba(0, 0, 0, .45));
+}
+
+
+/* --------------------------------------------------------------------------
+   STORY — cartões da timeline
+   Números enormes e muito claros (quase fantasma), como em painéis de
+   produto premium: o número organiza, mas nunca compete com o texto.
+   O nó luminoso na linha (ver css/layout.css) usa a mesma cor fria do
+   glow da Hero, para a timeline parecer parte do mesmo sistema de luz.
+   -------------------------------------------------------------------------- */
+
+.timeline__item {
+    padding: 44px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    /* Camada extra de profundidade, exclusiva da timeline: um hairline
+       de luz no topo do card, quase imperceptível — soma-se à sombra
+       já herdada do sistema de cards acima, nunca a substitui. */
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .05),
+        var(--glass-shadow, 0 30px 80px rgba(0, 0, 0, .35));
+}
+
+.timeline__item:hover {
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .08),
+        var(--glass-shadow-hover, 0 40px 110px rgba(0, 0, 0, .45));
+}
+
+.timeline__item::before {
+    content: '';
+    position: absolute;
+    left: -46px;
+    top: 46px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-glow-cold, #6e8ca3);
+    box-shadow:
+        0 0 0 4px rgba(110, 140, 163, .14),
+        0 0 22px 4px rgba(110, 140, 163, .35);
+}
+
+/* Etapa 2 (iluminação dinâmica / mouse interaction): um brilho radial
+   que segue o ponteiro, já com toda a mecânica pronta via custom
+   properties — só não está ativo (opacity: 0) porque nenhum JS ainda
+   atualiza --pointer-x/--pointer-y ou liga essa camada. Quando a etapa
+   2 chegar, basta o JS escrever as duas variáveis e subir a opacidade
+   (ex.: no mousemove/mouseenter) — nenhuma mudança de CSS necessária. */
+.timeline__item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+        240px circle at var(--pointer-x, 50%) var(--pointer-y, 50%),
+        rgba(255, 255, 255, .06),
+        transparent 70%
+    );
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.timeline__number {
+    font-family: var(--font-display, 'Space Grotesk', sans-serif);
+    font-size: clamp(2.4rem, 3vw, 3rem);
+    font-weight: 700;
+    line-height: 1;
+    color: rgba(255, 255, 255, .14);
+}
+
+.timeline__item h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--copy-primary, rgba(255, 255, 255, .96));
+}
+
+.timeline__item p {
+    font-size: .98rem;
+    line-height: 1.7;
+    color: var(--copy-secondary, rgba(255, 255, 255, .62));
+}
+
+
+/* --------------------------------------------------------------------------
+   ETAPA 2 — PREPARAÇÃO (scroll reveal)
+   Nenhum efeito visual hoje: --reveal-progress começa em 1 (sempre
+   visível), então opacity fica 1 e o transform vira translateY(0) —
+   idêntico ao estado atual. Quando o scroll-reveal for implementado,
+   basta o JS setar --reveal-progress: 0 no estado inicial (via
+   IntersectionObserver) e 1 quando o elemento entrar em cena — a
+   transição já está pronta, não precisa tocar em CSS de novo.
+   -------------------------------------------------------------------------- */
+.story [data-reveal] {
+    --reveal-progress: 1;
+    opacity: var(--reveal-progress);
+    transform: translateY(calc((1 - var(--reveal-progress)) * 24px));
+    transition:
+        opacity var(--duration-hover, 420ms) var(--ease-hover, ease),
+        transform var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+
+/* --------------------------------------------------------------------------
+   TRANSFORMATION — cards do método
+   -------------------------------------------------------------------------- */
+
+.transformation-card {
+    padding: 44px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    text-align: left;
+}
+
+.transformation-card__icon {
+    display: block;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--glass-border-hover, rgba(255, 255, 255, .18));
+    background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, .08), transparent 70%);
+}
+
+.transformation-card__title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--copy-primary, rgba(255, 255, 255, .96));
+}
+
+.transformation-card__description {
+    font-size: .98rem;
+    line-height: 1.7;
+    color: var(--copy-secondary, rgba(255, 255, 255, .62));
+}
+
+/* Badges — "pílulas" quase invisíveis, texto pequeno, sem competir
+   com os cards acima. */
+.transformation__benefit {
+    padding: 10px 22px;
+    border-radius: 999px;
+    border: 1px solid var(--glass-border, rgba(255, 255, 255, .08));
+    background: var(--glass-bg, rgba(255, 255, 255, .025));
+    color: var(--copy-secondary, rgba(255, 255, 255, .62));
+    font-size: .85rem;
+    letter-spacing: .02em;
+}
+
+
+/* --------------------------------------------------------------------------
+   RESULTS — números de destaque, mapa-placeholder e logos parceiras
+   -------------------------------------------------------------------------- */
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 28px 0;
+    border-top: 1px solid var(--glass-border, rgba(255, 255, 255, .08));
+}
+
+.stat-item__number {
+    font-family: var(--font-display, 'Space Grotesk', sans-serif);
+    font-size: clamp(2.2rem, 2.8vw, 2.8rem);
+    font-weight: 700;
+    color: var(--copy-primary, rgba(255, 255, 255, .96));
+}
+
+.stat-item__label {
+    font-size: .92rem;
+    color: var(--copy-secondary, rgba(255, 255, 255, .62));
+}
+
+/* O mapa ainda não existe — mas o espaço precisa parecer um
+   componente tecnológico real: grid discreto, borda quase invisível,
+   glow frio, cantos suaves. */
+.results__map-visual {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--glass-radius, 24px);
+    border: 1px solid var(--glass-border, rgba(255, 255, 255, .08));
+    background-color: var(--color-elevated, #0f1218);
+    background-image:
+        linear-gradient(var(--glass-border, rgba(255, 255, 255, .05)) 1px, transparent 1px),
+        linear-gradient(90deg, var(--glass-border, rgba(255, 255, 255, .05)) 1px, transparent 1px),
+        radial-gradient(60% 60% at 50% 40%, rgba(110, 140, 163, .16), transparent 75%);
+    background-size: 48px 48px, 48px 48px, 100% 100%;
+    box-shadow: var(--glass-shadow, 0 30px 80px rgba(0, 0, 0, .35));
+    overflow: hidden;
+}
+
+.results__map-caption {
+    margin-top: 22px;
+    text-align: center;
+    font-size: .92rem;
+    color: var(--copy-tertiary, rgba(255, 255, 255, .36));
+}
+
+.results__companies-label {
+    font-size: .85rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--copy-tertiary, rgba(255, 255, 255, .36));
+    margin-bottom: 30px;
+}
+
+.results__companies-list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 56px;
+}
+
+.results__company-logo {
+    width: 120px;
+    height: 32px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .03));
+    opacity: .6;
+}
+
+
+/* --------------------------------------------------------------------------
+   COMMUNITY — depoimentos e galeria
+   -------------------------------------------------------------------------- */
+
+.testimonial-card {
+    padding: 40px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.testimonial-card__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--glass-border-hover, rgba(255, 255, 255, .18));
+    background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, .14), rgba(255, 255, 255, .02) 70%);
+}
+
+.testimonial-card__quote {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--copy-primary, rgba(255, 255, 255, .9));
+    font-style: normal;
+}
+
+.testimonial-card__author {
+    display: block;
+    font-size: .95rem;
+    font-weight: 600;
+    color: var(--copy-primary, rgba(255, 255, 255, .96));
+}
+
+.testimonial-card__role {
+    display: block;
+    font-size: .85rem;
+    color: var(--copy-tertiary, rgba(255, 255, 255, .36));
+    margin-top: 2px;
+}
+
+/* Galeria — composição fotográfica discreta: proporção fixa, vidro
+   sutil, sem hover chamativo (é decoração de fundo, não CTA). */
+.community__gallery-item {
+    aspect-ratio: 3 / 4;
+    border-radius: var(--glass-radius-sm, 16px);
+    border: 1px solid var(--glass-border, rgba(255, 255, 255, .08));
+    background: linear-gradient(160deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .015));
+    transition: border-color var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.community__gallery-item:hover {
+    border-color: var(--glass-border-hover, rgba(255, 255, 255, .18));
+}
+
+
+/* --------------------------------------------------------------------------
+   FAQ — extremamente limpo: linhas finas, sem cara de acordeão padrão
+   -------------------------------------------------------------------------- */
+
+.faq-item {
+    border-top: 1px solid var(--glass-border, rgba(255, 255, 255, .08));
+}
+
+.faq-item:last-child {
+    border-bottom: 1px solid var(--glass-border, rgba(255, 255, 255, .08));
+}
+
+.faq-item__question {
+    margin: 0;
+}
+
+.faq-item__trigger {
+    all: unset;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    width: 100%;
+    padding: 28px 4px;
+    cursor: pointer;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--copy-primary, rgba(255, 255, 255, .9));
+    transition: color var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.faq-item__trigger:hover {
+    color: var(--color-accent-green, #00ff84);
+}
+
+.faq-item__trigger:focus-visible {
+    outline: 2px solid var(--color-accent-green, #00ff84);
+    outline-offset: 6px;
+}
+
+/* Indicador "+" / "–" — puramente CSS, um único pseudo-elemento com
+   duas linhas desenhadas via gradiente. Reage ao aria-expanded que o
+   JS já existente do acordeão controla. */
+.faq-item__trigger::after {
+    content: '';
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    background:
+        linear-gradient(var(--copy-secondary, rgba(255, 255, 255, .62)), var(--copy-secondary, rgba(255, 255, 255, .62))) center / 100% 1px no-repeat,
+        linear-gradient(var(--copy-secondary, rgba(255, 255, 255, .62)), var(--copy-secondary, rgba(255, 255, 255, .62))) center / 1px 100% no-repeat;
+    transition: transform var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.faq-item__trigger[aria-expanded="true"]::after {
+    transform: rotate(45deg);
+}
+
+.faq-item__answer {
+    overflow: hidden;
+}
+
+.faq-item__answer p {
+    margin: 0;
+    padding: 0 4px 28px;
+    max-width: 68ch;
+    font-size: .98rem;
+    line-height: 1.8;
+    color: var(--copy-secondary, rgba(255, 255, 255, .62));
+    overflow: hidden;
+}
+
+
+/* --------------------------------------------------------------------------
+   FOOTER — ultra minimalista
+   -------------------------------------------------------------------------- */
+
+.footer__logo {
+    display: block;
+    font-family: var(--font-display, 'Space Grotesk', sans-serif);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--copy-primary, rgba(255, 255, 255, .96));
+    margin-bottom: 14px;
+}
+
+.footer__description {
+    max-width: 32ch;
+    font-size: .92rem;
+    line-height: 1.7;
+    color: var(--copy-tertiary, rgba(255, 255, 255, .4));
+}
+
+.footer__nav-title {
+    display: block;
+    font-size: .8rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--copy-tertiary, rgba(255, 255, 255, .36));
+    margin-bottom: 20px;
+}
+
+.footer__nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer__nav-list a {
+    font-size: .95rem;
+    color: var(--copy-secondary, rgba(255, 255, 255, .62));
+    text-decoration: none;
+    transition: color var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.footer__nav-list a:hover {
+    color: var(--copy-primary, rgba(255, 255, 255, .96));
+}
+
+.footer__social {
+    display: flex;
+    gap: 24px;
+}
+
+.footer__social-link {
+    font-size: .9rem;
+    color: var(--copy-secondary, rgba(255, 255, 255, .62));
+    text-decoration: none;
+    transition: color var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.footer__social-link:hover {
+    color: var(--color-accent-green, #00ff84);
+}
+
+.footer__copyright {
+    font-size: .82rem;
+    color: var(--copy-tertiary, rgba(255, 255, 255, .36));
+}
+
+
+/* ==========================================================================
+   NAVBAR
+   Logo, gatilho do dropdown ("Story ▾") e o próprio painel do menu. O
+   painel reaproveita a mesma linguagem "glass" dos cards acima, só um
+   pouco mais opaco (--dropdown-bg, ver effects.css) porque fica sobre
+   conteúdo em movimento.
+   ========================================================================== */
+
+.nav__logo {
+    font-family: var(--font-display, 'Space Grotesk', sans-serif);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--copy-primary, #ffffff);
+    text-decoration: none;
+    line-height: 1;
+}
+
+/* Gatilho — texto + um pequeno chevron desenhado em CSS puro (duas
+   bordas rotacionadas), sem depender de nenhum ícone/fonte externa. */
+.nav__menu-trigger {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: .95rem;
+    font-weight: 500;
+    color: var(--copy-secondary, rgba(255, 255, 255, .62));
+    transition: color var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.nav__menu-trigger:hover,
+.nav__menu-trigger[aria-expanded="true"] {
+    color: var(--copy-primary, #ffffff);
+}
+
+.nav__menu-trigger:focus-visible {
+    outline: 2px solid var(--color-accent-green, #00ff84);
+    outline-offset: 6px;
+    border-radius: 4px;
+}
+
+.nav__menu-caret {
+    width: 7px;
+    height: 7px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg) translateY(-2px);
+    transition: transform var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.nav__menu-trigger[aria-expanded="true"] .nav__menu-caret {
+    transform: rotate(225deg) translateY(2px);
+}
+
+/* Painel do dropdown — a "continuação natural da navbar" pedida no
+   brief: mesmo raio/sombra/blur da família de cards, só um pouco mais
+   opaco (ver --dropdown-bg em effects.css). */
+.nav__menu-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    padding: 10px;
+    list-style: none;
+    border-radius: var(--glass-radius-sm, 16px);
+    border: 1px solid var(--glass-border, rgba(255, 255, 255, .08));
+    background: var(--dropdown-bg, rgba(12, 14, 18, .82));
+    backdrop-filter: var(--dropdown-blur, blur(26px));
+    -webkit-backdrop-filter: var(--dropdown-blur, blur(26px));
+    box-shadow: var(--glass-shadow, 0 30px 80px rgba(0, 0, 0, .35));
+}
+
+.nav__menu-item {
+    display: block;
+    padding: 12px 16px;
+    border-radius: 10px;
+    font-size: .92rem;
+    color: var(--copy-secondary, rgba(255, 255, 255, .62));
+    text-decoration: none;
+    transition:
+        color var(--duration-hover, 420ms) var(--ease-hover, ease),
+        background-color var(--duration-hover, 420ms) var(--ease-hover, ease),
+        box-shadow var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+/* O "glow verde extremamente discreto" pedido no brief: um anel interno
+   sutil + uma sombra externa curta, nunca um brilho grande. */
+.nav__menu-item:hover,
+.nav__menu-item:focus-visible {
+    color: var(--copy-primary, #ffffff);
+    background: rgba(0, 255, 132, .05);
+    box-shadow:
+        inset 0 0 0 1px rgba(0, 255, 132, .12),
+        0 0 16px rgba(0, 255, 132, .10);
+}
+
+.nav__menu-item:focus-visible {
+    outline: 1px solid rgba(0, 255, 132, .4);
+    outline-offset: -1px;
+}
+
+/* "Entrar" — mesmo botão do resto do site, só compacto o suficiente
+   para conviver com uma navbar bem fina. */
+.nav__cta {
+    padding: 10px 20px;
+    font-size: .88rem;
+}
+
+
+/* ==========================================================================
+   ACESSIBILIDADE
+   Mesma regra global já usada em effects.css/animations.css, agora
+   cobrindo os hovers/transições definidos neste arquivo.
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    .button,
+    .timeline__item,
+    .transformation-card,
+    .testimonial-card,
+    .community__gallery-item,
+    .faq-item__trigger,
+    .faq-item__trigger::after,
+    .footer__nav-list a,
+    .footer__social-link,
+    .nav__menu-trigger,
+    .nav__menu-caret,
+    .nav__menu-item {
+        transition-duration: 1ms !important;
+    }
+
+    .button--primary:hover,
+    .button--secondary:hover,
+    .timeline__item:hover,
+    .transformation-card:hover,
+    .testimonial-card:hover {
+        transform: none !important;
+    }
+}

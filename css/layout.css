@@ -10,23 +10,69 @@ Footer
 
 */
 
+/* == HEADER / NAVBAR == */
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 50; /* acima de qualquer seção — o dropdown precisa flutuar sobre tudo */
+}
+
+.nav {
+    width: min(1400px, 100% - 160px);
+    margin-inline: auto;
+    height: var(--nav-height, 64px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* logo à esquerda, ações à direita, centro sempre vazio */
+    transition: height var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.nav__actions {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+/* Âncora de posicionamento do dropdown — o próprio botão/lista ficam
+   em components.css; aqui só a coordenada. */
+.nav__menu {
+    position: relative;
+}
+
+.nav__menu-list {
+    position: absolute;
+    top: calc(100% + 14px);
+    right: 0;
+    min-width: 240px;
+}
+
+/* Todas as seções navegáveis pelo dropdown (Story ▾) têm id — isso
+   garante que o scroll (suave, ver css/animations.css) nunca deixe o
+   início da seção escondido atrás da navbar fixa. */
+.main section[id] {
+    scroll-margin-top: var(--nav-height, 64px);
+}
+
 /* == HERO == */
 
 .hero {
     position: relative;
-    min-height: 92vh;
-    overflow: hidden;
+    min-height: 80vh;
 }
 
 .hero__container{
     width: min(1400px, 100% - 160px);
-    min-height: 92vh;
+    min-height: 80vh;
     margin-inline: auto;
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
     position: relative;
     z-index: 2;
+    transform: translateY(-40px);
 }
 
 .hero__background {
@@ -37,12 +83,6 @@ Footer
 
 .hero__content {
     max-width: 620px;
-}
-
-.hero__visual {
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .hero__scene {
@@ -104,7 +144,9 @@ Footer
 ===========================================*/
 
 .story{
-    padding:180px 0;
+    padding-top: 70px;
+    padding-bottom: 160px;
+    position: relative;
 }
 
 .story .container{
@@ -127,10 +169,63 @@ Footer
 
 }
 
+/* Timeline vertical: uma linha fina acompanhada de um pequeno nó
+   luminoso por item (ver components.css para o cartão em si). A linha
+   nasce e morre em degradê — nunca corta seca no topo/base. Um glow
+   bem suave (::after) acompanha a linha por trás, reforçando a
+   sensação de "componente tecnológico" sem nenhum exagero. */
 .story__timeline{
 
     order:1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding-left: 46px;
 
+    /* Etapa 2 (parallax): hoje sempre 0px — o JS futuro só precisa
+       atualizar esta variável no scroll, sem mexer em CSS. */
+    --parallax-offset: 0px;
+    transform: translateY(var(--parallax-offset));
+
+}
+
+.story__timeline::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 13px;
+    width: 1px;
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        var(--glass-border-hover, rgba(255, 255, 255, .18)) 12%,
+        var(--glass-border-hover, rgba(255, 255, 255, .18)) 88%,
+        transparent
+    );
+}
+
+/* Glow acompanhando a linha — mesmo formato/degradê, só mais largo,
+   mais borrado e bem mais discreto. Reforça a continuidade vertical
+   sem nunca competir com a linha nítida da frente. */
+.story__timeline::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 13px;
+    width: 3px;
+    transform: translateX(-1px);
+    filter: blur(4px);
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(110, 140, 163, .35) 15%,
+        rgba(110, 140, 163, .35) 85%,
+        transparent
+    );
+    pointer-events: none;
 }
 
 /* ==========================================================
@@ -138,62 +233,68 @@ Footer
 ========================================================== */
 
 .transformation{
-
-    padding:180px 0;
-
+    padding-top: 70px;
+    padding-bottom: 160px;
+    position: relative;
 }
 
 .transformation .container{
-
     width:min(1300px,100% - 160px);
     margin-inline:auto;
-
     display:flex;
-
     flex-direction:column;
-
     align-items:center;
-
 }
 
 .transformation__header{
-
     max-width:720px;
-
     text-align:center;
-
     margin-bottom:90px;
-
 }
 
 .transformation__content{
-
     width:100%;
+    position: relative;
+}
 
+/* O visual não fica "empilhado" acima dos cards — ele ocupa a mesma
+   área deles, como um painel de luz por trás (position: absolute
+   inset: 0 acompanha a altura do grid de cards, que é quem define o
+   fluxo real). É isso que dá a sensação de "visual integrado" pedida
+   no brief, sem duplicar espaço vertical. */
+.transformation__visual{
+    position: absolute;
+    inset: -40px;
+    z-index: 0;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+}
+
+.transformation__scene{
+    width: min(1040px, 100%);
+    height: 100%;
+    border-radius: var(--glass-radius, 24px);
+    background:
+        radial-gradient(60% 80% at 50% 0%, rgba(110, 140, 163, 0.12), transparent 70%);
 }
 
 .transformation__cards{
-
+    position: relative;
+    z-index: 1;
     display:grid;
-
     grid-template-columns:repeat(3,1fr);
-
     gap:32px;
-
 }
 
 .transformation__benefits{
-
+    position: relative;
+    z-index: 1;
     margin-top:70px;
-
     display:flex;
-
     justify-content:center;
-
     flex-wrap:wrap;
-
     gap:20px;
-
 }
 
 /* ==========================================================
@@ -201,53 +302,51 @@ Footer
 ========================================================== */
 
 .results{
-
-    padding:180px 0;
-
+    padding-top: 70px;
+    padding-bottom: 160px;
+    position: relative;
 }
 
 .results .container{
-
     width:min(1300px,100% - 160px);
-
     margin-inline:auto;
-
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+        "map header"
+        "stats stats"
+        "companies companies";
+    column-gap: 100px;
+    row-gap: 70px;
+    align-items: center;
 }
 
 .results__header{
-
-    max-width:620px;
-
-    margin-bottom:70px;
-
+    grid-area: header;
+    max-width:560px;
 }
 
 .results__stats{
-
+    grid-area: stats;
     display:grid;
-
     grid-template-columns:repeat(4,1fr);
-
     gap:28px;
-
-    margin-bottom:80px;
-
 }
 
+/* O mapa ainda não existe — mas o espaço reservado já precisa parecer
+   um componente real: grid técnico discreto, borda quase invisível,
+   glow frio, cantos suaves. Nada disso é decoração gratuita: é o que
+   torna o placeholder parte do "universo" da página, não um buraco. */
 .results__map{
-
-    margin-bottom:80px;
-
+    grid-area: map;
+    margin-bottom: 0;
 }
 
 .results__companies{
-
+    grid-area: companies;
     display:flex;
-
     flex-direction:column;
-
     align-items:center;
-
 }
 
 /* ==========================================================
@@ -255,51 +354,34 @@ Footer
 ========================================================== */
 
 .community{
-
-    padding:180px 0;
-
+    padding-top: 70px;
+    padding-bottom: 160px;
+    position: relative;
 }
 
 .community .container{
-
     width:min(1300px,100% - 160px);
-
     margin-inline:auto;
-
 }
 
 .community__header{
-
     max-width:620px;
-
-    margin-left:auto;
-
-    text-align:right;
-
+    margin-inline:auto;
+    text-align:center;
     margin-bottom:80px;
-
 }
 
 .community__testimonials{
-
     display:grid;
-
     grid-template-columns:repeat(3,1fr);
-
     gap:30px;
-
     margin-bottom:70px;
-
 }
 
 .community__gallery{
-
     display:grid;
-
     grid-template-columns:repeat(6,1fr);
-
     gap:20px;
-
 }
 
 /* ==========================================================
@@ -307,39 +389,26 @@ Footer
 ========================================================== */
 
 .faq{
-
-    padding:180px 0;
-
+    padding-top: 70px;
+    padding-bottom: 160px;
 }
 
 .faq .container{
-
     width:min(1000px,100% - 160px);
-
     margin-inline:auto;
-
 }
 
 .faq__header{
-
     text-align:center;
-
     max-width:700px;
-
     margin-inline:auto;
-
     margin-bottom:80px;
-
 }
 
 .faq__list{
-
     display:flex;
-
     flex-direction:column;
-
     gap:18px;
-
 }
 
 /* ==========================================================
@@ -347,39 +416,45 @@ Footer
 ========================================================== */
 
 .cta{
-
-    padding:220px 0;
-
+    padding-top: 70px;
+    padding-bottom: 160px;
+    position: relative;
 }
 
 .cta .container{
-
     width:min(1200px,100% - 160px);
-
     margin-inline:auto;
-
+    position: relative;
 }
 
 .cta__content{
-
+    position: relative;
+    z-index: 1;
     max-width:760px;
-
     margin-inline:auto;
-
     text-align:center;
+}
 
+/* O "encerramento cinematográfico" pedido no brief: um painel de luz
+   generoso, centrado atrás do conteúdo, complementando (nunca
+   repetindo) o brilho mais amplo já definido em css/effects.css. */
+.cta__visual{
+    position: absolute;
+    inset: -25% -10%;
+    z-index: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(50% 60% at 50% 40%, rgba(255, 255, 255, 0.05), transparent 70%),
+        radial-gradient(40% 50% at 50% 65%, rgba(0, 255, 132, 0.06), transparent 75%);
 }
 
 .cta__actions{
-
+    position: relative;
+    z-index: 1;
     margin-top:50px;
-
     display:flex;
-
     justify-content:center;
-
     gap:24px;
-
 }
 
 /* ==========================================================
@@ -387,31 +462,44 @@ Footer
 ========================================================== */
 
 .footer{
-
     padding:100px 0 40px;
+    position: relative;
+}
 
+/* Linha superior quase invisível — a única "borda" do site inteiro,
+   marcando o fim do conteúdo sem nunca parecer um corte seco. */
+.footer::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(1300px,100% - 160px);
+    height:1px;
+    background:linear-gradient(
+        to right,
+        transparent,
+        var(--color-hairline, rgba(255,255,255,.06)) 20%,
+        var(--color-hairline, rgba(255,255,255,.06)) 80%,
+        transparent
+    );
 }
 
 .footer__container{
-
     width:min(1300px,100% - 160px);
-
     margin-inline:auto;
-
     display:flex;
-
     justify-content:space-between;
-
     align-items:flex-start;
-
     gap:80px;
+}
 
+.footer__nav{
+    display:flex;
+    gap:80px;
 }
 
 .footer__bottom{
-
     margin-top:70px;
-
     text-align:center;
-
 }

@@ -62,9 +62,42 @@
 
   <header class="header">
     <nav class="nav">
-      <!-- Logo -->
-      <!-- Links -->
-      <!-- CTA -->
+
+      <a href="#" class="nav__logo" aria-label="DevClub — voltar ao topo">DevClub</a>
+
+      <div class="nav__actions">
+
+        <div class="nav__menu">
+          <button
+            type="button"
+            class="nav__menu-trigger"
+            id="nav-menu-trigger"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="nav-menu-list"
+          >
+            <span class="nav__menu-trigger-label">Story</span>
+            <span class="nav__menu-caret" aria-hidden="true"></span>
+          </button>
+
+          <ul
+            class="nav__menu-list"
+            id="nav-menu-list"
+            role="menu"
+            aria-labelledby="nav-menu-trigger"
+            hidden
+          >
+            <li role="none"><a href="#journey" class="nav__menu-item" role="menuitem">Story</a></li>
+            <li role="none"><a href="#method" class="nav__menu-item" role="menuitem">Transformation</a></li>
+            <li role="none"><a href="#results" class="nav__menu-item" role="menuitem">Results</a></li>
+            <li role="none"><a href="#community" class="nav__menu-item" role="menuitem">Community</a></li>
+            <li role="none"><a href="#faq" class="nav__menu-item" role="menuitem">FAQ</a></li>
+            <li role="none"><a href="#start" class="nav__menu-item" role="menuitem">CTA</a></li>
+          </ul>
+        </div>
+
+      </div>
+
     </nav>
   </header>
 
@@ -99,7 +132,7 @@
           <!-- Bloco com os dois botões de ação da Hero -->
           <div class="hero__actions">
             <a href="#journey" class="button button--primary">Explorar</a>
-            <a href="#results" class="button button--secondary">Resultados</a>
+            <a href="#start" class="button button--secondary">Começar</a>
           </div>
 
         </div>
@@ -121,11 +154,11 @@
 
         <div class="story__header">
 
-          <span class="story__eyebrow">TODO PROFISSIONAL JÁ FOI UM INICIANTE</span>
+          <span class="story__eyebrow" data-reveal>TODO PROFISSIONAL JÁ FOI UM INICIANTE</span>
 
-          <h2 class="story__title">Você não precisa nascer sabendo.</h2>
+          <h2 class="story__title" data-reveal>Você não precisa nascer sabendo.</h2>
 
-          <p class="story__description">
+          <p class="story__description" data-reveal>
             Todo desenvolvedor que você admira começou exatamente
             onde você está agora. A diferença nunca foi talento,
             mas a decisão de continuar aprendendo.
@@ -134,7 +167,7 @@
         </div>
 
         <div class="story__timeline">
-          <div class="timeline__item">
+          <div class="timeline__item" data-reveal style="--i: 0">
 
             <span class="timeline__number">01</span>
 
@@ -143,7 +176,7 @@
 
           </div>
 
-          <div class="timeline__item">
+          <div class="timeline__item" data-reveal style="--i: 1">
 
             <span class="timeline__number">02</span>
 
@@ -152,7 +185,7 @@
 
           </div>
 
-          <div class="timeline__item">
+          <div class="timeline__item" data-reveal style="--i: 2">
 
             <span class="timeline__number">03</span>
 
@@ -434,8 +467,8 @@
           </p>
 
           <div class="cta__actions">
-            <a href="#" class="button button--primary">Quero começar agora</a>
-            <a href="#" class="button button--secondary">Falar com um consultor</a>
+            <a href="https://links.devclub.com.br/pagamentos-lf60" class="button button--primary">Quero começar agora</a>
+            <a href="http://wa.me/5586981653315" class="button button--secondary">Falar com um consultor</a>
           </div>
 
         </div>
@@ -475,7 +508,7 @@
           <span class="footer__nav-title">Suporte</span>
           <ul class="footer__nav-list">
             <li><a href="#faq">Perguntas frequentes</a></li>
-            <li><a href="#">Contato</a></li>
+            <li><a href="https://www.instagram.com/rodolfomorii?igsh=MXdtYnlpM2MyeXo4dg==">Contato</a></li>
             <li><a href="#">Política de privacidade</a></li>
           </ul>
         </div>

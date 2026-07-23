@@ -28,23 +28,42 @@ export class HeroOrb {
 
     this.options = Object.assign(
       {
-        particleCount: 120,
+        particleCount: 240,
         rotationSpeedDeg: 4, // graus por segundo — dentro de 3–5
-        maxNeighbors: 3, // conexões por partícula (garante rede esparsa)
-        neighborThreshold: 0.62, // distância de corda (unidade da esfera)
-        breathAmplitude: 0.028, // variação de "respiração" do raio
+        maxNeighbors: 2, // reduzido (era 3) para compensar o dobro de partículas
+        neighborThreshold: 0.46, // ajustado para a nova densidade (era 0.62)
+        // Respiração orgânica: duas ondas senoidais sobrepostas, com
+        // períodos não múltiplos entre si — evita o padrão "metrônomo"
+        // de uma única senoide e passa a sensação de organismo vivo.
+        breathAmplitude: 0.026,
         breathPeriodMs: 6200,
+        breathSecondaryAmplitude: 0.011,
+        breathSecondaryPeriodMs: 3850,
         floatAmplitudePx: 7, // oscilação vertical, em px de tela
         floatPeriodMs: 5200,
+        floatSecondaryAmplitudePx: 2.4,
+        floatSecondaryPeriodMs: 3300,
+        // Pequeníssima variação orgânica na velocidade de rotação —
+        // imperceptível como "efeito", mas quebra a monotonia mecânica.
+        rotationJitterAmount: 0.06,
+        rotationJitterPeriodMs: 9000,
         mouseInfluenceRadiusFactor: 3.2, // múltiplo do raio do canvas
         mouseTiltMaxRad: 0.16, // ~9°
         mouseLerp: 0.055, // suavização do "aproximar/afastar"
         glowBaseAlpha: 0.16,
         glowHoverBoost: 0.10, // +10% pedido no brief
+        // Onda de energia (clique): pico instantâneo que decai suavemente,
+        // como uma respiração rápida — nunca uma explosão.
+        pulseDecayRate: 0.90, // aplicado por passo de ~16.6ms
+        pulseBreathBoost: 0.05, // expansão extra do raio durante o pulso
+        pulseGlowBoost: 0.45, // glow visivelmente mais alto no pico do clique
+        pulseGreenBoost: 0.5, // peso extra do verde durante o pulso (mesmo tom do .hero__glow)
         colorCore: '255, 255, 255',
         colorParticleWarm: '255, 255, 255',
         colorParticleCool: '210, 224, 236', // cinza muito claro / azul sutil
         colorGlow: '198, 214, 232',
+        colorGlowGreen: '0, 255, 132', // verde DevClub — usado com muita moderação
+        greenBaseWeight: 0.05, // tonalidade verde discreta, sempre presente
       },
       options
     );
@@ -70,6 +89,9 @@ export class HeroOrb {
     this._pointerScreenY = 0;
     this._bounds = null; // cache de getBoundingClientRect
 
+    /* -- estado da onda de energia (clique) ---------------------------- */
+    this._pulseEnergy = 0; // 0..1, decai sozinho a cada frame
+
     /* -- geometria / buffers reutilizáveis (evita GC por frame) ------- */
     this._particles = null; // { bx, by, bz, sizeFactor, brightFactor }[]
     this._edges = null; // [i, j][]
@@ -93,6 +115,7 @@ export class HeroOrb {
     this._onResize = this._onResize.bind(this);
     this._onPointerMove = this._onPointerMove.bind(this);
     this._onPointerLeave = this._onPointerLeave.bind(this);
+    this._onClick = this._onClick.bind(this);
     this._onVisibilityChange = this._onVisibilityChange.bind(this);
     this._loop = this._loop.bind(this);
   }
@@ -106,6 +129,9 @@ export class HeroOrb {
     this._generateEdges();
     this._bindEvents();
     this.resize();
+    // Sinaliza que a esfera responde a clique (onda de energia) — estilo
+    // inline via JS, sem criar nenhuma regra CSS nova.
+    this.canvas.style.cursor = 'pointer';
     return this;
   }
 
@@ -129,6 +155,7 @@ export class HeroOrb {
     window.removeEventListener('resize', this._onResize);
     window.removeEventListener('mousemove', this._onPointerMove);
     window.removeEventListener('mouseleave', this._onPointerLeave);
+    this.canvas.removeEventListener('click', this._onClick);
     document.removeEventListener('visibilitychange', this._onVisibilityChange);
 
     if (this._resizeObserver) {
@@ -159,7 +186,10 @@ export class HeroOrb {
       // Fibonacci sphere: distribuição uniforme, sem aglomerar nos polos.
       const y = 1 - (i / (n - 1)) * 2;
       const radiusAtY = Math.sqrt(Math.max(0, 1 - y * y));
-      const theta = GOLDEN_ANGLE * i;
+      // Pequeno jitter no ângulo: quebra o leve padrão em espiral que o
+      // Fibonacci sphere puro pode revelar, deixando a esfera mais "cheia"
+      // e orgânica, sem comprometer a distribuição uniforme de base.
+      const theta = GOLDEN_ANGLE * i + (Math.random() - 0.5) * 0.06;
 
       const bx = Math.cos(theta) * radiusAtY;
       const bz = Math.sin(theta) * radiusAtY;
@@ -169,8 +199,10 @@ export class HeroOrb {
         by: y,
         bz,
         // leve jitter de tamanho/brilho — quebra a monotonia sem
-        // sacrificar a leitura de "esfera" definida.
-        sizeFactor: 0.62 + Math.random() * 0.85,
+        // sacrificar a leitura de "esfera" definida. Variação contida
+        // de propósito: com o dobro de partículas, o objetivo é uma
+        // esfera mais minimalista (pontos pequenos), não mais "cheia".
+        sizeFactor: 0.6 + Math.random() * 0.55,
         brightFactor: 0.55 + Math.random() * 0.6,
         // fase própria para micro-cintilação de brilho (sutil, nunca pisca)
         twinklePhase: Math.random() * TAU,
@@ -273,6 +305,7 @@ export class HeroOrb {
     window.addEventListener('resize', this._onResize, { passive: true });
     window.addEventListener('mousemove', this._onPointerMove, { passive: true });
     window.addEventListener('mouseleave', this._onPointerLeave, { passive: true });
+    this.canvas.addEventListener('click', this._onClick);
     document.addEventListener('visibilitychange', this._onVisibilityChange);
 
     if ('ResizeObserver' in window && this.canvas.parentElement) {
@@ -289,6 +322,19 @@ export class HeroOrb {
 
   _onPointerLeave() {
     this._pointerInViewport = false;
+  }
+
+  // Clique sobre a esfera dispara a "onda de energia" (ver _updatePulse).
+  // Cliques fora da área circular do núcleo são ignorados — a interação
+  // deve parecer intencional, nunca acidental.
+  _onClick(event) {
+    const dx = event.offsetX - this._cssWidth / 2;
+    const dy = event.offsetY - this._cssHeight / 2;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist <= this._radius * 1.05) {
+      this._pulseEnergy = 1;
+    }
   }
 
   _onVisibilityChange() {
@@ -323,9 +369,15 @@ export class HeroOrb {
   _update(dt) {
     const speedFactor = this._reducedMotion ? 0.12 : 1;
 
-    // 1) Rotação contínua, muito lenta.
+    // 1) Rotação contínua, muito lenta — com uma variação orgânica mínima
+    // de velocidade (nunca perceptível como "efeito", só quebra a
+    // monotonia de uma rotação puramente mecânica).
+    const jitter =
+      1 +
+      Math.sin((this._elapsed / this.options.rotationJitterPeriodMs) * TAU) *
+        this.options.rotationJitterAmount;
     const radPerMs = (this.options.rotationSpeedDeg * (Math.PI / 180)) / 1000;
-    this._rotationY += radPerMs * dt * speedFactor;
+    this._rotationY += radPerMs * dt * speedFactor * jitter;
     if (this._rotationY > TAU) this._rotationY -= TAU;
 
     // 2) Proximidade do mouse → intensidade de hover (0..1), suavizada.
@@ -339,6 +391,20 @@ export class HeroOrb {
     this._tiltX += (this._tiltXTarget - this._tiltX) * this.options.mouseLerp;
     this._tiltYOffset +=
       (this._tiltYOffsetTarget - this._tiltYOffset) * this.options.mouseLerp;
+
+    // 4) Onda de energia do clique — decaimento exponencial suave.
+    this._updatePulse(dt);
+  }
+
+  // Decai a energia do pulso a cada frame. Um decaimento exponencial já
+  // é, por natureza, um easing suave — sobe instantâneo no clique e
+  // se dissolve devagar, sem precisar de uma máquina de estados própria.
+  _updatePulse(dt) {
+    if (this._pulseEnergy <= 0.001) {
+      this._pulseEnergy = 0;
+      return;
+    }
+    this._pulseEnergy *= Math.pow(this.options.pulseDecayRate, dt / 16.67);
   }
 
   _updateHoverTarget() {
@@ -381,17 +447,8 @@ export class HeroOrb {
     ctx.clearRect(0, 0, w, h);
 
     const centerX = w / 2;
-    const floatOffset =
-      Math.sin((this._elapsed / this.options.floatPeriodMs) * TAU) *
-      this.options.floatAmplitudePx *
-      (this._reducedMotion ? 0.25 : 1);
-    const centerY = h / 2 + floatOffset;
-
-    const breathScale =
-      1 +
-      Math.sin((this._elapsed / this.options.breathPeriodMs) * TAU) *
-        this.options.breathAmplitude *
-        (this._reducedMotion ? 0.3 : 1);
+    const centerY = h / 2 + this._computeFloatOffset();
+    const breathScale = this._computeBreathScale();
 
     this._drawCoreGlow(centerX, centerY, breathScale);
     this._project(centerX, centerY, breathScale);
@@ -400,22 +457,49 @@ export class HeroOrb {
     this._drawParticles();
   }
 
-  _drawCoreGlow(centerX, centerY, breathScale) {
-    const { ctx } = this;
-    const boost = 1 + this._hoverIntensity * this.options.glowHoverBoost;
-    const glowRadius = this._radius * 0.92 * breathScale * boost;
-    const alpha = this.options.glowBaseAlpha * (0.85 + this._hoverIntensity * 0.35);
+  // Flutuação vertical orgânica: soma de duas senoides com períodos não
+  // múltiplos entre si. Sozinha, uma única senoide tem cara de "loop de
+  // animação"; a segunda onda, mais rápida e discreta, quebra essa
+  // regularidade sem que o olho consiga identificar um padrão repetitivo.
+  _computeFloatOffset() {
+    const o = this.options;
+    const reduce = this._reducedMotion ? 0.25 : 1;
+    const primary = Math.sin((this._elapsed / o.floatPeriodMs) * TAU) * o.floatAmplitudePx;
+    const secondary =
+      Math.sin((this._elapsed / o.floatSecondaryPeriodMs) * TAU) *
+      o.floatSecondaryAmplitudePx;
+    return (primary + secondary) * reduce;
+  }
 
-    const gradient = ctx.createRadialGradient(
-      centerX,
-      centerY,
-      0,
-      centerX,
-      centerY,
-      glowRadius
-    );
-    gradient.addColorStop(0, `rgba(${this.options.colorCore}, ${alpha})`);
-    gradient.addColorStop(0.45, `rgba(${this.options.colorGlow}, ${alpha * 0.35})`);
+  // Respiração orgânica: mesma lógica de duas ondas sobrepostas, mais a
+  // contribuição pontual do pulso de clique (uma expansão rápida que
+  // decai junto com _pulseEnergy).
+  _computeBreathScale() {
+    const o = this.options;
+    const reduce = this._reducedMotion ? 0.3 : 1;
+    const primary = Math.sin((this._elapsed / o.breathPeriodMs) * TAU) * o.breathAmplitude;
+    const secondary =
+      Math.sin((this._elapsed / o.breathSecondaryPeriodMs) * TAU) *
+      o.breathSecondaryAmplitude;
+    const pulse = this._pulseEnergy * o.pulseBreathBoost;
+    return 1 + (primary + secondary) * reduce + pulse;
+  }
+
+  _drawCoreGlow(centerX, centerY, breathScale) {
+    const { ctx, options: o } = this;
+    const boost = 1 + this._hoverIntensity * o.glowHoverBoost + this._pulseEnergy * o.pulseGlowBoost;
+    const glowRadius = this._radius * 0.92 * breathScale * boost;
+    const alpha = o.glowBaseAlpha * (0.85 + this._hoverIntensity * 0.35);
+
+    // Verde DevClub: presente como uma tonalidade quase imperceptível em
+    // repouso, e reforçado por poucos instantes a cada clique — a
+    // "onda de energia" pedida no brief, sem nunca virar um flash.
+    const greenWeight = o.greenBaseWeight + this._pulseEnergy * o.pulseGreenBoost;
+
+    const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, glowRadius);
+    gradient.addColorStop(0, `rgba(${o.colorCore}, ${alpha})`);
+    gradient.addColorStop(0.35, `rgba(${o.colorGlowGreen}, ${alpha * greenWeight})`);
+    gradient.addColorStop(0.6, `rgba(${o.colorGlow}, ${alpha * 0.3})`);
     gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
     ctx.save();
@@ -472,12 +556,20 @@ export class HeroOrb {
     }
   }
 
+  // Curva suave 0→1, sem degraus — usada para desaparecimentos graduais
+  // (conexões indo para trás da esfera, contraste de profundidade).
+  _smoothstep(edge0, edge1, x) {
+    const t = Math.min(1, Math.max(0, (x - edge0) / (edge1 - edge0)));
+    return t * t * (3 - 2 * t);
+  }
+
   _sortBackToFront() {
     const order = this._order;
     const z = this._projZ;
-    // Insertion sort: para 120 elementos quase já ordenados entre frames
-    // (rotação é contínua e suave), isso é mais barato que Array.sort
-    // genérico e não aloca memória nova.
+    // Insertion sort: com a rotação contínua e suave, a ordem por
+    // profundidade muda muito pouco entre frames (quase já ordenado),
+    // o que mantém este método barato mesmo com mais partículas — e,
+    // diferente de Array.sort, não aloca memória nova.
     for (let i = 1; i < order.length; i++) {
       const key = order[i];
       const keyZ = z[key];
@@ -505,12 +597,14 @@ export class HeroOrb {
 
       // Opacidade das conexões depende da profundidade dos dois pontos —
       // é isso que faz a "rede" mudar naturalmente conforme a rotação,
-      // sem recalcular pares e sem piscar.
+      // sem recalcular pares e sem piscar. O smoothstep garante que uma
+      // conexão indo para trás da esfera se dissolva aos poucos, nunca
+      // some de um frame para o outro.
       const depthFactor = (projScale[i] + projScale[j]) / 2; // ~0.7–1.3
-      const baseAlpha = Math.max(0, (depthFactor - 0.68) * 0.42);
-      if (baseAlpha <= 0.002) continue;
+      const fade = this._smoothstep(0.62, 1.15, depthFactor);
+      if (fade <= 0.004) continue;
 
-      const alpha = baseAlpha * (0.9 + hover * 0.3);
+      const alpha = fade * 0.28 * (0.9 + hover * 0.3);
       ctx.strokeStyle = `rgba(${this.options.colorParticleCool}, ${alpha})`;
       ctx.beginPath();
       ctx.moveTo(projX[i], projY[i]);
@@ -527,22 +621,25 @@ export class HeroOrb {
     const projY = this._projY;
     const projScale = this._projScale;
     const hover = this._hoverIntensity;
-    const baseSize = Math.max(1.1, this._radius * 0.028);
+    // Base menor de propósito: o dobro de partículas já dá densidade —
+    // pontos pequenos mantêm a esfera minimalista em vez de "cheia".
+    const baseSize = Math.max(0.7, this._radius * 0.016);
 
     for (let k = 0; k < order.length; k++) {
       const i = order[k];
       const p = particles[i];
       const scale = projScale[i];
 
-      // Profundidade → tamanho e brilho. Partículas na frente (scale > 1)
-      // ficam maiores e mais nítidas; no fundo, menores e mais discretas.
-      const size = baseSize * p.sizeFactor * scale;
+      // Profundidade → tamanho e brilho. O expoente acentua a diferença
+      // entre frente e fundo (esfera "mais 3D") sem distorcer a curva de
+      // perspectiva já calculada em _project.
+      const size = baseSize * p.sizeFactor * Math.pow(scale, 1.15);
       if (size <= 0.15) continue;
 
       const twinkle =
         0.85 + Math.sin(this._elapsed * 0.0011 + p.twinklePhase) * 0.15;
 
-      const depthAlpha = Math.max(0.08, Math.min(1, (scale - 0.55) * 1.35));
+      const depthAlpha = Math.max(0.06, this._smoothstep(0.55, 1.05, scale));
       const alpha =
         depthAlpha * p.brightFactor * twinkle * (0.88 + hover * 0.28);
 
@@ -552,7 +649,7 @@ export class HeroOrb {
         k % 3 === 0 ? this.options.colorParticleWarm : this.options.colorParticleCool;
 
       // Halo suave em vez de shadowBlur (mais barato, sem repaint global).
-      const haloRadius = size * 2.6;
+      const haloRadius = size * 2.2;
       const halo = ctx.createRadialGradient(x, y, 0, x, y, haloRadius);
       halo.addColorStop(0, `rgba(${color}, ${alpha * 0.5})`);
       halo.addColorStop(1, 'rgba(255, 255, 255, 0)');

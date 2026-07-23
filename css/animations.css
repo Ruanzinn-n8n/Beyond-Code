@@ -244,3 +244,150 @@
     filter: none !important;
   }
 }
+
+
+/* ==========================================================================
+   BEYOND CODE — NAVBAR
+   Três estados disparados por JS (js/nav.js), todos via classList — a
+   animação em si vive inteira aqui, mesmo espírito do Hero Reveal acima:
+
+   1. .header--ready     → entrada suave, disparada junto do hero--ready
+                            (ver js/main.js), depois que a Intro termina.
+   2. .header--scrolled  → a Hero deixou de estar visível (via
+                            IntersectionObserver, não scroll bruto):
+                            navbar sai do "quase invisível" e ganha
+                            vidro fosco de verdade.
+   3. .is-open no dropdown → abrir/fechar do menu "Story ▾".
+   ========================================================================== */
+
+:root {
+  /* ~25% mais fina que a versão anterior (88px/68px). */
+  --nav-height: 64px;
+  --nav-height-scrolled: 52px;
+  --dropdown-duration: 300ms; /* dentro da faixa de 250–350ms pedida no brief */
+  --nav-reveal-duration: 750ms; /* dentro da faixa de 600–900ms pedida no brief */
+}
+
+/* --------------------------------------------------------------------------
+   1. ENTRADA — participa da apresentação junto com a Hero
+   Antes de .header--ready, a navbar fica invisível (nunca aparece
+   "pronta" antes da hora, mesmo que a Intro a cubra por cima).
+   -------------------------------------------------------------------------- */
+.header {
+  opacity: 0;
+  transform: translateY(-14px);
+  background: var(--nav-bg, rgba(7, 8, 10, .12));
+  backdrop-filter: var(--nav-blur, blur(6px));
+  -webkit-backdrop-filter: var(--nav-blur, blur(6px));
+  border-bottom: 1px solid var(--nav-border, rgba(255, 255, 255, .03));
+  box-shadow: none;
+  transition:
+    opacity var(--nav-reveal-duration) var(--ease-cinematic, ease),
+    transform var(--nav-reveal-duration) var(--ease-cinematic, ease),
+    background-color var(--duration-hover, 420ms) var(--ease-hover, ease),
+    backdrop-filter var(--duration-hover, 420ms) var(--ease-hover, ease),
+    box-shadow var(--duration-hover, 420ms) var(--ease-hover, ease),
+    border-color var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.header--ready {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --------------------------------------------------------------------------
+   2. DENTRO DA HERO × FORA DA HERO
+   -------------------------------------------------------------------------- */
+.header--scrolled {
+  background: var(--nav-bg-scrolled, rgba(7, 8, 10, .76));
+  backdrop-filter: var(--nav-blur-scrolled, blur(22px));
+  -webkit-backdrop-filter: var(--nav-blur-scrolled, blur(22px));
+  border-bottom-color: var(--nav-border-scrolled, rgba(255, 255, 255, .09));
+  box-shadow: var(--nav-shadow-scrolled, 0 20px 45px rgba(0, 0, 0, .25));
+}
+
+.header--scrolled .nav {
+  height: var(--nav-height-scrolled);
+}
+
+/* --------------------------------------------------------------------------
+   3. DROPDOWN — fade + leve translateY, mesma curva para abrir e fechar
+   -------------------------------------------------------------------------- */
+.nav__menu-list {
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+  transition:
+    opacity var(--dropdown-duration) var(--ease-cinematic, ease),
+    transform var(--dropdown-duration) var(--ease-cinematic, ease);
+}
+
+.nav__menu-list.is-open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* --------------------------------------------------------------------------
+   4. RÓTULO DA SEÇÃO ATIVA — troca suave de texto ("Story ▾" → "Results ▾")
+   O JS só troca o texto no meio da transição (ver js/nav.js), nunca de
+   forma abrupta.
+   -------------------------------------------------------------------------- */
+.nav__menu-trigger-label {
+  display: inline-block;
+  transition: opacity 160ms var(--ease-hover, ease);
+}
+
+.nav__menu-trigger-label.is-swapping {
+  opacity: 0;
+}
+
+/* --------------------------------------------------------------------------
+   4.1 FAQ — abrir/fechar a resposta (js/faq.js só troca a classe .is-open)
+   max-height 0 → valor generoso: mais simples e previsível que animar
+   grid-template-rows/height com altura intrínseca (que tem sutilezas de
+   cálculo e nem sempre colapsa a zero de verdade em todo navegador).
+   600px cobre com folga qualquer resposta atual do FAQ.
+   -------------------------------------------------------------------------- */
+.faq-item__answer {
+  max-height: 0;
+  transition: max-height var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.faq-item.is-open .faq-item__answer {
+  max-height: 600px;
+}
+
+/* --------------------------------------------------------------------------
+   5. SCROLL SUAVE — usado pelos links do dropdown (âncoras nativas)
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. ACESSIBILIDADE
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .header,
+  .nav,
+  .nav__menu-list,
+  .nav__menu-caret,
+  .nav__menu-trigger,
+  .nav__menu-item,
+  .nav__menu-trigger-label,
+  .faq-item__answer {
+    transition-duration: 1ms !important;
+  }
+
+  .header {
+    opacity: 1;
+    transform: none !important;
+  }
+
+  .nav__menu-list {
+    transform: none !important;
+  }
+}
