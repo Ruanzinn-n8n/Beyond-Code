@@ -1,18 +1,7 @@
-/* ==========================================================================
-   BEYOND CODE — INTRO
-   Layout, camadas e estados da sequência de abertura.
-   A matemática do warp vive em warp.js; a aparência do <canvas> em warp.css.
-   Os estados são acionados via atributo [data-phase] pelo intro.js.
-   ========================================================================== */
-
-:root {
-  --intro-bg: var(--color-void, #030304);
-  --intro-white: #f5f6f7;
-  --intro-ease: var(--ease-cinematic, cubic-bezier(0.16, 1, 0.3, 1));
-}
+@import url(variables.css);
 
 /* --------------------------------------------------------------------------
-   1. CONTAINER
+   CONTAINER
    -------------------------------------------------------------------------- */
 .intro {
   position: fixed;
@@ -27,7 +16,6 @@
   transition: opacity 500ms ease;
 }
 
-/* Fade final: a intro vai a opacidade 0 antes de sumir de fato do layout */
 .intro--fade-out {
   opacity: 0;
 }
@@ -37,7 +25,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   2. CENA 2 — luz central
+   CENA 2 — luz central
    -------------------------------------------------------------------------- */
 .intro__light {
   position: absolute;
@@ -55,7 +43,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   3. CENA 3 — canvas do warp (posição aqui; aparência em warp.css)
+   CENA 3 — canvas do warp
    -------------------------------------------------------------------------- */
 .intro__canvas {
   position: absolute;
@@ -66,7 +54,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   4. CENAS 4/5/6 — conteúdo textual
+   CENAS 4/5/6 — conteúdo textual
    -------------------------------------------------------------------------- */
 .intro__content {
   position: absolute;
@@ -105,10 +93,10 @@
 }
 
 /* --------------------------------------------------------------------------
-   5. ESTADOS DA TIMELINE — [data-phase] controlado por intro.js
+   ESTADOS DA TIMELINE — [data-phase]
    -------------------------------------------------------------------------- */
 
-/* Cena 1 (black): estado inicial já é preto absoluto, nada a fazer aqui */
+/* Cena 1 (black)*/
 
 /* Cena 2 — luz parada no centro */
 .intro[data-phase="spark"] .intro__light {

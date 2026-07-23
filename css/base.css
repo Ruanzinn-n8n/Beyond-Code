@@ -4,6 +4,12 @@
 
 /* == BASE == */
 
+::selection {
+    background: rgba(0, 255, 132, .22);
+    color: #fff;
+    text-shadow: none;
+}
+
 body {
     background:
         radial-gradient(circle at top,

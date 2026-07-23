@@ -1,21 +1,6 @@
-/* ==========================================================================
-   BEYOND CODE — ENTRY POINT
-   Inicia a Intro e, quando ela termina de verdade, aguarda um pequeno
-   intervalo e revela a Hero adicionando a classe hero--ready.
-   Toda a animação da revelação vive em CSS (css/hero-reveal.css) —
-   este arquivo só troca a classe.
-
-   Este arquivo também orquestra o restante do site (Transformation →
-   Footer): scroll reveal, contadores de números, glow de mouse nos
-   cards e a poeira de partículas do fundo global. Cada peça é uma
-   classe pequena e isolada, no mesmo espírito de HeroOrb/Navbar — só
-   que, por instrução do projeto, todas vivem aqui mesmo (nenhum
-   arquivo novo foi criado).
-   ========================================================================== */
-
 import { IntroSequence } from './intro.js';
 import { HeroOrb } from './hero-orb.js';
-import { Navbar } from './nav.js';
+import { Navbar, ScrollProgress } from './nav.js';
 import { FaqAccordion } from './faq.js';
 
 const HERO_REVEAL_DELAY = 150; // ms — aguardado após a Intro sumir de vez
@@ -25,18 +10,7 @@ const prefersReducedMotion = () =>
 
 
 /* ==========================================================================
-   SCROLL REVEAL — Transformation → Footer
-   Cada [data-reveal] entra em cena com opacity + translateY + blur leve
-   (tudo definido em css/animations.css); este código só liga a classe
-   --reveal-progress no momento certo, uma única vez por elemento.
-
-   Progressive enhancement: o CSS por padrão deixa tudo visível
-   (--reveal-progress: 1). Só quando este JS roda de fato é que os
-   elementos são escondidos antes de observar — se o JS falhar, o site
-   nunca fica com conteúdo permanentemente invisível.
-
-   Nunca inclui a Story (filtrada explicitamente) — ela já tem seus
-   próprios ganchos, prontos para uma etapa futura, e não deve mudar.
+   SCROLL REVEAL
    ========================================================================== */
 class ScrollReveal {
   constructor(root, options = {}) {
@@ -77,10 +51,7 @@ class ScrollReveal {
 
 
 /* ==========================================================================
-   NUMBER COUNTER — estatísticas da Results contam a partir de 0
-   Lê [data-count-to] (mais prefix/suffix/decimals opcionais) e anima
-   via requestAnimationFrame com easing próprio — sem depender de
-   nenhuma biblioteca. Dispara uma vez, quando o número entra em cena.
+   NUMBER COUNTER
    ========================================================================== */
 class NumberCounter {
   constructor(root) {
@@ -138,8 +109,6 @@ class NumberCounter {
     el.textContent = prefix + this._format(value, decimals) + suffix;
   }
 
-  // Mesma convenção já usada no texto estático original (ponto como
-  // separador de milhar E de decimal — ex.: "12.000+", "4.9/5").
   _format(value, decimals) {
     const [intPart, decPart] = value.toFixed(decimals).split('.');
     const withThousands = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -153,14 +122,12 @@ class NumberCounter {
 
 
 /* ==========================================================================
-   POINTER GLOW — brilho que segue o mouse em qualquer [data-glow]
-   Uma única classe cobre todos os cards novos (Transformation, Results,
-   Community): escreve --pointer-x/--pointer-y, o CSS cuida do resto
-   (ver [data-glow]::after em components.css).
+   POINTER GLOW
    ========================================================================== */
 class PointerGlow {
-  constructor(root) {
-    this.elements = Array.from(root.querySelectorAll('[data-glow]'));
+  constructor(root, options = {}) {
+    this.elements = Array.from(root.querySelectorAll('[data-glow], .timeline__item'));
+    this.maxTilt = options.maxTilt ?? 3;
     this._onPointerMove = this._onPointerMove.bind(this);
   }
 
@@ -173,8 +140,13 @@ class PointerGlow {
   _onPointerMove(event) {
     const el = event.currentTarget;
     const rect = el.getBoundingClientRect();
-    el.style.setProperty('--pointer-x', `${((event.clientX - rect.left) / rect.width) * 100}%`);
-    el.style.setProperty('--pointer-y', `${((event.clientY - rect.top) / rect.height) * 100}%`);
+    const px = (event.clientX - rect.left) / rect.width;
+    const py = (event.clientY - rect.top) / rect.height;
+
+    el.style.setProperty('--pointer-x', `${(px * 100).toFixed(1)}%`);
+    el.style.setProperty('--pointer-y', `${(py * 100).toFixed(1)}%`);
+    el.style.setProperty('--tilt-x', `${((0.5 - py) * this.maxTilt * 2).toFixed(2)}deg`);
+    el.style.setProperty('--tilt-y', `${((px - 0.5) * this.maxTilt * 2).toFixed(2)}deg`);
   }
 
   destroy() {
@@ -184,21 +156,20 @@ class PointerGlow {
 
 
 /* ==========================================================================
-   PARTICLE PARALLAX — a poeira do fundo global reage ao mouse
-   Poucos pixels, nunca mais — .core__particles já existe (ver
-   effects.css); este código só escreve --particles-x/--particles-y,
-   throttlado por requestAnimationFrame (nunca um listener pesado).
+   GLOBAL PARALLAX
    ========================================================================== */
-class ParticleParallax {
-  constructor(el, options = {}) {
-    this.el = el;
-    this.maxOffset = options.maxOffset ?? 6; // px — "só alguns pixels"
+class GlobalParallax {
+  constructor(options = {}) {
+    this.maxOffset = options.maxOffset ?? 15; // px — "nunca mais que 10-15px"
+    this.particlesOffset = options.particlesOffset ?? 6;
+    this.particlesLayer = document.querySelector('.core__particles');
+    this.root = document.documentElement.style;
     this._ticking = false;
     this._onPointerMove = this._onPointerMove.bind(this);
   }
 
   init() {
-    if (!this.el || prefersReducedMotion()) return this;
+    if (prefersReducedMotion()) return this;
     window.addEventListener('pointermove', this._onPointerMove, { passive: true });
     return this;
   }
@@ -208,10 +179,17 @@ class ParticleParallax {
     this._ticking = true;
 
     requestAnimationFrame(() => {
-      const nx = (event.clientX / window.innerWidth) * 2 - 1; // -1..1
+      const nx = (event.clientX / window.innerWidth) * 2 - 1;
       const ny = (event.clientY / window.innerHeight) * 2 - 1;
-      this.el.style.setProperty('--particles-x', `${(nx * this.maxOffset).toFixed(1)}px`);
-      this.el.style.setProperty('--particles-y', `${(ny * this.maxOffset).toFixed(1)}px`);
+
+      this.root.setProperty('--parallax-x', `${(nx * this.maxOffset).toFixed(1)}px`);
+      this.root.setProperty('--parallax-y', `${(ny * this.maxOffset).toFixed(1)}px`);
+
+      if (this.particlesLayer) {
+        this.particlesLayer.style.setProperty('--particles-x', `${(nx * this.particlesOffset).toFixed(1)}px`);
+        this.particlesLayer.style.setProperty('--particles-y', `${(ny * this.particlesOffset).toFixed(1)}px`);
+      }
+
       this._ticking = false;
     });
   }
@@ -223,12 +201,359 @@ class ParticleParallax {
 
 
 /* ==========================================================================
-   MAP NETWORK — Results: conecta os pontos do "painel tecnológico"
-   Mesma lógica de vizinhança da Hero Orb (cada ponto liga aos N mais
-   próximos), só que aqui os pontos são fixos — o grafo é calculado uma
-   única vez, na carga, sem loop de animação. Com poucas dezenas de
-   pontos, uma varredura O(n²) é instantânea; não precisa de nada mais
-   sofisticado.
+   GLOBAL PARTICLES
+   ========================================================================== */
+class GlobalParticles {
+  constructor(container, options = {}) {
+    this.container = container;
+    this.count = options.count ?? 120;
+    this.repelRadius = options.repelRadius ?? 130;
+    this.maxRepel = options.maxRepel ?? 10; // px — "poucos pixels"
+
+    this.canvas = document.createElement('canvas');
+    this.canvas.className = 'core__particles-canvas';
+    this.ctx = this.canvas.getContext('2d');
+    this.dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    this.width = 0;
+    this.height = 0;
+    this.particles = [];
+    this.mouseX = null;
+    this.mouseY = null;
+
+    this._running = false;
+    this._rafId = null;
+
+    this._onResize = this._onResize.bind(this);
+    this._onPointerMove = this._onPointerMove.bind(this);
+    this._onPointerLeave = this._onPointerLeave.bind(this);
+    this._onVisibilityChange = this._onVisibilityChange.bind(this);
+    this._loop = this._loop.bind(this);
+  }
+
+  init() {
+    if (!this.container || prefersReducedMotion()) return this; // fica só a textura CSS estática
+
+    this.container.appendChild(this.canvas);
+    this._resize();
+    this._createParticles();
+
+    window.addEventListener('resize', this._onResize, { passive: true });
+    window.addEventListener('pointermove', this._onPointerMove, { passive: true });
+    window.addEventListener('pointerleave', this._onPointerLeave, { passive: true });
+    document.addEventListener('visibilitychange', this._onVisibilityChange);
+
+    this.start();
+    return this;
+  }
+
+  start() {
+    if (this._running) return;
+    this._running = true;
+    this._rafId = requestAnimationFrame(this._loop);
+  }
+
+  stop() {
+    this._running = false;
+    if (this._rafId) cancelAnimationFrame(this._rafId);
+  }
+
+  destroy() {
+    this.stop();
+    window.removeEventListener('resize', this._onResize);
+    window.removeEventListener('pointermove', this._onPointerMove);
+    window.removeEventListener('pointerleave', this._onPointerLeave);
+    document.removeEventListener('visibilitychange', this._onVisibilityChange);
+    this.canvas.remove();
+  }
+
+  /* ------------------------------------------------------------------
+     SETUP
+     ------------------------------------------------------------------ */
+
+  _resize() {
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+    this.canvas.width = this.width * this.dpr;
+    this.canvas.height = this.height * this.dpr;
+    this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+  }
+
+  _createParticles() {
+    this.particles = Array.from({ length: this.count }, () => ({
+      x: Math.random() * this.width,
+      y: Math.random() * this.height,
+      size: 0.6 + Math.random() * 1.8,
+      baseOpacity: 0.12 + Math.random() * 0.45,
+      // Metade sobe, metade desce, algumas quase paradas — cada uma com
+      // sua própria velocidade, nunca um movimento em bloco/repetitivo.
+      driftSpeed: (Math.random() - 0.5) * 0.05,
+      twinklePhase: Math.random() * Math.PI * 2,
+      twinkleSpeed: 0.0005 + Math.random() * 0.001,
+      offsetX: 0,
+      offsetY: 0,
+    }));
+  }
+
+  /* ------------------------------------------------------------------
+     EVENTOS
+     ------------------------------------------------------------------ */
+
+  _onResize() {
+    this._resize();
+  }
+
+  _onPointerMove(event) {
+    this.mouseX = event.clientX;
+    this.mouseY = event.clientY;
+  }
+
+  _onPointerLeave() {
+    this.mouseX = null;
+    this.mouseY = null;
+  }
+
+  _onVisibilityChange() {
+    if (document.hidden) this.stop();
+    else this.start();
+  }
+
+  /* ------------------------------------------------------------------
+     LOOP
+     ------------------------------------------------------------------ */
+
+  _loop(now) {
+    if (!this._running) return;
+
+    this.ctx.clearRect(0, 0, this.width, this.height);
+
+    for (const p of this.particles) {
+      this._drift(p);
+      this._repel(p);
+      this._draw(p, now);
+    }
+
+    this._rafId = requestAnimationFrame(this._loop);
+  }
+
+  _drift(p) {
+    p.y += p.driftSpeed;
+    if (p.y < -10) p.y = this.height + 10;
+    if (p.y > this.height + 10) p.y = -10;
+  }
+
+  _repel(p) {
+    let targetX = 0;
+    let targetY = 0;
+
+    if (this.mouseX !== null) {
+      const dx = p.x - this.mouseX;
+      const dy = p.y - this.mouseY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist < this.repelRadius) {
+        const force = (1 - dist / this.repelRadius) * this.maxRepel;
+        const safeDist = dist || 1;
+        targetX = (dx / safeDist) * force;
+        targetY = (dy / safeDist) * force;
+      }
+    }
+
+    p.offsetX += (targetX - p.offsetX) * 0.06;
+    p.offsetY += (targetY - p.offsetY) * 0.06;
+  }
+
+  _draw(p, now) {
+    const twinkle = 0.7 + Math.sin(now * p.twinkleSpeed + p.twinklePhase) * 0.3;
+    const alpha = p.baseOpacity * twinkle;
+
+    this.ctx.beginPath();
+    this.ctx.arc(p.x + p.offsetX, p.y + p.offsetY, p.size, 0, Math.PI * 2);
+    this.ctx.fillStyle = `rgba(255, 255, 255, ${alpha.toFixed(3)})`;
+    this.ctx.fill();
+  }
+}
+
+
+/* ==========================================================================
+   RAMP PROPERTY
+   ========================================================================== */
+function rampProperty(el, prop, duration = 700) {
+  const start = performance.now();
+
+  const step = (now) => {
+    const progress = Math.min(1, (now - start) / duration);
+    el.style.setProperty(prop, progress.toFixed(3));
+    if (progress < 1) requestAnimationFrame(step);
+  };
+
+  requestAnimationFrame(step);
+}
+
+
+/* ==========================================================================
+   STORY REVEAL
+   ========================================================================== */
+class StoryReveal {
+  constructor(root) {
+    this.timeline = root.querySelector('.story__timeline');
+    this.items = this.timeline ? Array.from(this.timeline.querySelectorAll('.timeline__item')) : [];
+    this.header = root.querySelectorAll('.story [data-reveal]');
+    this._observer = null;
+    this._onIntersect = this._onIntersect.bind(this);
+  }
+
+  init() {
+    if (!this.timeline || prefersReducedMotion()) return this;
+
+    // Esconde ativamente antes de observar
+    this.timeline.classList.add('pre-reveal');
+    this.items.forEach((item) => item.style.setProperty('--reveal-progress', '0'));
+    this.header.forEach((el) => el.style.setProperty('--reveal-progress', '0'));
+
+    this._observer = new IntersectionObserver(this._onIntersect, { threshold: 0.25 });
+    this._observer.observe(this.timeline);
+    return this;
+  }
+
+  _onIntersect(entries) {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      this._reveal();
+      this._observer.disconnect();
+    });
+  }
+
+  _reveal() {
+    this.header.forEach((el, i) => {
+      window.setTimeout(() => el.style.setProperty('--reveal-progress', '1'), i * 90);
+    });
+
+    this.timeline.classList.remove('pre-reveal');
+
+    this.items.forEach((item, i) => {
+      window.setTimeout(() => item.style.setProperty('--reveal-progress', '1'), 200 + i * 140);
+    });
+  }
+
+  destroy() {
+    if (this._observer) this._observer.disconnect();
+  }
+}
+
+
+/* ==========================================================================
+   MAP REVEAL
+   ========================================================================== */
+class MapReveal {
+  constructor(root, nodes) {
+    this.root = root;
+    this.nodes = nodes;
+    this._observer = null;
+    this._onIntersect = this._onIntersect.bind(this);
+  }
+
+  init() {
+    if (!this.root || !this.nodes.length) return this;
+
+    if (prefersReducedMotion()) {
+      this.nodes.forEach((node) => node.style.setProperty('--reveal-progress', '1'));
+      return this;
+    }
+
+    this._observer = new IntersectionObserver(this._onIntersect, { threshold: 0.3 });
+    this._observer.observe(this.root);
+    return this;
+  }
+
+  _onIntersect(entries) {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      this.nodes.forEach((node, i) => {
+        window.setTimeout(() => rampProperty(node, '--reveal-progress', 700), i * 90);
+      });
+      this._observer.disconnect();
+    });
+  }
+
+  destroy() {
+    if (this._observer) this._observer.disconnect();
+  }
+}
+
+
+/* ==========================================================================
+   CTA REVEAL 
+   ========================================================================== */
+class CtaReveal {
+  constructor(visual) {
+    this.visual = visual;
+    this._observer = null;
+    this._onIntersect = this._onIntersect.bind(this);
+  }
+
+  init() {
+    if (!this.visual) return this;
+
+    if (prefersReducedMotion()) {
+      this.visual.style.setProperty('--reveal-progress', '1');
+      return this;
+    }
+
+    this._observer = new IntersectionObserver(this._onIntersect, { threshold: 0.3 });
+    this._observer.observe(this.visual);
+    return this;
+  }
+
+  _onIntersect(entries) {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      rampProperty(this.visual, '--reveal-progress', 1000);
+      this._observer.disconnect();
+    });
+  }
+
+  destroy() {
+    if (this._observer) this._observer.disconnect();
+  }
+}
+
+
+/* ==========================================================================
+   AMBIENT PAUSE — nenhuma animação contínua roda fora de tela
+   Um único IntersectionObserver cobre todas as seções com respiração
+   ambiente (@keyframes infinite): Transformation, Results e CTA. A
+   pausa em si é 100% CSS (animation-play-state, ver .is-offscreen em
+   animations.css) — este código só liga/desliga a classe.
+   ========================================================================== */
+class AmbientPause {
+  constructor(sections) {
+    this.sections = sections.filter(Boolean);
+    this._observer = null;
+    this._onIntersect = this._onIntersect.bind(this);
+  }
+
+  init() {
+    if (!this.sections.length) return this;
+    this._observer = new IntersectionObserver(this._onIntersect, { threshold: 0 });
+    this.sections.forEach((section) => this._observer.observe(section));
+    return this;
+  }
+
+  _onIntersect(entries) {
+    entries.forEach((entry) => {
+      entry.target.classList.toggle('is-offscreen', !entry.isIntersecting);
+    });
+  }
+
+  destroy() {
+    if (this._observer) this._observer.disconnect();
+  }
+}
+
+
+/* ==========================================================================
+   MAP NETWORK
    ========================================================================== */
 class MapNetwork {
   /**
@@ -259,9 +584,6 @@ class MapNetwork {
     }));
   }
 
-  // Para cada ponto, liga aos N vizinhos mais próximos dentro do raio
-  // máximo. Um Set de chaves "i-j" (sempre i < j) evita linhas duplicadas
-  // quando dois pontos já se escolheram mutuamente como vizinhos.
   _buildEdges(points) {
     const seen = new Set();
     const edges = [];
@@ -293,31 +615,34 @@ class MapNetwork {
   _render(edges, points) {
     const svgNS = 'http://www.w3.org/2000/svg';
     const fragment = document.createDocumentFragment();
+    this.lines = []; // linhas de pulso, expostas pra MapReveal poder escalonar
 
-    edges.forEach(([i, j]) => {
-      const line = document.createElementNS(svgNS, 'line');
-      line.setAttribute('x1', points[i].x);
-      line.setAttribute('y1', points[i].y);
-      line.setAttribute('x2', points[j].x);
-      line.setAttribute('y2', points[j].y);
-      fragment.appendChild(line);
+    edges.forEach(([i, j], index) => {
+      fragment.appendChild(this._createLine(svgNS, points[i], points[j]));
+
+      const pulse = this._createLine(svgNS, points[i], points[j]);
+      pulse.classList.add('results__map-pulse-line');
+      pulse.style.setProperty('--i', index);
+      fragment.appendChild(pulse);
+      this.lines.push(pulse);
     });
 
     this.group.appendChild(fragment);
+  }
+
+  _createLine(svgNS, a, b) {
+    const line = document.createElementNS(svgNS, 'line');
+    line.setAttribute('x1', a.x);
+    line.setAttribute('y1', a.y);
+    line.setAttribute('x2', b.x);
+    line.setAttribute('y2', b.y);
+    return line;
   }
 }
 
 
 /* ==========================================================================
-   MAP POINTER — reação ao mouse, no mesmo espírito da Hero Orb, só que
-   bem mais suave: um tilt sutil no conjunto (perspective + rotateX/Y) e
-   o glow de cada ponto crescendo conforme o cursor se aproxima
-   (--proximity, lido pela animação node-pulse em css/animations.css).
-
-   Um único loop de rAF, iniciado só quando o mouse entra na área do
-   mapa e encerrado assim que tudo volta a repousar — nunca roda à toa
-   com a página parada. Tudo interpolado (lerp) a cada frame, o que já
-   entrega a suavidade pedida sem precisar de easing em CSS.
+   MAP POINTER
    ========================================================================== */
 class MapPointer {
   /**
@@ -333,7 +658,7 @@ class MapPointer {
     this.points = points;
 
     this.influenceRadius = options.influenceRadius ?? 70; // unidades do viewBox
-    this.maxTilt = options.maxTilt ?? 4; // graus — bem mais discreto que a Orb
+    this.maxTilt = options.maxTilt ?? 6; // graus — mais discreto que a Orb
     this.lerpFactor = options.lerpFactor ?? 0.1;
     this.settleThreshold = 0.004;
 
@@ -381,8 +706,6 @@ class MapPointer {
     this._ensureRunning();
   }
 
-  // Converte a posição do mouse (coordenadas de tela) para o espaço do
-  // viewBox do SVG — é o que permite comparar direto com cx/cy dos nós.
   _toViewBoxPoint(event) {
     const point = this.svg.createSVGPoint();
     point.x = event.clientX;
@@ -391,7 +714,7 @@ class MapPointer {
   }
 
   /* ------------------------------------------------------------------
-     LOOP (só roda enquanto algo ainda está se movendo)
+     LOOP
      ------------------------------------------------------------------ */
 
   _ensureRunning() {
@@ -442,8 +765,6 @@ class MapPointer {
     return settled;
   }
 
-  // Smoothstep — brilho cresce suave conforme o cursor se aproxima,
-  // sem nunca ligar/desligar abruptamente ao cruzar o raio de influência.
   _proximityFor(point) {
     const dx = point.x - this._targetPointer.x;
     const dy = point.y - this._targetPointer.y;
@@ -460,6 +781,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const header = document.querySelector('.header');
   const navbar = header ? new Navbar(header).init() : null;
 
+  const progressTrack = document.querySelector('.nav__progress');
+  const progressDot = document.querySelector('.nav__progress-dot');
+  if (progressTrack && progressDot) new ScrollProgress(progressTrack, progressDot).init();
+
   const faqList = document.querySelector('.faq__list');
   if (faqList) new FaqAccordion(faqList).init();
 
@@ -467,16 +792,30 @@ document.addEventListener('DOMContentLoaded', () => {
   new ScrollReveal(document).init();
   new NumberCounter(document).init();
   new PointerGlow(document).init();
+  new GlobalParallax().init();
+  new StoryReveal(document).init();
 
   const particlesLayer = document.querySelector('.core__particles');
-  if (particlesLayer) new ParticleParallax(particlesLayer).init();
+  if (particlesLayer) new GlobalParticles(particlesLayer).init();
 
   const mapSvg = document.querySelector('.results__map-points');
   if (mapSvg) {
     const network = new MapNetwork(mapSvg).init();
     const mapVisual = document.querySelector('.results__map-visual');
     if (mapVisual) new MapPointer(mapSvg, mapVisual, network.nodes, network.points).init();
+
+    const mapContainer = document.querySelector('.results__map');
+    if (mapContainer) new MapReveal(mapContainer, network.nodes).init();
   }
+
+  const ctaVisual = document.querySelector('.cta__visual');
+  if (ctaVisual) new CtaReveal(ctaVisual).init();
+
+  new AmbientPause([
+    document.querySelector('.transformation'),
+    document.querySelector('.results'),
+    document.querySelector('.cta'),
+  ]).init();
 
   const introRoot = document.querySelector('.intro');
   const hero = document.querySelector('.hero');

@@ -1,23 +1,9 @@
-/*
-
-Layout global
-
-Header
-
-Sections
-
-Footer
-
-*/
-
-/* == HEADER / NAVBAR == */
-
 .header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 50; /* acima de qualquer seção — o dropdown precisa flutuar sobre tudo */
+    z-index: 50;
 }
 
 .nav {
@@ -26,7 +12,7 @@ Footer
     height: var(--nav-height, 64px);
     display: flex;
     align-items: center;
-    justify-content: space-between; /* logo à esquerda, ações à direita, centro sempre vazio */
+    justify-content: space-between;
     transition: height var(--duration-hover, 420ms) var(--ease-hover, ease);
 }
 
@@ -36,8 +22,17 @@ Footer
     gap: 28px;
 }
 
-/* Âncora de posicionamento do dropdown — o próprio botão/lista ficam
-   em components.css; aqui só a coordenada. */
+/* Indicador de progresso */
+.nav__progress {
+    flex: 1 1 auto;
+    position: relative;
+    height: 1px;
+    margin: 0 40px;
+    background: rgba(255, 255, 255, .08);
+    pointer-events: none; /* puramente decorativo — nunca intercepta clique */
+}
+
+/* Âncora de posicionamento do dropdown */
 .nav__menu {
     position: relative;
 }
@@ -49,9 +44,7 @@ Footer
     min-width: 240px;
 }
 
-/* Todas as seções navegáveis pelo dropdown (Story ▾) têm id — isso
-   garante que o scroll (suave, ver css/animations.css) nunca deixe o
-   início da seção escondido atrás da navbar fixa. */
+/* Todas as seções navegáveis pelo dropdown (Story ▾) */
 .main section[id] {
     scroll-margin-top: var(--nav-height, 64px);
 }
@@ -93,9 +86,7 @@ Footer
     position: relative;
 }
 
-/* Canvas do núcleo tecnológico (js/hero-orb.js). Preenche o círculo
-   reservado por .hero__scene; todo o desenho é feito via Canvas 2D,
-   o CSS aqui só posiciona. */
+/* Canvas do núcleo */
 .hero__orb {
     position: absolute;
     inset: 0;
@@ -169,11 +160,7 @@ Footer
 
 }
 
-/* Timeline vertical: uma linha fina acompanhada de um pequeno nó
-   luminoso por item (ver components.css para o cartão em si). A linha
-   nasce e morre em degradê — nunca corta seca no topo/base. Um glow
-   bem suave (::after) acompanha a linha por trás, reforçando a
-   sensação de "componente tecnológico" sem nenhum exagero. */
+/* Timeline vertical */
 .story__timeline{
 
     order:1;
@@ -182,9 +169,6 @@ Footer
     flex-direction: column;
     gap: 28px;
     padding-left: 46px;
-
-    /* Etapa 2 (parallax): hoje sempre 0px — o JS futuro só precisa
-       atualizar esta variável no scroll, sem mexer em CSS. */
     --parallax-offset: 0px;
     transform: translateY(var(--parallax-offset));
 
@@ -204,11 +188,16 @@ Footer
         var(--glass-border-hover, rgba(255, 255, 255, .18)) 88%,
         transparent
     );
+    transform-origin: top;
+    transform: scaleY(1);
+    transition: transform 1.1s var(--ease-cinematic, ease);
 }
 
-/* Glow acompanhando a linha — mesmo formato/degradê, só mais largo,
-   mais borrado e bem mais discreto. Reforça a continuidade vertical
-   sem nunca competir com a linha nítida da frente. */
+.story__timeline.pre-reveal::before {
+    transform: scaleY(0);
+}
+
+/* Glow acompanhando a linha */
 .story__timeline::after {
     content: '';
     position: absolute;
@@ -216,7 +205,6 @@ Footer
     bottom: 0;
     left: 13px;
     width: 3px;
-    transform: translateX(-1px);
     filter: blur(4px);
     background: linear-gradient(
         to bottom,
@@ -226,6 +214,14 @@ Footer
         transparent
     );
     pointer-events: none;
+
+    transform-origin: top;
+    transform: translateX(-1px) scaleY(1);
+    transition: transform 1.1s var(--ease-cinematic, ease);
+}
+
+.story__timeline.pre-reveal::after {
+    transform: translateX(-1px) scaleY(0);
 }
 
 /* ==========================================================
@@ -257,11 +253,7 @@ Footer
     position: relative;
 }
 
-/* O visual não fica "empilhado" acima dos cards — ele ocupa a mesma
-   área deles, como um painel de luz por trás (position: absolute
-   inset: 0 acompanha a altura do grid de cards, que é quem define o
-   fluxo real). É isso que dá a sensação de "visual integrado" pedida
-   no brief, sem duplicar espaço vertical. */
+/* O visual não fica "empilhado" */
 .transformation__visual{
     position: absolute;
     inset: -40px;
@@ -279,8 +271,7 @@ Footer
         radial-gradient(60% 80% at 50% 0%, rgba(110, 140, 163, 0.12), transparent 70%);
 }
 
-/* Malha de energia (SVG) — preenche a mesma área do .transformation__scene,
-   centralizada e contida, nunca maior que o painel de luz por trás dela. */
+/* Malha de energia (SVG) */
 .transformation__mesh{
     position: absolute;
     inset: 0;
@@ -344,20 +335,12 @@ Footer
     gap:28px;
 }
 
-/* O mapa ainda não existe — mas o espaço reservado já precisa parecer
-   um componente real: grid técnico discreto, borda quase invisível,
-   glow frio, cantos suaves. Nada disso é decoração gratuita: é o que
-   torna o placeholder parte do "universo" da página, não um buraco. */
 .results__map{
     grid-area: map;
     margin-bottom: 0;
 }
 
-/* Pontos/linhas do "painel tecnológico" — preenchem o mesmo espaço do
-   painel (ver components.css para o fundo em grid/glow).
-   --map-tilt-x/-y: inclinação sutil ao aproximar o mouse (ver
-   MapPointer em js/main.js) — bem mais discreta que a Hero Orb, e
-   sempre 0deg sem JS/mouse, então nada muda por padrão. */
+/* Pontos/linhas do painel para o mapa */
 .results__map-points{
     position: absolute;
     inset: 0;
@@ -444,6 +427,7 @@ Footer
     padding-top: 70px;
     padding-bottom: 160px;
     position: relative;
+    overflow: hidden;
 }
 
 .cta .container{
@@ -460,9 +444,6 @@ Footer
     text-align:center;
 }
 
-/* O "encerramento cinematográfico" pedido no brief: um painel de luz
-   generoso, centrado atrás do conteúdo, complementando (nunca
-   repetindo) o brilho mais amplo já definido em css/effects.css. */
 .cta__visual{
     position: absolute;
     inset: -25% -10%;
@@ -491,8 +472,7 @@ Footer
     position: relative;
 }
 
-/* Linha superior quase invisível — a única "borda" do site inteiro,
-   marcando o fim do conteúdo sem nunca parecer um corte seco. */
+/* Linha superior quase invisível */
 .footer::before{
     content:'';
     position:absolute;

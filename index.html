@@ -13,7 +13,6 @@
   <link rel="stylesheet" href="css/intro.css">
   <link rel="stylesheet" href="css/warp.css">
   <link rel="stylesheet" href="css/animations.css">
-  <link rel="stylesheet" href="css/hero-reveal.css">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,10 +23,6 @@
 
 <body>
 
-  <!-- Camada da frase de abertura -->
-  <!-- Intro: sequência de abertura cinematográfica -->
-  <!-- Independente da Hero — cobre 100vw x 100vh, fixa, acima de tudo -->
-  <!-- data-phase é controlado exclusivamente por js/intro.js -->
   <div class="intro" data-phase="black" aria-hidden="true">
 
     <!-- Cena 2: ponto de luz central que dispara em direção à câmera -->
@@ -65,6 +60,10 @@
 
       <a href="#" class="nav__logo" aria-label="DevClub — voltar ao topo">DevClub</a>
 
+      <div class="nav__progress" aria-hidden="true">
+        <span class="nav__progress-dot"></span>
+      </div>
+
       <div class="nav__actions">
 
         <div class="nav__menu">
@@ -94,7 +93,6 @@
     <!-- Hero Section -->
 
     <section class="hero">
-      <!-- Reservado para futura animação de partículas de fundo e etc -->
       <div class="hero__background">
 
         <div class="hero__particles"></div>
@@ -117,7 +115,6 @@
           </p>
 
           <!-- Hero Actions -->
-          <!-- Bloco com os dois botões de ação da Hero -->
           <div class="hero__actions">
             <a href="#journey" class="button button--primary">Explorar</a>
             <a href="#start" class="button button--secondary">Começar</a>
@@ -126,7 +123,6 @@
         </div>
 
         <!-- Hero Visual -->
-        <!-- Área reservada para futura animação 3D -->
         <div class="hero__visual">
           <div class="hero__scene">
             <canvas class="hero__orb"></canvas>
@@ -205,10 +201,6 @@
 
         <div class="transformation__content">
 
-          <!-- Malha de energia: rede de nós/linhas extremamente discreta,
-               sugerindo algo "se formando" atrás dos cards. Estática por
-               padrão, com uma respiração lentíssima em opacity/transform
-               (ver css/animations.css) — nunca compete com o conteúdo. -->
           <div class="transformation__visual" aria-hidden="true">
             <div class="transformation__scene"></div>
             <svg class="transformation__mesh" viewBox="0 0 800 480" focusable="false">
@@ -335,15 +327,10 @@
 
         </ul>
 
-        <!-- Painel tecnológico: mesmo espaço reservado pro mapa do Brasil,
-             agora com pontos luminosos e linhas de conexão discretas —
-             lê como um "painel de dados" mesmo antes do mapa real entrar. -->
+        <!-- Painel tecnológico -->
         <div class="results__map" data-reveal style="--i:4">
           <div class="results__map-visual">
             <svg class="results__map-points" viewBox="0 0 400 300" aria-hidden="true" focusable="false">
-              <!-- As conexões (<line>) são geradas em runtime por
-                   js/main.js (classe MapNetwork) — cada ponto liga aos
-                   3 vizinhos mais próximos. Este grupo começa vazio. -->
               <g class="results__map-lines" stroke="currentColor" stroke-width="1" fill="none" opacity=".28"></g>
               <g class="results__map-nodes" fill="currentColor">
                 <circle cx="148" cy="40" r="3" style="--i:0" />
@@ -391,11 +378,11 @@
         <div class="results__companies" data-reveal style="--i:5">
           <span class="results__companies-label">Nossos alunos estão em</span>
           <ul class="results__companies-list">
-            <li class="results__company-logo">Minas Gerais</li>
-            <li class="results__company-logo">Santa Catarina</li>
-            <li class="results__company-logo">Amapá</li>
-            <li class="results__company-logo">Bahia</li>
-            <li class="results__company-logo">São Paulo</li>
+            <li class="results__company-logo">Amazon</li>
+            <li class="results__company-logo">Spotify</li>
+            <li class="results__company-logo">Inter</li>
+            <li class="results__company-logo">Google</li>
+            <li class="results__company-logo">iFood</li>
           </ul>
         </div>
 
@@ -422,25 +409,31 @@
         <ul class="community__testimonials">
 
           <li class="testimonial-card" data-reveal data-glow style="--i:0">
-            <div class="testimonial-card__avatar"></div>
+            <div class="testimonial-card__avatar">
+              <img src="/assets/images/sa-ava.jpeg" alt="Samira Stefani">
+            </div>
             <blockquote class="testimonial-card__quote">
               A didática mudou completamente a forma como eu aprendo.
             </blockquote>
-            <span class="testimonial-card__author">Ana Ribeiro</span>
+            <span class="testimonial-card__author">Samira Stefani</span>
             <span class="testimonial-card__role">Desenvolvedora Front-end</span>
           </li>
 
           <li class="testimonial-card" data-reveal data-glow style="--i:1">
-            <div class="testimonial-card__avatar"></div>
+            <div class="testimonial-card__avatar">
+              <img src="/assets/images/eu-ava.jpeg" alt="Ruan Ferraz, sim sou eu kkk">
+            </div>
             <blockquote class="testimonial-card__quote">
               Consegui minha primeira vaga antes mesmo de terminar o curso.
             </blockquote>
-            <span class="testimonial-card__author">Lucas Almeida</span>
+            <span class="testimonial-card__author">Ruan Ferraz</span>
             <span class="testimonial-card__role">Desenvolvedor Full Stack</span>
           </li>
 
           <li class="testimonial-card" data-reveal data-glow style="--i:2">
-            <div class="testimonial-card__avatar"></div>
+            <div class="testimonial-card__avatar">
+              <img src="https://images.pexels.com/photos/2029867/pexels-photo-2029867.jpeg" alt="Foto de Beatriz Souza">
+            </div>
             <blockquote class="testimonial-card__quote">
               A comunidade foi essencial para eu não desistir.
             </blockquote>
@@ -450,14 +443,14 @@
 
         </ul>
 
-        <!-- Galeria da comunidade — composição fotográfica discreta -->
+        <!-- Galeria da comunidade — composição fotográfica discreta. -->
         <ul class="community__gallery" data-reveal style="--i:3">
-          <li class="community__gallery-item"></li>
-          <li class="community__gallery-item"></li>
-          <li class="community__gallery-item"></li>
-          <li class="community__gallery-item"></li>
-          <li class="community__gallery-item"></li>
-          <li class="community__gallery-item"></li>
+          <li class="community__gallery-item"><img src="https://images.pexels.com/photos/16051533/pexels-photo-16051533.jpeg" alt="Foto da comunidade DevClub"></li>
+          <li class="community__gallery-item"><img src="https://images.pexels.com/photos/17143758/pexels-photo-17143758.jpeg" alt="Foto da comunidade DevClub"></li>
+          <li class="community__gallery-item"><img src="/assets/images/sa-g.jpeg" alt="Foto da NOIVA"></li>
+          <li class="community__gallery-item"><img src="/assets/images/eu-g.jpeg" alt="Foto do NOIVO"></li>
+          <li class="community__gallery-item"><img src="https://images.pexels.com/photos/29666273/pexels-photo-29666273.jpeg" alt="Foto da comunidade DevClub"></li>
+          <li class="community__gallery-item"><img src="https://images.pexels.com/photos/14543659/pexels-photo-14543659.jpeg" alt="Foto da comunidade DevClub"></li>
         </ul>
 
       </div>
@@ -554,8 +547,6 @@
 
         </div>
 
-        <!-- Encerramento cinematográfico: o mesmo glow de effects.css, com
-             uma respiração lentíssima (opacity/scale) via animations.css. -->
         <div class="cta__visual" aria-hidden="true"></div>
 
       </div>

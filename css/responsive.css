@@ -1,13 +1,3 @@
-/*
-
-Tablet
-
-Mobile
-
-Desktop
-
-*/
-
 @media (max-width: 980px){
 
     .hero__container{
@@ -93,6 +83,10 @@ Desktop
 
     .nav__actions{
         gap: 16px;
+    }
+
+    .nav__progress{
+        margin: 0 16px;
     }
 
     .nav__menu-trigger{

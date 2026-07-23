@@ -1,14 +1,3 @@
-/*
-
-Buttons
-
-Cards
-
-Inputs
-
-Badges
-
-*/
 .button {
     display: inline-flex;
     align-items: center;
@@ -27,10 +16,6 @@ Badges
 
 /* ==========================================================================
    BOTÕES — ACABAMENTO
-   .button (acima) já define a forma-base usada na Hero. Aqui só
-   completamos o que faltava: cor, hover, foco e estado ativo — usado
-   tanto na Hero quanto no "Entrar" da navbar, para o botão continuar
-   sendo "o mesmo botão elegante" em qualquer lugar do site.
    ========================================================================== */
 
 .button {
@@ -44,8 +29,7 @@ Badges
     will-change: transform;
 }
 
-/* Primário — preenchido, branco puro sobre o vazio: o único lugar do
-   site (fora o verde de destaque) que usa contraste máximo. */
+/* Primário */
 .button--primary {
     background: var(--copy-primary, #fff);
     color: var(--color-void, #06070a);
@@ -57,9 +41,7 @@ Badges
     box-shadow: 0 26px 70px rgba(255, 255, 255, 0.14);
 }
 
-/* Secundário — contorno quase invisível em repouso; o verde só aparece
-   no hover, como um convite discreto a clicar, nunca como decoração
-   parada na tela. */
+/* Secundário */
 .button--secondary {
     background: transparent;
     color: var(--copy-primary, #fff);
@@ -83,12 +65,25 @@ Badges
     outline-offset: 4px;
 }
 
+/* CTA */
+.cta__actions .button {
+    position: relative;
+}
+
+.cta__actions .button::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: inherit;
+    background: radial-gradient(circle, rgba(255, 255, 255, .15), transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+    animation: button-breathe 11s ease-in-out infinite;
+}
+
 
 /* ==========================================================================
    TIPOGRAFIA DE SEÇÃO — EYEBROW / TITLE / DESCRIPTION
-   Cada seção abaixo da Hero tem sua própria classe (story__eyebrow,
-   transformation__eyebrow...), mas todas devem ler como o mesmo
-   sistema tipográfico da Hero — por isso agrupadas numa única regra.
    ========================================================================== */
 
 .story__eyebrow,
@@ -151,10 +146,7 @@ Badges
     font-size: 1.15rem;
 }
 
-/* Story-only: mesma hierarquia da Hero, só com um pouco mais de respiro
-   e uma medida de leitura mais curta — texto que "respira", nunca um
-   bloco grande. Não mexe na regra agrupada acima (que serve todas as
-   seções); só soma o que é específico daqui. */
+/* Story */
 .story__eyebrow {
     margin-bottom: 26px;
 }
@@ -166,10 +158,6 @@ Badges
 
 /* ==========================================================================
    SISTEMA DE CARDS "GLASS"
-   Um único vidro para todo o site: mesmo raio, mesmo brilho, mesmo
-   hover, mesmas sombras. As diferenças de conteúdo entre timeline,
-   cards do método e depoimentos ficam em blocos próprios logo abaixo;
-   o que é comum vive aqui.
    ========================================================================== */
 
 .timeline__item,
@@ -198,10 +186,7 @@ Badges
     box-shadow: var(--glass-shadow-hover, 0 40px 110px rgba(0, 0, 0, .45));
 }
 
-/* Glow de mouse genérico — qualquer elemento com [data-glow] ganha um
-   brilho radial que segue o ponteiro (--pointer-x/--pointer-y, escritos
-   por main.js). Uma única regra serve Transformation/Results/Community;
-   a Story já tem o próprio mecanismo equivalente e não é tocada aqui. */
+/* Glow de mouse genérico */
 [data-glow] {
     position: relative;
     overflow: hidden;
@@ -226,13 +211,18 @@ Badges
     opacity: 1;
 }
 
+/* Leve inclinação 3D */
+[data-glow]:hover {
+    transform:
+        perspective(800px)
+        rotateX(var(--tilt-x, 0deg))
+        rotateY(var(--tilt-y, 0deg))
+        translateY(-6px);
+}
+
 
 /* --------------------------------------------------------------------------
    STORY — cartões da timeline
-   Números enormes e muito claros (quase fantasma), como em painéis de
-   produto premium: o número organiza, mas nunca compete com o texto.
-   O nó luminoso na linha (ver css/layout.css) usa a mesma cor fria do
-   glow da Hero, para a timeline parecer parte do mesmo sistema de luz.
    -------------------------------------------------------------------------- */
 
 .timeline__item {
@@ -240,10 +230,6 @@ Badges
     display: flex;
     flex-direction: column;
     gap: 14px;
-
-    /* Camada extra de profundidade, exclusiva da timeline: um hairline
-       de luz no topo do card, quase imperceptível — soma-se à sombra
-       já herdada do sistema de cards acima, nunca a substitui. */
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, .05),
         var(--glass-shadow, 0 30px 80px rgba(0, 0, 0, .35));
@@ -267,14 +253,11 @@ Badges
     box-shadow:
         0 0 0 4px rgba(110, 140, 163, .14),
         0 0 22px 4px rgba(110, 140, 163, .35);
+    opacity: var(--reveal-progress, 1);
+    transition: opacity 500ms var(--ease-cinematic, ease) .15s;
 }
 
-/* Etapa 2 (iluminação dinâmica / mouse interaction): um brilho radial
-   que segue o ponteiro, já com toda a mecânica pronta via custom
-   properties — só não está ativo (opacity: 0) porque nenhum JS ainda
-   atualiza --pointer-x/--pointer-y ou liga essa camada. Quando a etapa
-   2 chegar, basta o JS escrever as duas variáveis e subir a opacidade
-   (ex.: no mousemove/mouseenter) — nenhuma mudança de CSS necessária. */
+/* Etapa 2 (iluminação dinâmica / mouse interaction)*/
 .timeline__item::after {
     content: '';
     position: absolute;
@@ -288,6 +271,10 @@ Badges
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--duration-hover, 420ms) var(--ease-hover, ease);
+}
+
+.timeline__item:hover::after {
+    opacity: 1;
 }
 
 .timeline__number {
@@ -312,21 +299,15 @@ Badges
 
 
 /* --------------------------------------------------------------------------
-   ETAPA 2 — PREPARAÇÃO (scroll reveal)
-   Nenhum efeito visual hoje: --reveal-progress começa em 1 (sempre
-   visível), então opacity fica 1 e o transform vira translateY(0) —
-   idêntico ao estado atual. Quando o scroll-reveal for implementado,
-   basta o JS setar --reveal-progress: 0 no estado inicial (via
-   IntersectionObserver) e 1 quando o elemento entrar em cena — a
-   transição já está pronta, não precisa tocar em CSS de novo.
+     PREPARAÇÃO
    -------------------------------------------------------------------------- */
 .story [data-reveal] {
     --reveal-progress: 1;
     opacity: var(--reveal-progress);
-    transform: translateY(calc((1 - var(--reveal-progress)) * 24px));
+    transform: translateX(calc((1 - var(--reveal-progress)) * 28px));
     transition:
-        opacity var(--duration-hover, 420ms) var(--ease-hover, ease),
-        transform var(--duration-hover, 420ms) var(--ease-hover, ease);
+        opacity var(--reveal-duration, 820ms) var(--ease-cinematic, ease) calc(var(--i, 0) * var(--reveal-stagger-step, 90ms)),
+        transform var(--reveal-duration, 820ms) var(--ease-cinematic, ease) calc(var(--i, 0) * var(--reveal-stagger-step, 90ms));
 }
 
 
@@ -371,8 +352,7 @@ Badges
     color: var(--copy-secondary, rgba(255, 255, 255, .62));
 }
 
-/* Malha de energia — traços/nós extremamente discretos; a respiração
-   lenta (opacity/transform) vive em animations.css. */
+/* Malha de energia */
 .transformation__mesh-lines path {
     stroke-opacity: .5;
 }
@@ -381,8 +361,7 @@ Badges
     opacity: .75;
 }
 
-/* Badges — "pílulas" quase invisíveis, texto pequeno, sem competir
-   com os cards acima. */
+/* Badges */
 .transformation__benefit {
     padding: 10px 22px;
     border-radius: 999px;
@@ -403,7 +382,7 @@ Badges
 
 
 /* --------------------------------------------------------------------------
-   RESULTS — números de destaque, mapa-placeholder e logos parceiras
+   RESULTS 
    -------------------------------------------------------------------------- */
 
 .stat-item {
@@ -433,9 +412,6 @@ Badges
     color: var(--copy-secondary, rgba(255, 255, 255, .62));
 }
 
-/* O mapa ainda não existe — mas o espaço precisa parecer um
-   componente tecnológico real: grid discreto, borda quase invisível,
-   glow frio, cantos suaves. */
 .results__map-visual {
     position: relative;
     width: 100%;
@@ -459,18 +435,21 @@ Badges
     color: var(--copy-tertiary, rgba(255, 255, 255, .36));
 }
 
-/* As linhas (<line>) são geradas por js/main.js — ver classe MapNetwork. */
 .results__map-lines line {
     stroke-opacity: .4;
 }
 
-/* Pontos/linhas do painel — glow curto via drop-shadow (mais barato que
-   um blur em cada nó). Todo o brilho — a respiração ambiente E o boost
-   de proximidade do mouse — é resolvido junto na animação (ver
-   node-pulse em animations.css), por isso não há opacity/filter
-   estáticos aqui. */
+/* Brilho "viajando" por cima da linha base */
+.results__map-pulse-line {
+    stroke: #ffffff;
+    stroke-width: 1.4;
+    stroke-dasharray: 5 160;
+}
+
+/* Pontos/linhas do painel */
 .results__map-nodes circle {
     --proximity: 0;
+    --reveal-progress: 0;
 }
 
 .results__companies-label {
@@ -527,6 +506,19 @@ Badges
     border-radius: 50%;
     border: 1px solid var(--glass-border-hover, rgba(255, 255, 255, .18));
     background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, .14), rgba(255, 255, 255, .02) 70%);
+    overflow: hidden; /* recorta a <img> no círculo — sem isso, a foto "vaza" quadrada por cima */
+}
+
+.testimonial-card__avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.testimonial-card__avatar img:not([src]),
+.testimonial-card__avatar img[src=""] {
+    display: none;
 }
 
 .testimonial-card__quote {
@@ -551,13 +543,15 @@ Badges
     margin-top: 2px;
 }
 
-/* Galeria — composição fotográfica discreta: proporção fixa, vidro
-   sutil, sem hover chamativo (é decoração de fundo, não CTA). */
 .community__gallery-item {
     aspect-ratio: 3 / 4;
     border-radius: var(--glass-radius-sm, 16px);
     border: 1px solid var(--glass-border, rgba(255, 255, 255, .08));
     background: linear-gradient(160deg, rgba(255, 255, 255, .05), rgba(255, 255, 255, .015));
+    overflow: hidden; /* recorta a <img> no cantos arredondados do card */
+    /* Parallax "muito pequeno" — metade do deslocamento global (ver
+       --parallax-x/-y em js/main.js, classe GlobalParallax). */
+    transform: translate(calc(var(--parallax-x, 0px) * .5), calc(var(--parallax-y, 0px) * .5));
     transition:
         border-color var(--duration-hover, 420ms) var(--ease-hover, ease),
         transform var(--duration-hover, 420ms) var(--ease-hover, ease);
@@ -565,12 +559,24 @@ Badges
 
 .community__gallery-item:hover {
     border-color: var(--glass-border-hover, rgba(255, 255, 255, .18));
-    transform: scale(1.03);
+    transform: translate(calc(var(--parallax-x, 0px) * .5), calc(var(--parallax-y, 0px) * .5)) scale(1.03);
+}
+
+.community__gallery-item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.community__gallery-item img:not([src]),
+.community__gallery-item img[src=""] {
+    display: none;
 }
 
 
 /* --------------------------------------------------------------------------
-   FAQ — extremamente limpo: linhas finas, sem cara de acordeão padrão
+   FAQ 
    -------------------------------------------------------------------------- */
 
 .faq-item {
@@ -578,8 +584,6 @@ Badges
     border-top: 1px solid var(--glass-border, rgba(255, 255, 255, .08));
 }
 
-/* Barra de acento — quase invisível em repouso, cresce suavemente no
-   hover e permanece visível enquanto a resposta está aberta. */
 .faq-item::before {
     content: '';
     position: absolute;
@@ -634,9 +638,7 @@ Badges
     outline-offset: 6px;
 }
 
-/* Indicador "+" / "–" — puramente CSS, um único pseudo-elemento com
-   duas linhas desenhadas via gradiente. Reage ao aria-expanded que o
-   JS já existente do acordeão controla. */
+/* Indicador + e – */
 .faq-item__trigger::after {
     content: '';
     flex-shrink: 0;
@@ -668,7 +670,7 @@ Badges
 
 
 /* --------------------------------------------------------------------------
-   FOOTER — ultra minimalista
+   FOOTER
    -------------------------------------------------------------------------- */
 
 .footer__logo {
@@ -758,10 +760,6 @@ Badges
 
 /* ==========================================================================
    NAVBAR
-   Logo, gatilho do dropdown ("Story ▾") e o próprio painel do menu. O
-   painel reaproveita a mesma linguagem "glass" dos cards acima, só um
-   pouco mais opaco (--dropdown-bg, ver effects.css) porque fica sobre
-   conteúdo em movimento.
    ========================================================================== */
 
 .nav__logo {
@@ -774,8 +772,28 @@ Badges
     line-height: 1;
 }
 
-/* Gatilho — texto + um pequeno chevron desenhado em CSS puro (duas
-   bordas rotacionadas), sem depender de nenhum ícone/fonte externa. */
+.nav__progress-dot {
+    position: absolute;
+    left: 0;
+    top: -3.5px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 34%, #ffffff 0%, #f1f1f1 55%, #d8d8d8 100%);
+    box-shadow:
+        0 0 0 1px rgba(255, 255, 255, .12),
+        0 0 6px rgba(0, 255, 132, .3),
+        0 2px 4px rgba(0, 0, 0, .35);
+    transform: translateX(0px);
+    transition: transform 120ms linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .nav__progress-dot {
+        transition-duration: 1ms;
+    }
+}
+
 .nav__menu-trigger {
     all: unset;
     display: inline-flex;
@@ -812,9 +830,7 @@ Badges
     transform: rotate(225deg) translateY(2px);
 }
 
-/* Painel do dropdown — a "continuação natural da navbar" pedida no
-   brief: mesmo raio/sombra/blur da família de cards, só um pouco mais
-   opaco (ver --dropdown-bg em effects.css). */
+/* Painel do dropdown */
 .nav__menu-list {
     display: flex;
     flex-direction: column;
@@ -843,8 +859,6 @@ Badges
         box-shadow var(--duration-hover, 420ms) var(--ease-hover, ease);
 }
 
-/* O "glow verde extremamente discreto" pedido no brief: um anel interno
-   sutil + uma sombra externa curta, nunca um brilho grande. */
 .nav__menu-item:hover,
 .nav__menu-item:focus-visible {
     color: var(--copy-primary, #ffffff);
@@ -859,18 +873,8 @@ Badges
     outline-offset: -1px;
 }
 
-/* "Entrar" — mesmo botão do resto do site, só compacto o suficiente
-   para conviver com uma navbar bem fina. */
-.nav__cta {
-    padding: 10px 20px;
-    font-size: .88rem;
-}
-
-
 /* ==========================================================================
    ACESSIBILIDADE
-   Mesma regra global já usada em effects.css/animations.css, agora
-   cobrindo os hovers/transições definidos neste arquivo.
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
     .button,

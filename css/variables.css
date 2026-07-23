@@ -1,60 +1,129 @@
 :root {
 /* == CORES == */
 
-    --color-bg:#050505;
-    --color-surface:#101010;
-    --color-surface-light:#1A1A1A;
-
-    --color-primary:#00FF84;
-    --color-primary-dark:#00CC6A;
-
-    --color-text:#FFFFFF;
-    --color-text-secondary:#B7B7B7;
-
-    --color-border:rgba(255,255,255,.08);
-
-    --color-glow:rgba(0,255,132,.25);
+    --color-bg: #050505;
+    --color-surface: #101010;
+    --color-surface-light: #1A1A1A;
+    --color-primary: #00FF84;
+    --color-primary-dark: #00CC6A;
+    --color-text: #FFFFFF;
+    --color-text-secondary: #B7B7B7;
+    --color-border: rgba(255, 255, 255, .08);
+    --color-glow: rgba(0, 255, 132, .25);
 
 
+/* == TYPOGRAPHY == */
 
-    /* == TYPOGRAPHY == */
+    --font-title: "Space Grotesk", sans-serif;
+    --font-text: "Inter", sans-serif;
 
-    --font-title:"Space Grotesk", sans-serif;
-    --font-text:"Inter", sans-serif;
+/* == ESPAÇAMENTO == */
 
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 16px;
+    --space-4: 24px;
+    --space-5: 32px;
+    --space-6: 48px;
+    --space-7: 64px;
+    --space-8: 96px;
+    --space-9: 128px;
 
+/* == RADIUS == */
 
-    /* == ESPAÇAMENTO == */
+    --radius-sm: 12px;
+    --radius-md: 16px;
+    --radius-lg: 20px;
 
-    --space-1:4px;
-    --space-2:8px;
-    --space-3:16px;
-    --space-4:24px;
-    --space-5:32px;
-    --space-6:48px;
-    --space-7:64px;
-    --space-8:96px;
-    --space-9:128px;
+/* == TRANSITIONS == */
 
+    --transition-fast: .25s;
+    --transition-normal: .4s;
+    --transition-slow: .8s;
 
+/* == CONTAINER == */
 
-    /* == RADIUS == */
+    --container: 1400px;
 
-    --radius-sm:12px;
-    --radius-md:16px;
-    --radius-lg:20px;
+/* == ANIMATIONS == */
 
+    --reveal-ease: var(--ease-cinematic, cubic-bezier(0.16, 1, 0.3, 1));
+    /* -- Atraso de início de cada camada (stagger) -------------------------- */
+    --reveal-delay-background: 0ms;
+    --reveal-delay-glow: 110ms;
+    --reveal-delay-gradient: 220ms;
+    --reveal-delay-particles: 340ms;
+    --reveal-delay-eyebrow: 480ms;
+    --reveal-delay-title: 610ms;
+    --reveal-delay-description: 740ms;
+    --reveal-delay-button-primary: 880ms;
+    --reveal-delay-button-secondary: 1000ms;
+    --reveal-delay-visual: 1050ms;
+    /* -- Duração de cada camada --------------------------------------------- */
+    --reveal-duration-background: 950ms;
+    --reveal-duration-glow: 1450ms;
+    --reveal-duration-gradient: 1150ms;
+    --reveal-duration-particles: 1100ms;
+    --reveal-duration-eyebrow: 820ms;
+    --reveal-duration-title: 860ms;
+    --reveal-duration-description: 820ms;
+    --reveal-duration-button: 720ms;
+    --reveal-duration-visual: 680ms;
+    /* -- NAVBAR-animation ------------------------------- */
+    --nav-height: 64px;
+    --nav-height-scrolled: 52px;
+    --dropdown-duration: 300ms;
+    --nav-reveal-duration: 750ms;
+    /* -- Scroll reveal------------------------------------------------*/
+    --reveal-duration: 820ms;
+    --reveal-stagger-step: 90ms;
 
+/* === EFFECTS === */
 
-    /* == TRANSITIONS == */
+    --reveal-duration: 820ms;
+    --reveal-stagger-step: 90ms;
+    --color-elevated: #0f1218;
+    --color-glow-cold: #6e8ca3;
+    --color-hairline: rgba(255, 255, 255, 0.06);
+    --depth-blur-lg: 140px;
+    --depth-blur-md: 90px;
+    --shadow-cinematic: 0 60px 160px rgba(0, 0, 0, 0.6);
+    --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-ambient: 1.4s;
+    --page-max-width: 1400px;
+    /* -- SISTEMA DAS SEÇÕES + NAVBAR ----------------------------- */
+    --copy-primary: rgba(255, 255, 255, 0.96);
+    --copy-secondary: rgba(255, 255, 255, 0.62);
+    --copy-tertiary: rgba(255, 255, 255, 0.36);
+    --color-accent-green: #00ff84;
+    --font-display: var(--font-title, 'Space Grotesk', sans-serif);
+    --font-copy: var(--font-body, 'Inter', sans-serif);
+    --glass-bg: rgba(255, 255, 255, 0.025);
+    --glass-bg-hover: rgba(255, 255, 255, 0.045);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-border-hover: rgba(255, 255, 255, 0.18);
+    --glass-radius: 24px;
+    --glass-radius-sm: 16px;
+    --glass-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+    --glass-shadow-hover: 0 40px 110px rgba(0, 0, 0, 0.45);
+    --ease-hover: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-hover: 420ms;
+    --section-padding-y: 180px;
+    --section-padding-y-lg: 220px;
+    --nav-bg: rgba(7, 8, 10, 0.12);
+    --nav-bg-scrolled: rgba(7, 8, 10, 0.76);
+    --nav-blur: blur(6px) saturate(120%);
+    --nav-blur-scrolled: blur(22px) saturate(160%);
+    --nav-border: rgba(255, 255, 255, 0.03);
+    --nav-border-scrolled: rgba(255, 255, 255, 0.09);
+    --nav-shadow-scrolled: 0 20px 45px rgba(0, 0, 0, 0.25);
+    --dropdown-bg: rgba(12, 14, 18, 0.82);
+    --dropdown-blur: blur(26px) saturate(160%);
 
-    --transition-fast:.25s;
-    --transition-normal:.4s;
-    --transition-slow:.8s;
+/* ===== INTRO ======*/
 
+    --intro-bg: var(--color-void, #030304);
+    --intro-white: #f5f6f7;
+    --intro-ease: var(--ease-cinematic, cubic-bezier(0.16, 1, 0.3, 1));
 
-
-    /* == CONTAINER == */
-
-    --container:1400px;
 }

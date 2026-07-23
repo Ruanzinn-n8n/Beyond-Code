@@ -1,11 +1,3 @@
-/* ==========================================================================
-   BEYOND CODE — INTRO SEQUENCE
-   Timeline 100% baseada em timers (setTimeout), sem depender de eventos
-   de CSS (transitionend), que podem não disparar em certos navegadores.
-   Inclui um watchdog: não importa o que aconteça no meio do caminho,
-   a Intro é forçada a terminar dentro de um tempo máximo conhecido.
-   ========================================================================== */
-
 import { WarpEffect } from './warp.js';
 
 const SELECTORS = Object.freeze({
@@ -43,7 +35,7 @@ const WARP_INTENSITY = Object.freeze({
   STOPPED: 0,
 });
 
-/** Soma de todas as fases — usada só para calcular o prazo do watchdog. */
+/** usada só para calcular o prazo do watchdog. */
 const TOTAL_TIMELINE_DURATION =
   TIMING.BLACK_HOLD +
   TIMING.LIGHT_HOLD +
@@ -65,14 +57,12 @@ export class IntroSequence {
       '(prefers-reduced-motion: reduce)'
     ).matches;
     this.timers = [];
-    this.ended = false; // garante que o fim só rode uma única vez
-    this.onComplete = onComplete; // chamado só depois que a Intro já sumiu
+    this.ended = false;
+    this.onComplete = onComplete;
   }
 
-  /** Ponto de entrada público: inicia a sequência completa. */
+  /** Inicia a sequência completa. */
   play() {
-    // Watchdog: garante que a Intro termine SEMPRE, mesmo que algo no
-    // meio da timeline falhe silenciosamente.
     this._after(TOTAL_TIMELINE_DURATION + TIMING.WATCHDOG_MARGIN, () =>
       this._end()
     );
@@ -151,11 +141,6 @@ export class IntroSequence {
     this._after(TIMING.REDUCED_MOTION_HOLD, () => this._end());
   }
 
-  /**
-   * Fim único e definitivo da Intro.
-   * Idempotente: pode ser chamado mais de uma vez (timeline normal +
-   * watchdog) sem qualquer efeito colateral.
-   */
   _end() {
     if (this.ended) return;
     this.ended = true;
@@ -167,8 +152,7 @@ export class IntroSequence {
 
     window.setTimeout(() => {
       this.root.classList.add('intro--hidden');
-      // Reforço via inline style: garante que a Hero seja liberada mesmo
-      // que, por qualquer motivo, o CSS de .intro--hidden não seja aplicado.
+      // Reforço via inline style.
       this.root.style.setProperty('display', 'none', 'important');
 
       if (typeof this.onComplete === 'function') {
@@ -182,7 +166,6 @@ export class IntroSequence {
     try {
       fn();
     } catch (error) {
-      // Uma falha no Canvas nunca pode impedir a Intro de terminar.
     }
   }
 

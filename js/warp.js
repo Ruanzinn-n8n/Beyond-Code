@@ -1,32 +1,15 @@
-/* ==========================================================================
-   BEYOND CODE — WARP
-   Túnel espacial por perspectiva (estilo starfield/hyperspace).
-   Cada linha existe num espaço 3D simplificado (x, y, z); a câmera avança
-   em direção a z=0. Projetar (x/z, y/z) é o que faz tudo crescer e
-   acelerar ao se aproximar — como estrelas vistas de dentro de uma nave,
-   não uma explosão saindo do centro da tela.
-   ========================================================================== */
-
 const CONFIG = Object.freeze({
   PARTICLE_COUNT: 260,
 
-  // Profundidade: Z_FAR é "no horizonte", Z_NEAR é "colado na câmera".
-  // Ao cruzar Z_NEAR, a linha "passou pelo usuário" e renasce em Z_FAR —
-  // nunca no centro da tela.
   Z_FAR: 1,
   Z_NEAR: 0.015,
 
-  // Posição angular ao redor do eixo da câmera (espalhamento lateral).
   MIN_SPREAD: 0.05,
   MAX_SPREAD: 1,
 
-  // Velocidade individual por linha ao longo do eixo Z — varia entre
-  // partículas para que o campo nunca pareça um bloco rígido/sincronizado.
   SPEED_MIN: 0.0035,
   SPEED_MAX: 0.011,
 
-  // Rastro mínimo garantido: nenhuma linha nasce como um ponto — ela já
-  // existe como um traço curto e alonga naturalmente ao se aproximar.
   MIN_STREAK_DELTA_Z: 0.01,
   STREAK_FACTOR: 1,
 
@@ -38,19 +21,13 @@ const CONFIG = Object.freeze({
   INTENSITY_SMOOTHING: 0.06,
 });
 
-/**
- * Uma única "linha" do túnel. Vive em coordenadas (x, y, z): x e y são
- * fixos (a direção do raio não muda), só z diminui — é a câmera avançando.
- */
 class Particle {
   constructor() {
     this.respawn(true);
   }
 
   /**
-   * @param {boolean} spreadAcrossDepth — true apenas na criação inicial,
-   * para o túnel já nascer com profundidade em vez de todas as linhas
-   * surgirem juntas em Z_FAR e demorarem a preencher a cena.
+   * @param {boolean} spreadAcrossDepth —
    */
   respawn(spreadAcrossDepth) {
     const angle = Math.random() * Math.PI * 2;
@@ -68,7 +45,7 @@ class Particle {
       CONFIG.SPEED_MIN + Math.random() * (CONFIG.SPEED_MAX - CONFIG.SPEED_MIN);
   }
 
-  /** Avança a linha em direção à câmera. speedMultiplier vem da intensidade global. */
+  /** Avança a linha em direção à câmera */
   update(speedMultiplier) {
     this.z -= this.speed * speedMultiplier;
   }
@@ -86,7 +63,6 @@ class Particle {
     };
   }
 
-  /** Cabeça (posição atual) e cauda (um pouco mais longe) do traço. */
   getStreak(center, speedMultiplier) {
     const head = this._project(this.z, center);
 
