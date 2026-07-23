@@ -1,9 +1,5 @@
 @media (max-width: 1024px){
 
-    /* HERO — vindo de layout.css (Etapa de organização): mantém a
-       mesma cascata largo → estreito que o resto deste arquivo já
-       segue, então o breakpoint de 640px sempre vence aqui quando as
-       duas faixas se sobrepõem. */
     .hero__scene{
         width: min(52vw, 400px);
     }
@@ -15,6 +11,8 @@
     .hero__container{
         grid-template-columns: 1fr;
         text-align: center;
+        gap: 48px;
+        transform: none;
     }
 
     .hero__content{
@@ -25,13 +23,10 @@
         width: min(80vw, 420px);
     }
 
-    /* NAVBAR — mesma identidade, só um pouco menos de margem lateral. */
     .nav{
         width: min(1400px, 100% - 80px);
     }
 
-    /* STORY — a timeline vira a primeira coisa lida, o texto vem depois;
-       em telas estreitas o grid de 2 colunas não cabe com respiro. */
     .story .container{
         grid-template-columns: 1fr;
         gap: 60px;
@@ -47,13 +42,10 @@
         text-align: left;
     }
 
-    /* TRANSFORMATION — 3 colunas não respiram abaixo de ~980px. */
     .transformation__cards{
         grid-template-columns: repeat(2, 1fr);
     }
 
-    /* RESULTS — o grid de áreas vira uma coluna única, mantendo a
-       ordem visual: mapa, depois texto, depois números. */
     .results .container{
         grid-template-columns: 1fr;
         grid-template-areas:
@@ -68,7 +60,6 @@
         grid-template-columns: repeat(2, 1fr);
     }
 
-    /* COMMUNITY — depoimentos em 2 colunas, galeria mais compacta. */
     .community__testimonials{
         grid-template-columns: repeat(2, 1fr);
     }
@@ -81,15 +72,31 @@
 
 @media (max-width: 640px){
 
-    /* HERO — vindo de layout.css. */
+    .hero__container,
+    .story .container,
+    .transformation .container,
+    .results .container,
+    .community .container,
+    .faq .container,
+    .cta .container,
+    .footer__container{
+        width: min(1400px, 100% - 40px);
+    }
+
+    .footer::before{
+        width: min(1300px, 100% - 40px);
+    }
+
     .hero__scene{
         width: min(70vw, 300px);
         transform: none;
     }
 
-    /* NAVBAR — mesma identidade, só mais compacta: nada de reorganizar
-       logo/dropdown/CTA, apenas menos espaço entre eles e alvos de
-       toque confortáveis para o dropdown. */
+    .hero__actions{
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
     .nav{
         width: min(1400px, 100% - 40px);
         height: 56px;
@@ -117,82 +124,13 @@
     }
 
     .nav__menu-list{
-        min-width: 220px;
+        min-width: 240px;
     }
 
     .nav__menu-item{
-        padding: 14px 16px; /* alvo de toque confortável */
+        padding: 16px 18px;
     }
 
-    /* TRANSFORMATION — uma coluna única no celular. */
-    .transformation__cards{
-        grid-template-columns: 1fr;
-    }
-
-    .transformation__benefits{
-        gap: 12px;
-    }
-
-    /* A malha de energia é puramente decorativa — em telas estreitas o
-       espaço já é curto, então ela sai de cena (o painel de luz por trás
-       dos cards continua). */
-    .transformation__mesh{
-        display: none;
-    }
-
-    /* RESULTS — números em coluna única, mapa mais alto (mais legível
-       que um retângulo muito raso em telas estreitas). */
-    .results__stats{
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
-    .results__map-visual{
-        aspect-ratio: 1 / 1;
-    }
-
-    .results__companies-list{
-        gap: 32px;
-    }
-
-    /* COMMUNITY — depoimentos e galeria em coluna única/dupla. */
-    .community__testimonials{
-        grid-template-columns: 1fr;
-    }
-
-    .community__gallery{
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    /* CTA — menos respiro vertical, mas ainda generoso. */
-    .cta{
-        padding: 140px 0;
-    }
-
-    .cta__actions{
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    /* FOOTER — empilha em coluna, nav em coluna única. */
-    .footer__container{
-        flex-direction: column;
-        gap: 50px;
-    }
-
-    .footer__nav{
-        flex-direction: column;
-        gap: 40px;
-    }
-
-    .footer__social{
-        flex-wrap: wrap;
-        gap: 20px;
-    }
-
-    /* STORY — recuo e paddings menores, a linha/nó continuam alinhados
-       porque tudo aqui deriva do mesmo valor (--i não muda, só a escala
-       do componente). */
     .story .container{
         gap: 48px;
     }
@@ -218,6 +156,113 @@
 
     .timeline__number{
         font-size: 2.2rem;
+    }
+
+    .transformation,
+    .results,
+    .community,
+    .faq{
+        padding-bottom: 110px;
+    }
+
+    .transformation__cards{
+        grid-template-columns: 1fr;
+    }
+
+    .transformation-card,
+    .testimonial-card{
+        padding: 32px 28px;
+    }
+
+    .transformation__benefits{
+        gap: 12px;
+    }
+
+    .transformation__mesh{
+        display: none;
+    }
+
+    .results__stats{
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .results__map-visual{
+        aspect-ratio: 1 / 1;
+    }
+
+    .results__companies-list{
+        gap: 32px;
+    }
+
+    .community__testimonials{
+        grid-template-columns: 1fr;
+    }
+
+    .community__gallery{
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .cta{
+        padding-top: 100px;
+        padding-bottom: 130px;
+    }
+
+    .cta__actions{
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .footer__container{
+        flex-direction: column;
+        gap: 50px;
+    }
+
+    .footer__nav{
+        flex-direction: column;
+        gap: 40px;
+    }
+
+    .footer__social{
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+}
+
+@media (hover: none), (pointer: coarse) {
+
+    [data-glow]:hover,
+    .timeline__item:hover,
+    .transformation-card:hover,
+    .testimonial-card:hover,
+    .stat-item:hover,
+    .community__gallery-item:hover,
+    .results__company-logo:hover,
+    .transformation__benefit:hover,
+    .button--primary:hover,
+    .button--secondary:hover {
+        transform: none;
+    }
+
+    [data-glow]:hover::after {
+        opacity: 0;
+    }
+
+    [data-glow]:active,
+    .timeline__item:active,
+    .transformation-card:active,
+    .testimonial-card:active {
+        transform: translateY(-3px) scale(0.99);
+    }
+
+    .stat-item:active,
+    .community__gallery-item:active {
+        transform: translateY(-2px);
+    }
+
+    .button:active {
+        transform: scale(0.97);
     }
 
 }

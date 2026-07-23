@@ -8,6 +8,12 @@ const HERO_REVEAL_DELAY = 150; // ms — aguardado após a Intro sumir de vez
 const prefersReducedMotion = () =>
   window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// Usado só para reduzir a contagem de partículas em Canvas (Orb e poeira
+// global) em telas pequenas — GPUs de celular têm bem menos fôlego que
+// desktop. Mesmo breakpoint de "phone" já usado em responsive.css.
+const isSmallViewport = () =>
+  window.matchMedia && window.matchMedia('(max-width: 640px)').matches;
+
 
 /* ==========================================================================
    SCROLL REVEAL
@@ -816,7 +822,11 @@ document.addEventListener('DOMContentLoaded', () => {
   new StoryReveal(document).init();
 
   const particlesLayer = document.querySelector('.core__particles');
-  if (particlesLayer) new GlobalParticles(particlesLayer).init();
+  if (particlesLayer) {
+    new GlobalParticles(particlesLayer, {
+      count: isSmallViewport() ? 70 : 120,
+    }).init();
+  }
 
   const mapSvg = document.querySelector('.results__map-points');
   if (mapSvg) {
@@ -845,7 +855,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // O HeroOrb é instanciado desde já (geometria/eventos prontos), mas só
   // começa a animar quando a Hero recebe .hero--ready — nunca antes.
-  const orb = orbCanvas ? new HeroOrb(orbCanvas).init() : null;
+  const orb = orbCanvas
+    ? new HeroOrb(orbCanvas, {
+        particleCount: isSmallViewport() ? 160 : 240,
+      }).init()
+    : null;
 
   const revealHero = () => {
     if (!hero) return;
